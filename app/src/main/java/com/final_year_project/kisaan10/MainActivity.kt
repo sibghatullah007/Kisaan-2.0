@@ -2,9 +2,9 @@
 package com.final_year_project.kisaan10
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.navigation.compose.NavHost
@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     SplashScreen()
                     LaunchedEffect(key1 = true) {
                         delay(3000) // 3 seconds delay
-                        navController.navigate("main_screen") {
+                        navController.navigate("login") {
                             // Pop up back stack to ensure that splash screen is removed from the back stack
                             popUpTo("splash") {
                                 inclusive = true
@@ -34,10 +34,34 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                    composable("main_screen") {
-                        Text(text = "Hello")
-                    }
+                    composable("login") {
+
+                        LoginScreen(onLoginClicked = { username, password -> {
+                            var uname = username
+                            var upas = password
+                            Toast.makeText(
+                                applicationContext,
+                                "Username: $uname\nPassword: $upas",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                        }
+                    },
+                            onSignUpClicked = {
+                                navController.navigate("signup")
+                            })
+                }
+                composable("signup") {
+                    SignUpScreen(onSignUpClicked = {username,email, password,confirmPassword->{
+
+                    } }
+                    , onLoginClickIntent = {
+                            navController.navigate("login")
+                        })
+
+
+
                 }
             }
         }
-}
+}}
