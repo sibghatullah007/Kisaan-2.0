@@ -57,8 +57,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-private val textFieldPadding = 32.dp
-private val cornerRadius = 25.dp
+val textFieldPadding = 32.dp
+val cornerRadius = 25.dp
 
 @Composable
 fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
@@ -238,7 +238,7 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
 
 
 @Composable
-private fun WithIcons(iconRes: Int, contentDescription: String, context:Context){
+ fun WithIcons(iconRes: Int, contentDescription: String, context:Context){
     OutlinedButton(
         modifier = Modifier
             .size(46.dp),
@@ -255,7 +255,7 @@ private fun WithIcons(iconRes: Int, contentDescription: String, context:Context)
     }
 }
 @Composable
-private fun Devider(){
+ fun Devider(){
     Divider(modifier = Modifier.width(64.dp),
         color = Color(0xFF333333),
         thickness = 1.dp
@@ -263,7 +263,7 @@ private fun Devider(){
 }
 
 @Composable
-private fun ScreenTextFeild(
+ fun ScreenTextFeild(
     text: String,
     hint: String,
     leadingIcon: ImageVector,
@@ -324,7 +324,7 @@ private fun ScreenTextFeild(
 }
 
 @Composable
-private fun screenTextField(textColor:Color) = androidx.compose.ui.text.TextStyle(
+fun screenTextField(textColor:Color) = androidx.compose.ui.text.TextStyle(
     fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
     letterSpacing = 1.sp,
     color = textColor

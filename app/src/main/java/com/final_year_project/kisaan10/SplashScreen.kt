@@ -5,8 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -19,6 +22,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,29 +32,66 @@ import androidx.compose.ui.unit.sp
 @Preview
 @Composable
 fun SplashScreen() {
-    Box(modifier = Modifier.fillMaxSize().background(color = Color.White)) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(color = Color.White)) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 40.dp),
-            verticalArrangement = Arrangement.spacedBy(140.dp, Alignment.CenterVertically),
-            horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .height(500.dp)
+            ){
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
 
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(250.dp)
-                    .fillMaxWidth()
-                    .clip(RectangleShape)
-            )
-            Text("Kisaan App",
-                fontWeight = FontWeight.Bold ,
-                fontSize = 30.sp,
-                modifier = Modifier.padding(top = 80.dp)
-            )
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.logo),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(200.dp)
+                            .fillMaxWidth()
+                            .clip(RectangleShape)
+                    )
+                }
+            }
+            Row (
+                modifier = Modifier.fillMaxSize()
+            ){
+                Column (
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(25.dp, Alignment.CenterVertically)
+                ){
+
+                    Text(modifier = Modifier
+                        .padding(top = 24.dp),
+                        text = "Kisaan App",
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_bold , FontWeight.Bold)),
+                            fontSize = 30.sp,
+                            letterSpacing = 1.sp,
+                            color = Color.Black
+                        )
+                    )
+                    Text(modifier = Modifier
+                        .padding(top = 2.dp),
+                        text = "Diagnose & Care for Plants Worldwide",
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_regular , FontWeight.ExtraLight)),
+                            fontSize = 16.sp,
+                            letterSpacing = 1.sp,
+                            color = Color.Black
+                        )
+                    )
+                }
+            }
         }
 
     }
