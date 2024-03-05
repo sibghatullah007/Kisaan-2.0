@@ -53,11 +53,16 @@ class MainActivity : ComponentActivity() {
                 }
                 composable("signup") {
                     SignUpScreen(onSignUpClicked = {username,email, password,confirmPassword->{
-
-                    } }
-                    , onLoginClickIntent = {
+                        showToast(this@MainActivity, "Hello $username")
+                    } },
+                        signInNavigation = {
                             navController.navigate("login")
                         })
+
+//                    , onLoginClickIntent = {
+//                            navController.navigate("login")
+//                        }
+                    //                        )
 
 
 

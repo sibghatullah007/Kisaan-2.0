@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,7 +43,7 @@ fun SplashScreen() {
                 modifier = Modifier
                     .size(250.dp)
                     .fillMaxWidth()
-                    .clip(CircleShape)
+                    .clip(RectangleShape)
             )
             Text("Kisaan App",
                 fontWeight = FontWeight.Bold ,

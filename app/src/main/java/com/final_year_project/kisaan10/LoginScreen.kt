@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -60,7 +61,8 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit,
                 modifier = Modifier
                     .size(200.dp)
                     .fillMaxSize()
-                    .clip(CircleShape),
+                    .clip(RectangleShape)
+                    .align(Alignment.CenterHorizontally),
                 contentScale = ContentScale.Crop
             )
 
@@ -129,12 +131,12 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit,
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Text(
-                    "Already a user",
+                    "Not a user?  ",
                     fontWeight = FontWeight.Light,
                     fontSize = 18.sp,
                 )
                 Text(
-                    "   Sign Up",
+                    "Sign Up",
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     modifier = Modifier.clickable(onClick = onSignUpClicked)
