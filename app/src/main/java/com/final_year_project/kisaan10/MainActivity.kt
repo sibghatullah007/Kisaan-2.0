@@ -48,7 +48,11 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                             signUpNavigation = {
-                                navController.navigate("signup")
+                                navController.navigate("signup"){
+                                    popUpTo("login") {
+                                        inclusive = true
+                                    }
+                                }
                             })
                 }
                 composable("signup") {
@@ -56,7 +60,11 @@ class MainActivity : ComponentActivity() {
                         showToast(this@MainActivity, "Hello $username")
                     } },
                         signInNavigation = {
-                            navController.navigate("login")
+                            navController.navigate("login"){
+                                popUpTo("signup") {
+                                    inclusive = true
+                                }
+                            }
                         })
 
 //                    , onLoginClickIntent = {

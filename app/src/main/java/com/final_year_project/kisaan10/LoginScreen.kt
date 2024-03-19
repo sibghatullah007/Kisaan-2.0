@@ -1,6 +1,8 @@
 package com.final_year_project.kisaan10
 
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,167 +44,177 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
 
 
 @Composable
 fun LoginScreen(onLoginClicked: (String, String) -> Unit,
                 signUpNavigation: () -> Unit,
                 context: Context = LocalContext.current) {
-    var userEmail by rememberSaveable {
-        mutableStateOf("")
-    }
-    var userPassword by rememberSaveable {
-        mutableStateOf("")
-    }
-    Column(
-        modifier = Modifier
-            .background(Color(0xFFEEEEEE))
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                modifier = Modifier
-                    .padding(top = 24.dp),
-                text = "Welcome Back",
-                style = androidx.compose.ui.text.TextStyle(
-                    fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
-                    fontSize = 30.sp,
-                    letterSpacing = 1.sp,
-                    color = Color.Black
-                )
-            )
-            Text(
-                modifier = Modifier
-                    .padding(top = 4.dp),
-                text = "Sign in to your account",
-                style = androidx.compose.ui.text.TextStyle(
-                    fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
-                    fontSize = 18.sp,
-                    letterSpacing = 1.sp,
-                    color = Color.Black
-                )
-            )
-            Spacer(modifier = Modifier.height(25.dp))
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = null,
-                modifier = Modifier.size(100.dp)
-            )
-            ScreenTextFeild(text = userEmail,
-                hint = "Enter Email",
-                leadingIcon = Icons.Outlined.Email,
-                false){
-                userEmail = it
-            }
-            ScreenTextFeild(text = userPassword,
-                hint = "Enter Password",
-                leadingIcon = Icons.Outlined.Lock,
-                true){
-                userPassword = it
-            }
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = textFieldPadding,
-                        end = textFieldPadding,
-                        top = textFieldPadding
-                    ),
-                shape = RoundedCornerShape(cornerRadius),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                onClick = {
-//                    showToast(context = context, message = "Click: Button")
-                    onLoginClicked.invoke(userEmail,userPassword)
-                }) {
+    Kisaan10Theme {
+        var userEmail by rememberSaveable {
+            mutableStateOf("")
+        }
+        var userPassword by rememberSaveable {
+            mutableStateOf("")
+        }
+        Column(
+            modifier = Modifier
+                .background(Color(0xFFEEEEEE))
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text ="Login",
+                    modifier = Modifier
+                        .padding(top = 24.dp),
+                    text = "Welcome Back",
                     style = androidx.compose.ui.text.TextStyle(
-                        fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
-                        fontSize = 18.sp,
-                        color = Color.White
-                    )
-                )
-            }
-
-
-            Spacer(modifier = Modifier.height(48.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-//                modifier = Modifier.height(50.dp)
-            ) {
-                Devider()
-                Text(
-                    modifier = Modifier.padding(start = 12.dp, end = 12.dp),
-                    text =  "Or Sign up with",
-                    style = androidx.compose.ui.text.TextStyle(
-                        fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
-                        fontSize = 16.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                        fontSize = 30.sp,
                         letterSpacing = 1.sp,
                         color = Color.Black
                     )
                 )
-                Devider()
-            }
-
-
-            Row(
-                modifier = Modifier.padding(top = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                WithIcons(
-                    iconRes = R.drawable.google,
-                    contentDescription =  "Sign up with Google",
-                    context = context
-                )
-                WithIcons(
-                    iconRes = R.drawable.fb,
-                    contentDescription = "Sign up with Facebook",
-                    context = context )
-            }
-            val textBottom1 = "Don't have an account? "
-            val textBottom2 =  "Sign Up"
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Row(
-                modifier = Modifier.padding(bottom = 8.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
                 Text(
-                    text = textBottom1,
-                    color = Color.Black,
-                    fontFamily = FontFamily(
-                        Font(
-                            R.font.roboto_medium,
-                            weight = FontWeight.Medium
-                        )
-                    ),
-                    fontSize = 16.sp
+                    modifier = Modifier
+                        .padding(top = 4.dp),
+                    text = "Sign in to your account",
+                    style = androidx.compose.ui.text.TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                        fontSize = 18.sp,
+                        letterSpacing = 1.sp,
+                        color = Color.Black
+                    )
                 )
-
-                Text(
-                    modifier = Modifier.clickable {
-                        signUpNavigation()
-                    },
-                    text = textBottom2,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontFamily = FontFamily(
-                        Font(
-                            R.font.roboto_bold,
-                            weight = FontWeight.Bold
-                        )
-                    ),
-                    fontSize = 16.sp
+                Spacer(modifier = Modifier.height(25.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = null,
+                    modifier = Modifier.size(100.dp)
                 )
+                ScreenTextFeild(text = userEmail,
+                    hint = "Enter Email",
+                    leadingIcon = Icons.Outlined.Email,
+                    false){
+                    userEmail = it
+                }
+                ScreenTextFeild(text = userPassword,
+                    hint = "Enter Password",
+                    leadingIcon = Icons.Outlined.Lock,
+                    true){
+                    userPassword = it
+                }
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = textFieldPadding,
+                            end = textFieldPadding,
+                            top = textFieldPadding
+                        ),
+                    shape = RoundedCornerShape(cornerRadius),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    onClick = {
+//                    showToast(context = context, message = "Click: Button")
+//                        onLoginClicked.invoke(userEmail,userPassword)
+                        val my: Intent = Intent(context,HomeActivity::class.java)
+                        Intent(context,HomeActivity::class.java).
+                                also {
+                                    ContextCompat.startActivity(context,it, Bundle())
+                                }
+                    }) {
+                    Text(
+                        text ="Login",
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                            fontSize = 18.sp,
+                            color = Color.White
+                        )
+                    )
+                }
 
+
+                Spacer(modifier = Modifier.height(48.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+//                modifier = Modifier.height(50.dp)
+                ) {
+                    Devider()
+                    Text(
+                        modifier = Modifier.padding(start = 12.dp, end = 12.dp),
+                        text =  "Or Sign up with",
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                            fontSize = 16.sp,
+                            letterSpacing = 1.sp,
+                            color = Color.Black
+                        )
+                    )
+                    Devider()
+                }
+
+
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    WithIcons(
+                        iconRes = R.drawable.google,
+                        contentDescription =  "Sign up with Google",
+                        context = context
+                    )
+                    WithIcons(
+                        iconRes = R.drawable.fb,
+                        contentDescription = "Sign up with Facebook",
+                        context = context )
+                }
+                val textBottom1 = "Don't have an account? "
+                val textBottom2 =  "Sign Up"
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = textBottom1,
+                        color = Color.Black,
+                        fontFamily = FontFamily(
+                            Font(
+                                R.font.roboto_medium,
+                                weight = FontWeight.Medium
+                            )
+                        ),
+                        fontSize = 16.sp
+                    )
+
+                    Text(
+                        modifier = Modifier.clickable {
+                            signUpNavigation()
+                        },
+                        text = textBottom2,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontFamily = FontFamily(
+                            Font(
+                                R.font.roboto_bold,
+                                weight = FontWeight.Bold
+                            )
+                        ),
+                        fontSize = 16.sp
+                    )
+
+                }
             }
         }
     }
+
 }
 @Preview
 @Composable
