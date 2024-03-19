@@ -23,10 +23,11 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color.Green,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
-    error = Color.Green
+    primary = TextColor,
+    secondary = BoxColor,
+    tertiary = LightGrey,
+    surface = LightGreen,
+    error = Red
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -43,7 +44,7 @@ private val LightColorScheme = lightColorScheme(
 fun Kisaan10Theme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

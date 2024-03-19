@@ -1,4 +1,4 @@
-package com.final_year_project.kisaan10
+package com.final_year_project.kisaan10.auth
 
 import android.content.Context
 import android.widget.Toast
@@ -54,8 +54,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.final_year_project.kisaan10.R
+import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
 
 val textFieldPadding = 32.dp
 val cornerRadius = 25.dp
@@ -64,174 +67,177 @@ val cornerRadius = 25.dp
 fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
                  signInNavigation:()->Unit,
     context: Context = LocalContext.current) {
-    var userName by rememberSaveable {
-        mutableStateOf("")
-    }
-    var userEmail by rememberSaveable {
-        mutableStateOf("")
-    }
-    var userPassword by rememberSaveable {
-        mutableStateOf("")
-    }
-    var confirmUserPassword by rememberSaveable {
-        mutableStateOf("")
-    }
-    Column(
-        modifier = Modifier
-            .background(Color(0xFFEEEEEE))
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(modifier = Modifier
-                .padding(top = 24.dp),
-                text = "Create Account",
-                style = androidx.compose.ui.text.TextStyle(
-                    fontFamily = FontFamily(Font(R.font.roboto_bold , FontWeight.Bold)),
-                    fontSize = 30.sp,
-                    letterSpacing = 1.sp,
-                    color = Color.Black
-                )
-            )
-            Text(modifier = Modifier
-                .padding(top = 4.dp),
-                text ="Sign up to get started",
-                style = androidx.compose.ui.text.TextStyle(
-                    fontFamily = FontFamily(Font(R.font.roboto_regular , FontWeight.Normal)),
-                    fontSize = 18.sp,
-                    letterSpacing = 1.sp,
-                    color = Color.Black
-                )
-            )
+    Kisaan10Theme {
 
-            ScreenTextFeild(text = userName,
-                hint = "Full Name",
-                leadingIcon = Icons.Outlined.Person,
-                false){
-                userName = it
-            }
-            ScreenTextFeild(text = userEmail,
-                hint = "Enter Email",
-                leadingIcon = Icons.Outlined.Email,
-                false){
-                userEmail = it
-            }
-            ScreenTextFeild(text = userPassword,
-                hint = "Enter Password",
-                leadingIcon = Icons.Outlined.Lock,
-                true){
-                userPassword = it
-            }
-            ScreenTextFeild(text = confirmUserPassword,
-                hint = "Re-Enter Password",
-                leadingIcon = Icons.Outlined.Lock,
-                true){
-                confirmUserPassword = it
-            }
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = textFieldPadding,
-                        end = textFieldPadding,
-                        top = textFieldPadding
-                    ),
-                shape = RoundedCornerShape(cornerRadius),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                onClick = {
-//                    showToast(context = context, message = "Click: Button")
-                    onSignUpClicked.invoke(userName,userEmail,userPassword,confirmUserPassword)
-                }) {
-                Text(
-                    text ="Sign Up",
+        var userName by rememberSaveable {
+            mutableStateOf("")
+        }
+        var userEmail by rememberSaveable {
+            mutableStateOf("")
+        }
+        var userPassword by rememberSaveable {
+            mutableStateOf("")
+        }
+        var confirmUserPassword by rememberSaveable {
+            mutableStateOf("")
+        }
+        Column(
+            modifier = Modifier
+                .background(Color(0xFFEEEEEE))
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(modifier = Modifier
+                    .padding(top = 24.dp),
+                    text = "Create Account",
                     style = androidx.compose.ui.text.TextStyle(
-                        fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
-                        fontSize = 18.sp,
-                        color = Color.White
-                    )
-                )
-            }
-
-            Spacer(modifier = Modifier.height(48.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-//                modifier = Modifier.height(50.dp)
-            ) {
-                Devider()
-                Text(
-                    modifier = Modifier.padding(start = 12.dp, end = 12.dp),
-                    text =  "Or Sign up with",
-                    style = androidx.compose.ui.text.TextStyle(
-                        fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
-                        fontSize = 16.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                        fontSize = 30.sp,
                         letterSpacing = 1.sp,
                         color = Color.Black
                     )
                 )
-                Devider()
-            }
-
-
-            Row(
-                modifier = Modifier.padding(top = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                WithIcons(
-                    iconRes = R.drawable.google,
-                    contentDescription =  "Sign up with Google",
-                    context = context
+                Text(modifier = Modifier
+                    .padding(top = 4.dp),
+                    text ="Sign up to get started",
+                    style = androidx.compose.ui.text.TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                        fontSize = 18.sp,
+                        letterSpacing = 1.sp,
+                        color = Color.Black
+                    )
                 )
-                WithIcons(
-                    iconRes = R.drawable.fb,
-                    contentDescription = "Sign up with Facebook",
-                    context = context )
-            }
-            val textBottom1 = "Already a member? "
-            val textBottom2 =  "Sign In"
-            Spacer(modifier = Modifier.height(20.dp))
 
-            Row(
-                modifier = Modifier.padding(bottom = 8.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = textBottom1,
-                    color = Color.Black,
-                    fontFamily = FontFamily(
-                        Font(
-                            R.font.roboto_medium,
-                            weight = FontWeight.Medium
+                ScreenTextFeild(text = userName,
+                    hint = "Full Name",
+                    leadingIcon = Icons.Outlined.Person,
+                    false){
+                    userName = it
+                }
+                ScreenTextFeild(text = userEmail,
+                    hint = "Enter Email",
+                    leadingIcon = Icons.Outlined.Email,
+                    false){
+                    userEmail = it
+                }
+                ScreenTextFeild(text = userPassword,
+                    hint = "Enter Password",
+                    leadingIcon = Icons.Outlined.Lock,
+                    true){
+                    userPassword = it
+                }
+                ScreenTextFeild(text = confirmUserPassword,
+                    hint = "Re-Enter Password",
+                    leadingIcon = Icons.Outlined.Lock,
+                    true){
+                    confirmUserPassword = it
+                }
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = textFieldPadding,
+                            end = textFieldPadding,
+                            top = textFieldPadding
+                        ),
+                    shape = RoundedCornerShape(cornerRadius),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    onClick = {
+//                    showToast(context = context, message = "Click: Button")
+                        onSignUpClicked.invoke(userName,userEmail,userPassword,confirmUserPassword)
+                    }) {
+                    Text(
+                        text ="Sign Up",
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                            fontSize = 18.sp,
+                            color = Color.White
                         )
-                    ),
-                    fontSize = 16.sp
-                )
+                    )
+                }
 
-                Text(
-                    modifier = Modifier.clickable {
-                        signInNavigation()
-                    },
-                    text = textBottom2,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontFamily = FontFamily(
-                        Font(
-                            R.font.roboto_bold,
-                            weight = FontWeight.Bold
+                Spacer(modifier = Modifier.height(48.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+//                modifier = Modifier.height(50.dp)
+                ) {
+                    Devider()
+                    Text(
+                        modifier = Modifier.padding(start = 12.dp, end = 12.dp),
+                        text =  "Or Sign up with",
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                            fontSize = 16.sp,
+                            letterSpacing = 1.sp,
+                            color = Color.Black
                         )
-                    ),
-                    fontSize = 16.sp
-                )
+                    )
+                    Devider()
+                }
 
+
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    WithIcons(
+                        iconRes = R.drawable.google,
+                        contentDescription =  "Sign up with Google",
+                        context = context
+                    )
+                    WithIcons(
+                        iconRes = R.drawable.fb,
+                        contentDescription = "Sign up with Facebook",
+                        context = context )
+                }
+                val textBottom1 = "Already a member? "
+                val textBottom2 =  "Sign In"
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = textBottom1,
+                        color = Color.Black,
+                        fontFamily = FontFamily(
+                            Font(
+                                R.font.roboto_medium,
+                                weight = FontWeight.Medium
+                            )
+                        ),
+                        fontSize = 16.sp
+                    )
+
+                    Text(
+                        modifier = Modifier.clickable {
+                            signInNavigation()
+                        },
+                        text = textBottom2,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontFamily = FontFamily(
+                            Font(
+                                R.font.roboto_bold,
+                                weight = FontWeight.Bold
+                            )
+                        ),
+                        fontSize = 16.sp
+                    )
+
+                }
             }
-        }
 
 
 
         }
+    }
     }
 
 
@@ -295,7 +301,8 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
         textStyle = screenTextField(MaterialTheme.colorScheme.primary),
         placeholder = {
             Text(text = hint,
-                style = screenTextField(Color(0xFF808080)))
+                style = screenTextField(Color(0xFF808080))
+            )
         },
         leadingIcon = {
             Icon(
@@ -338,9 +345,9 @@ fun screenTextField(textColor:Color) = androidx.compose.ui.text.TextStyle(
     ).show()
 }
 
-//@Preview
-//@Composable
-//fun SignUpScreenPreview() {
-//    SignUpScreen(onSignUpClicked = {a,v,b,x->/*   */},
-//        signInNavigation = {})
-//}
+@Preview
+@Composable
+fun SignUpScreenPreview() {
+    SignUpScreen(onSignUpClicked = {a,v,b,x->/*   */},
+        signInNavigation = {})
+}

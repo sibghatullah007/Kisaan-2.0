@@ -1,4 +1,4 @@
-package com.final_year_project.kisaan10
+package com.final_year_project.kisaan10.auth
 
 import android.content.Context
 import androidx.compose.foundation.Image
@@ -30,10 +30,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -42,12 +39,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.final_year_project.kisaan10.R
+import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
 
 
 @Composable
 fun LoginScreen(onLoginClicked: (String, String) -> Unit,
                 signUpNavigation: () -> Unit,
                 context: Context = LocalContext.current) {
+Kisaan10Theme {
     var userEmail by rememberSaveable {
         mutableStateOf("")
     }
@@ -112,7 +112,7 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit,
                         top = textFieldPadding
                     ),
                 shape = RoundedCornerShape(cornerRadius),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 onClick = {
 //                    showToast(context = context, message = "Click: Button")
                     onLoginClicked.invoke(userEmail,userPassword)
@@ -203,6 +203,7 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit,
             }
         }
     }
+}
 }
 @Preview
 @Composable
