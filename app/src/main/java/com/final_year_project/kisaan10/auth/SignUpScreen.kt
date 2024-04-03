@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -29,7 +28,7 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +37,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -58,6 +58,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.final_year_project.kisaan10.R
+import com.final_year_project.kisaan10.auth.googleAuth.SignInState
 import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
 
 val textFieldPadding = 32.dp
@@ -66,9 +67,21 @@ val cornerRadius = 25.dp
 @Composable
 fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
                  signInNavigation:()->Unit,
-    context: Context = LocalContext.current) {
+                 signUpWithGoogle:()->Unit,
+//                 signUpWithFacebook:()->Unit,
+                 state: SignInState,
+//                 errorMessage: String?,
+                 context: Context = LocalContext.current) {
+
+
     Kisaan10Theme {
 
+        LaunchedEffect(key1 = state.signInErrorMessage) {
+            state.signInErrorMessage?.let{
+                    error ->
+                showToast(context, error)
+            }
+        }
         var userName by rememberSaveable {
             mutableStateOf("")
         }
@@ -152,7 +165,7 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
                     Text(
                         text ="Sign Up",
                         style = androidx.compose.ui.text.TextStyle(
-                            fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
                             fontSize = 18.sp,
                             color = Color.White
                         )
@@ -180,6 +193,7 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
                     Devider()
                 }
 
+                Spacer(modifier = Modifier.height(20.dp))
 
                 Row(
                     modifier = Modifier.padding(top = 8.dp),
@@ -187,13 +201,16 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
                 ) {
                     WithIcons(
                         iconRes = R.drawable.google,
-                        contentDescription =  "Sign up with Google",
-                        context = context
+                        contentDescription =  "Sign up with Google  ",
+                        context = context,
+                        onClick = signUpWithGoogle
                     )
-                    WithIcons(
-                        iconRes = R.drawable.fb,
-                        contentDescription = "Sign up with Facebook",
-                        context = context )
+//                    WithIcons(
+//                        iconRes = R.drawable.fb,
+//                        contentDescription = "Sign up with Facebook",
+//                        context = context,
+//                        onClick = signUpWithGoogle,
+//                    )
                 }
                 val textBottom1 = "Already a member? "
                 val textBottom2 =  "Sign In"
@@ -238,21 +255,29 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
 
         }
     }
-    }
+}
 
 
 
 
 @Composable
- fun WithIcons(iconRes: Int, contentDescription: String, context:Context){
+fun WithIcons(iconRes: Int, contentDescription: String, context:Context, onClick: () -> Unit){
     OutlinedButton(
         modifier = Modifier
-            .size(46.dp),
+            .height(46.dp)
+            .width(230.dp),
         shape = CircleShape,
         contentPadding = PaddingValues(6.dp),
-        border = BorderStroke(0.dp, Color.Transparent),
+        border = BorderStroke(0.15.dp, Color.Gray),
 //        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
-        onClick = { showToast(context = context, message = "This is Google") }) {
+        onClick = onClick) {
+        Text(text = contentDescription
+            , style = androidx.compose.ui.text.TextStyle(
+                fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                fontSize = 15.sp,
+                letterSpacing = 1.sp,
+                color = MaterialTheme.colorScheme.primary
+            ) )
         Icon(
             painterResource(id = iconRes),
             contentDescription = contentDescription,
@@ -261,15 +286,16 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
     }
 }
 @Composable
- fun Devider(){
-    Divider(modifier = Modifier.width(64.dp),
-        color = Color(0xFF333333),
-        thickness = 1.dp
+fun Devider(){
+    HorizontalDivider(
+        modifier = Modifier.width(64.dp),
+        thickness = 1.dp,
+        color = Color(0xFF333333)
     )
 }
 
 @Composable
- fun ScreenTextFeild(
+fun ScreenTextFeild(
     text: String,
     hint: String,
     leadingIcon: ImageVector,
@@ -311,21 +337,21 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
                 tint = MaterialTheme.colorScheme.primary
             )
         },
-            keyboardOptions =
-                KeyboardOptions(keyboardType = if (password) {
-                    KeyboardType.Password
-                } else KeyboardType.Text),
+        keyboardOptions =
+        KeyboardOptions(keyboardType = if (password) {
+            KeyboardType.Password
+        } else KeyboardType.Text),
 
         trailingIcon = {
             if (password){
-            IconButton(onClick = { passwordHidden = !passwordHidden }) {
-                val visibilityIcon =
-                    if (passwordHidden) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-                val description = if (passwordHidden) "Show password" else "Hide password"
-                Icon(imageVector = visibilityIcon, contentDescription = description)}
+                IconButton(onClick = { passwordHidden = !passwordHidden }) {
+                    val visibilityIcon =
+                        if (passwordHidden) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                    val description = if (passwordHidden) "Show password" else "Hide password"
+                    Icon(imageVector = visibilityIcon, contentDescription = description)}
             }
         }
-        )
+    )
 
 
 }
@@ -337,8 +363,7 @@ fun screenTextField(textColor:Color) = androidx.compose.ui.text.TextStyle(
     color = textColor
 )
 
-
- fun showToast(context:Context, message:String){
+fun showToast(context:Context, message:String){
     Toast.makeText(
         context.applicationContext, message,
         Toast.LENGTH_SHORT
@@ -348,6 +373,6 @@ fun screenTextField(textColor:Color) = androidx.compose.ui.text.TextStyle(
 @Preview
 @Composable
 fun SignUpScreenPreview() {
-    SignUpScreen(onSignUpClicked = {a,v,b,x->/*   */},
-        signInNavigation = {})
+    SignUpScreen(onSignUpClicked = {_,_,_,_->/*   */},
+        signInNavigation = {}, signUpWithGoogle = {}, SignInState(),    )
 }

@@ -3,6 +3,7 @@
     android:height="100dp"
     android:viewportWidth="256"
     android:viewportHeight="256">
+
   <path
       android:pathData="M130.31,138.53m-67.68,0a67.68,67.68 0,1 1,135.35 0a67.68,67.68 0,1 1,-135.35 0"
       android:strokeLineJoin="miter"

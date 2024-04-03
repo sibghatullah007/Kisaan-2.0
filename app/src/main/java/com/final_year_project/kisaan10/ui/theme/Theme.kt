@@ -10,7 +10,6 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -27,7 +26,8 @@ private val LightColorScheme = lightColorScheme(
     secondary = BoxColor,
     tertiary = LightGrey,
     surface = LightGreen,
-    error = Red
+    error = Red,
+    onBackground = Background
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -39,6 +39,7 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF1C1B1F),
     */
 )
+
 
 @Composable
 fun Kisaan10Theme(
@@ -60,7 +61,7 @@ fun Kisaan10Theme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = colorScheme.onBackground.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
@@ -70,4 +71,6 @@ fun Kisaan10Theme(
         typography = Typography,
         content = content
     )
+
 }
+

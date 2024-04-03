@@ -47,6 +47,7 @@ import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
 fun LoginScreen(onLoginClicked: (String, String) -> Unit,
                 signUpNavigation: () -> Unit,
                 context: Context = LocalContext.current) {
+
 Kisaan10Theme {
     var userEmail by rememberSaveable {
         mutableStateOf("")
@@ -127,8 +128,23 @@ Kisaan10Theme {
                 )
             }
 
+            Spacer(modifier = Modifier.height(20.dp))
 
-            Spacer(modifier = Modifier.height(48.dp))
+            Row(
+                modifier = Modifier.padding(top = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text ="Forgot your password ?",
+                    style = androidx.compose.ui.text.TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
+                        fontSize = 18.sp,
+                        color = Color.Black
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(25.dp))
 
             Row(
                 horizontalArrangement = Arrangement.Center,
@@ -138,7 +154,7 @@ Kisaan10Theme {
                 Devider()
                 Text(
                     modifier = Modifier.padding(start = 12.dp, end = 12.dp),
-                    text =  "Or Sign up with",
+                    text =  "Or",
                     style = androidx.compose.ui.text.TextStyle(
                         fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                         fontSize = 16.sp,
@@ -150,23 +166,9 @@ Kisaan10Theme {
             }
 
 
-            Row(
-                modifier = Modifier.padding(top = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                WithIcons(
-                    iconRes = R.drawable.google,
-                    contentDescription =  "Sign up with Google",
-                    context = context
-                )
-                WithIcons(
-                    iconRes = R.drawable.fb,
-                    contentDescription = "Sign up with Facebook",
-                    context = context )
-            }
             val textBottom1 = "Don't have an account? "
             val textBottom2 =  "Sign Up"
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(25.dp))
 
             Row(
                 modifier = Modifier.padding(bottom = 8.dp),
