@@ -36,10 +36,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.final_year_project.kisaan10.R
+import com.final_year_project.kisaan10.components.Devider
+import com.final_year_project.kisaan10.components.ScreenTextFeild
 import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
 
 
@@ -57,7 +58,7 @@ Kisaan10Theme {
     }
     Column(
         modifier = Modifier
-            .background(Color(0xFFEEEEEE))
+            .background(color = MaterialTheme.colorScheme.onBackground)
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -207,9 +208,9 @@ Kisaan10Theme {
     }
 }
 }
-@Preview
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen(onLoginClicked = { abc,efg -> /* Dummy lambda for preview */ },
-        signUpNavigation = {})
-}
+//@Preview
+//@Composable
+//fun LoginScreenPreview() {
+//    LoginScreen(onLoginClicked = { abc,efg -> /* Dummy lambda for preview */ },
+//        signUpNavigation = {})
+//}

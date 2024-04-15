@@ -1,4 +1,4 @@
-package com.final_year_project.kisaan10.auth
+package com.final_year_project.kisaan10.auth.googleAuth
 
 fun validateSignUp(username: String, email: String, password: String, confirmPassword: String): String? {
     // Check if username is empty

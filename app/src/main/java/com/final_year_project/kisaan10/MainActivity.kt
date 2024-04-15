@@ -21,9 +21,9 @@ import com.final_year_project.kisaan10.auth.LoginScreen
 import com.final_year_project.kisaan10.auth.SignUpScreen
 import com.final_year_project.kisaan10.auth.googleAuth.GoogleAuthUiClient
 import com.final_year_project.kisaan10.auth.googleAuth.SignInViewModel
-import com.final_year_project.kisaan10.auth.showToast
-import com.final_year_project.kisaan10.auth.validateSignUp
-import com.final_year_project.kisaan10.pages.HomeScreen
+import com.final_year_project.kisaan10.auth.googleAuth.validateSignUp
+import com.final_year_project.kisaan10.components.showToast
+import com.final_year_project.kisaan10.screens.MainScreen
 import com.final_year_project.kisaan10.splash.SplashScreen
 import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
 import kotlinx.coroutines.delay
@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 
 @ExperimentalUnitApi
 class MainActivity : ComponentActivity() {
-    private val googleAuthUiClient by lazy { 
+    private val googleAuthUiClient by lazy {
         GoogleAuthUiClient(
             context = applicationContext,
             oneTapClient = com.google.android.gms.auth.api.identity.Identity.getSignInClient(applicationContext)
@@ -115,7 +115,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         SignUpScreen(
-                            onSignUpClicked = { username, email, password, confirmPassword, ->
+                            onSignUpClicked = { username, email, password, confirmPassword ->
                                 val validationError = validateSignUp(username, email, password, confirmPassword)
                                 if (validationError != null) {
                                     showToast(this@MainActivity, validationError)
@@ -149,20 +149,22 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("home") {
-                        HomeScreen(
-                            userData = googleAuthUiClient.getSignedInUser(),
-                            onSignOut = {
-                                lifecycleScope.launch {
-                                    googleAuthUiClient.signOut()
-                                    showToast(applicationContext, "Signed Out")
-                                    navController.navigate("signup") {
-                                        popUpTo("home") {
-                                            inclusive = true
-                                        }
-                                    }
-                                }
-                            }
-                        )
+//                        HomeScreen(
+//                        userData = googleAuthUiClient.getSignedInUser(),
+//                        onSignOut = {
+//                            lifecycleScope.launch {
+//                                googleAuthUiClient.signOut()
+//                                showToast(applicationContext, "Signed Out")
+//                                navController.navigate("signup") {
+//                                    popUpTo("home") {
+//                                        inclusive = true
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        )
+
+                        MainScreen()
                     }
                 }
 
