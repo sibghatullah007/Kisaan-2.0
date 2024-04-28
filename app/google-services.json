@@ -12,7 +12,20 @@
           "package_name": "com.final_year_project.kisaan10"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "266103464396-9bjbop92ivvufvigj43k410mcjfujj0s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.final_year_project.kisaan10",
+            "certificate_hash": "4fa63d29a6d59d1bcaaa70d8336eb126cb18bdbf"
+          }
+        },
+        {
+          "client_id": "266103464396-v8hkb6hrif99p15k8ga86ramb8v43hev.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAWk7f9IYVjeEIHSJ1oPvai1ynNq-0E9jY"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "266103464396-v8hkb6hrif99p15k8ga86ramb8v43hev.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

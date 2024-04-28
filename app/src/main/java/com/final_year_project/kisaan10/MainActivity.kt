@@ -17,6 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.final_year_project.kisaan10.auth.EmailAuth.signUpUser
 import com.final_year_project.kisaan10.auth.LoginScreen
 import com.final_year_project.kisaan10.auth.SignUpScreen
 import com.final_year_project.kisaan10.auth.googleAuth.GoogleAuthUiClient
@@ -26,10 +27,10 @@ import com.final_year_project.kisaan10.components.showToast
 import com.final_year_project.kisaan10.screens.MainScreen
 import com.final_year_project.kisaan10.splash.SplashScreen
 import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
+import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@ExperimentalUnitApi
 class MainActivity : ComponentActivity() {
     private val googleAuthUiClient by lazy {
         GoogleAuthUiClient(
@@ -40,6 +41,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // In your Application class or MainActivity
+        FirebaseApp.initializeApp(this)
+
 
         setContent {
             Kisaan10Theme {
@@ -125,6 +130,20 @@ class MainActivity : ComponentActivity() {
                                     // Proceed with sign-up logic
                                     // showToast(this@MainActivity, "Hello $username")
                                     // Call your signUp function here
+                                    // Example call
+                                    signUpUser(email, password) { success, exception ->
+                                        if (success) {
+                                            // User signed up successfully
+                                            showToast(this@MainActivity,"Successful")
+                                        } else {
+                                            // Failed to sign up user, handle exception
+                                            exception?.let {
+                                                // Handle exception
+                                                showToast(this@MainActivity,"UnSuccessful")
+                                            }
+                                        }
+                                    }
+
                                 }
                             },
                             signInNavigation = {
