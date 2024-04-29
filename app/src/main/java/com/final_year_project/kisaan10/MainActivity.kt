@@ -164,7 +164,20 @@ class MainActivity : ComponentActivity() {
 //                        }
 //                        )
 
-                        MainScreen()
+                        MainScreen(
+                            userData = googleAuthUiClient.getSignedInUser(),
+                            onSignOut = {
+                                lifecycleScope.launch {
+                                    googleAuthUiClient.signOut()
+                                    showToast(applicationContext, "Signed Out")
+                                    navController.navigate("signup") {
+                                        popUpTo("home") {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            }
+                        )
                     }
                 }
 

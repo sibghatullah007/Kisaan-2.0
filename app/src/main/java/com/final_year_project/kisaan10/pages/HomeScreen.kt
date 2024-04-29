@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.final_year_project.kisaan10.auth.googleAuth.UserData
 
@@ -39,9 +38,9 @@ fun HomeScreen(
     }
 }
 
-@Preview
-@Composable
-fun preview(){
-    HomeScreen(UserData("A","A"),{})
-
-}
+//@Preview
+//@Composable
+//fun preview(){
+//    HomeScreen(UserData("A","A"),{})
+//
+//}

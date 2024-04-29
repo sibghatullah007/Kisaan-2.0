@@ -5,15 +5,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.final_year_project.kisaan10.auth.googleAuth.UserData
 import com.final_year_project.kisaan10.navigation.BottomNavigationBar
-import com.final_year_project.kisaan10.navigation.SetUpNavGraph
+import com.final_year_project.kisaan10.navigation.Screens
 import com.final_year_project.kisaan10.utils.bottomNavigationItemsList
 
 
 @Composable
-fun MainScreen() {
+fun MainScreen(userData: UserData?,
+               onSignOut:()->Unit) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute by remember(navBackStackEntry) {
@@ -65,8 +70,24 @@ fun MainScreen() {
         }
     ) {innerPadding->
 
-        SetUpNavGraph(navController = navController, innerPadding = innerPadding,)
+//        SetUpNavGraph(navController = navController, innerPadding = innerPadding,)
+        val inner = innerPadding
+        NavHost(navController = navController,
+            startDestination = Screens.Home.route){
+            composable(Screens.Home.route){
+                HomeScreen()
+            }
+            composable(Screens.Notification.route){
+                NotificationScreen()
+            }
+            composable(Screens.Blog.route){
+                BlogScreen()
+            }
 
+            composable(Screens.Setting.route){
+                SettingScreen(context = LocalContext.current,userData,onSignOut)
+            }
+        }
 
     }
 }

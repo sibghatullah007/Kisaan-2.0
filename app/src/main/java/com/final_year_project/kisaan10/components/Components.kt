@@ -216,5 +216,62 @@ fun recentDisease(name:String, image:Int){
         }
     }
 }
-
-
+//
+//@Composable
+//fun settingsItem(name: String) {
+//    Row(
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        Column(
+//            modifier = Modifier
+//                .width(70.sp)
+//        ){
+//            Text(
+//                text = name,
+//                modifier = Modifier.padding(start = 15.dp, top = 10.dp),
+//                style = TextStyle(
+//                    fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+//                    fontSize = 14.sp,
+//                    color = Color.Black,
+//                )
+//            )
+//            Divider(
+//                modifier = Modifier
+//                    .padding(horizontal = 7.dp),
+//                color = Color.White,
+//                thickness = 1.dp
+//            )
+//        }
+//        Column(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//        ){
+//
+//        }
+//
+//        Icon(
+//            imageVector = Icons.AutoMirrored.Outlined.ArrowForwardIos,
+//            contentDescription = "forwardArrow",
+//            tint = Color.Black,
+//            modifier = Modifier.size(15.dp)
+//        )
+//    }
+//    Spacer(modifier = Modifier.height(10.dp))
+//}
+//
+//
+//@Composable
+//fun arrowIcon(){
+//    Icon(
+//        imageVector = Icons.AutoMirrored.Outlined.ArrowForwardIos,
+//        contentDescription = "forwardArrow",
+//        tint = Color.Black,
+//        modifier = Modifier.size(15.dp)
+//    )
+//}
+//@Composable
+//@Preview
+//fun prevv(){
+//    settingsItem(name = "Abc")
+//}
+//
