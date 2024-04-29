@@ -11,8 +11,8 @@ fun signUpUser(email: String, password: String, callback: (Boolean, Exception?) 
             if (task.isSuccessful) {
                 callback(true, null) // User signed up successfully
             } else {
-                Log.e("SignUp", "Failed to sign up user", task.exception)
                 Log.e("SignUp", "Eamil : $email and password : $password")
+                Log.e("SignUp", "Failed to sign up user", task.exception)
                 callback(false, task.exception) // Failed to sign up user
             }
         })

@@ -27,7 +27,10 @@ import com.final_year_project.kisaan10.components.showToast
 import com.final_year_project.kisaan10.screens.MainScreen
 import com.final_year_project.kisaan10.splash.SplashScreen
 import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
+import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -38,12 +41,15 @@ class MainActivity : ComponentActivity() {
             oneTapClient = com.google.android.gms.auth.api.identity.Identity.getSignInClient(applicationContext)
         )
     }
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // In your Application class or MainActivity
         FirebaseApp.initializeApp(this)
+        // Initialize Firebase Auth
+        auth = Firebase.auth
 
 
         setContent {
@@ -73,6 +79,20 @@ class MainActivity : ComponentActivity() {
                                     "Username: $uname\nPassword: $upas",
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                auth.signInWithEmailAndPassword(username, password)
+                                    .addOnCompleteListener() { task ->
+                                        if (task.isSuccessful) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            navController.navigate("home") {
+                                                popUpTo("login") {
+                                                    inclusive = true
+                                                }
+                                            }
+                                        } else {
+                                            // If sign in fails, display a message to the user.
+                                            showToast(this@MainActivity,"Something went wrong")
+                                        }
+                                    }
                             },
                             signUpNavigation = {
                                 navController.navigate("signup") {
@@ -124,8 +144,6 @@ class MainActivity : ComponentActivity() {
                                 val validationError = validateSignUp(username, email, password, confirmPassword)
                                 if (validationError != null) {
                                     showToast(this@MainActivity, validationError)
-
-
                                 } else {
                                     // Proceed with sign-up logic
                                     // showToast(this@MainActivity, "Hello $username")
@@ -135,6 +153,11 @@ class MainActivity : ComponentActivity() {
                                         if (success) {
                                             // User signed up successfully
                                             showToast(this@MainActivity,"Successful")
+                                            navController.navigate("home") {
+                                                popUpTo("signup") {
+                                                    inclusive = true
+                                                }
+                                            }
                                         } else {
                                             // Failed to sign up user, handle exception
                                             exception?.let {
