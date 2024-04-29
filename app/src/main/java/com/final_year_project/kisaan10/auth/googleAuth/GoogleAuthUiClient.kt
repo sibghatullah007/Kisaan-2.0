@@ -44,6 +44,7 @@ class GoogleAuthUiClient(
                     UserData(
                         userId = uid,
                         username = displayName,
+                        userEmail = email
                     )
                 },
                 errorMessage = null
@@ -74,6 +75,7 @@ class GoogleAuthUiClient(
         UserData(
             userId = uid,
             username = displayName,
+            userEmail = email
         )
     }
     private fun buildSignInRequest():BeginSignInRequest{
