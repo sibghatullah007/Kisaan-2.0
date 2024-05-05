@@ -23,10 +23,12 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color.Green,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
-    error = Color.Green
+    primary = TextColor,
+    secondary = BoxColor,
+    tertiary = LightGrey,
+    surface = LightGreen,
+    error = Red,
+    onBackground = Background
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -39,11 +41,12 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+
 @Composable
 fun Kisaan10Theme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -59,7 +62,8 @@ fun Kisaan10Theme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = colorScheme.onBackground.toArgb()
+            window.navigationBarColor = Color.White.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
@@ -69,4 +73,6 @@ fun Kisaan10Theme(
         typography = Typography,
         content = content
     )
+
 }
+

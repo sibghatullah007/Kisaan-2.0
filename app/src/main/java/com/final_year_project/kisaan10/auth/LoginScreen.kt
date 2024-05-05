@@ -1,4 +1,4 @@
-package com.final_year_project.kisaan10
+package com.final_year_project.kisaan10.auth
 
 import android.content.Context
 import androidx.compose.foundation.Image
@@ -30,24 +30,26 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.final_year_project.kisaan10.R
+import com.final_year_project.kisaan10.components.Devider
+import com.final_year_project.kisaan10.components.ScreenTextFeild
+import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
 
 
 @Composable
 fun LoginScreen(onLoginClicked: (String, String) -> Unit,
                 signUpNavigation: () -> Unit,
                 context: Context = LocalContext.current) {
+
+Kisaan10Theme {
     var userEmail by rememberSaveable {
         mutableStateOf("")
     }
@@ -56,7 +58,7 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit,
     }
     Column(
         modifier = Modifier
-            .background(Color(0xFFEEEEEE))
+            .background(color = MaterialTheme.colorScheme.onBackground)
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -112,7 +114,7 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit,
                         top = textFieldPadding
                     ),
                 shape = RoundedCornerShape(cornerRadius),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 onClick = {
 //                    showToast(context = context, message = "Click: Button")
                     onLoginClicked.invoke(userEmail,userPassword)
@@ -127,8 +129,23 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit,
                 )
             }
 
+            Spacer(modifier = Modifier.height(20.dp))
 
-            Spacer(modifier = Modifier.height(48.dp))
+            Row(
+                modifier = Modifier.padding(top = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text ="Forgot your password ?",
+                    style = androidx.compose.ui.text.TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
+                        fontSize = 18.sp,
+                        color = Color.Black
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(25.dp))
 
             Row(
                 horizontalArrangement = Arrangement.Center,
@@ -138,7 +155,7 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit,
                 Devider()
                 Text(
                     modifier = Modifier.padding(start = 12.dp, end = 12.dp),
-                    text =  "Or Sign up with",
+                    text =  "Or",
                     style = androidx.compose.ui.text.TextStyle(
                         fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                         fontSize = 16.sp,
@@ -150,23 +167,9 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit,
             }
 
 
-            Row(
-                modifier = Modifier.padding(top = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                WithIcons(
-                    iconRes = R.drawable.google,
-                    contentDescription =  "Sign up with Google",
-                    context = context
-                )
-                WithIcons(
-                    iconRes = R.drawable.fb,
-                    contentDescription = "Sign up with Facebook",
-                    context = context )
-            }
             val textBottom1 = "Don't have an account? "
             val textBottom2 =  "Sign Up"
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(25.dp))
 
             Row(
                 modifier = Modifier.padding(bottom = 8.dp),
@@ -204,9 +207,10 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit,
         }
     }
 }
-@Preview
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen(onLoginClicked = { abc,efg -> /* Dummy lambda for preview */ },
-        signUpNavigation = {})
 }
+//@Preview
+//@Composable
+//fun LoginScreenPreview() {
+//    LoginScreen(onLoginClicked = { abc,efg -> /* Dummy lambda for preview */ },
+//        signUpNavigation = {})
+//}
