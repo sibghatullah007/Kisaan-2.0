@@ -78,14 +78,14 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 
-// Firebase Auth
+// Firebase
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
 
-    // Add the dependency for the Firebase Authentication library
-    // When using the BoM, you don't specify versions in Firebase library dependencies
+    // FireBase Auth
     implementation("com.google.firebase:firebase-auth")
 
-
+    //FireStore DB
+    implementation("com.google.firebase:firebase-firestore")
 
 }
