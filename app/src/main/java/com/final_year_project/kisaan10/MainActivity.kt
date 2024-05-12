@@ -45,7 +45,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        //FireStore
+        FirebaseManager.init(this)
         // In your Application class or MainActivity
         FirebaseApp.initializeApp(this)
         // Initialize Firebase Auth
@@ -149,7 +150,7 @@ class MainActivity : ComponentActivity() {
                                     // showToast(this@MainActivity, "Hello $username")
                                     // Call your signUp function here
                                     // Example call
-                                    signUpUser(email, password) { success, exception ->
+                                    signUpUser(username,email, password) { success, exception ->
                                         if (success) {
                                             // User signed up successfully
                                             showToast(this@MainActivity,"Successful")
