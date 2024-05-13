@@ -1,4 +1,4 @@
-package com.final_year_project.kisaan10.auth
+package com.final_year_project.kisaan10.screens
 
 import android.content.Context
 import androidx.compose.foundation.Image
@@ -39,8 +39,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.final_year_project.kisaan10.R
-import com.final_year_project.kisaan10.components.Devider
-import com.final_year_project.kisaan10.components.ScreenTextFeild
+import com.final_year_project.kisaan10.screens.components.Devider
+import com.final_year_project.kisaan10.screens.components.ScreenTextFeild
 import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
 
 

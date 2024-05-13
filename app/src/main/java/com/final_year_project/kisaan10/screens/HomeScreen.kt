@@ -31,9 +31,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.final_year_project.kisaan10.R
-import com.final_year_project.kisaan10.components.navTextDescription
-import com.final_year_project.kisaan10.components.navTextHeading
-import com.final_year_project.kisaan10.components.recentDisease
+import com.final_year_project.kisaan10.screens.components.navTextDescription
+import com.final_year_project.kisaan10.screens.components.navTextHeading
+import com.final_year_project.kisaan10.screens.components.recentDisease
 
 
 @Composable
@@ -47,17 +47,13 @@ fun HomeScreen() {
 
     Column(
         modifier = Modifier
-//            .padding(innerPadding)
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.onBackground),
-//        verticalArrangement = Arrangement.Center,
-//        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         navTextHeading(text = "Diagnose")
         navTextDescription(text = "Identify and Cure Plant Disease")
         Row(
             modifier = Modifier
-//                .padding(innerPadding)
                 .fillMaxWidth()
                 .height(230.dp),
             horizontalArrangement = Arrangement.Center,

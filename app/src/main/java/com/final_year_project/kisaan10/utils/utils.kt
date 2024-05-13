@@ -12,8 +12,8 @@ import androidx.compose.material.icons.outlined.Settings
 import com.final_year_project.kisaan10.navigation.NavigationItem
 import com.final_year_project.kisaan10.navigation.Screens
 
-//import com.meet.bottomnavigationbarjetpackcompose.navigation.NavigationItem
-//import com.meet.bottomnavigationbarjetpackcompose.navigation.Screens
+
+// ----------------  Final List of Bottom Navigation Items -------------------//
 
 val bottomNavigationItemsList = listOf(
     NavigationItem(

@@ -36,7 +36,6 @@ fun BottomNavigationBar(
     ) {
         items.forEachIndexed { index, navigationItem ->
             NavigationBarItem(
-
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Black,

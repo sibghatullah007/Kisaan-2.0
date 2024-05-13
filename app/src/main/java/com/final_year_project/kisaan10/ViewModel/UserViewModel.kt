@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.final_year_project.kisaan10.FirebaseManager
-import com.final_year_project.kisaan10.components.showToast
+import com.final_year_project.kisaan10.screens.components.showToast
 import com.final_year_project.kisaan10.model.UserInfo
 import com.google.firebase.firestore.auth.User
 import com.google.firebase.firestore.ktx.firestore

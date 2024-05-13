@@ -10,7 +10,6 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -18,14 +17,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.final_year_project.kisaan10.auth.EmailAuth.signUpUser
-import com.final_year_project.kisaan10.auth.LoginScreen
-import com.final_year_project.kisaan10.auth.SignUpScreen
 import com.final_year_project.kisaan10.auth.googleAuth.GoogleAuthUiClient
 import com.final_year_project.kisaan10.auth.googleAuth.SignInViewModel
 import com.final_year_project.kisaan10.auth.googleAuth.validateSignUp
-import com.final_year_project.kisaan10.components.showToast
-import com.final_year_project.kisaan10.screens.MainScreen
-import com.final_year_project.kisaan10.splash.SplashScreen
+import com.final_year_project.kisaan10.screens.LoginScreen
+import com.final_year_project.kisaan10.screens.MainNavigator
+import com.final_year_project.kisaan10.screens.SignUpScreen
+import com.final_year_project.kisaan10.screens.components.showToast
+import com.final_year_project.kisaan10.screens.SplashScreen
 import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
@@ -73,11 +72,9 @@ class MainActivity : ComponentActivity() {
                     composable("login") {
                         LoginScreen(
                             onLoginClicked = { username, password ->
-                                val uname = username
-                                val upas = password
                                 Toast.makeText(
                                     this@MainActivity,
-                                    "Username: $uname\nPassword: $upas",
+                                    "Username: $username\nPassword: $password",
                                     Toast.LENGTH_SHORT
                                 ).show()
                                 auth.signInWithEmailAndPassword(username, password)
@@ -146,10 +143,6 @@ class MainActivity : ComponentActivity() {
                                 if (validationError != null) {
                                     showToast(this@MainActivity, validationError)
                                 } else {
-                                    // Proceed with sign-up logic
-                                    // showToast(this@MainActivity, "Hello $username")
-                                    // Call your signUp function here
-                                    // Example call
                                     signUpUser(username,email, password) { success, exception ->
                                         if (success) {
                                             // User signed up successfully
@@ -207,7 +200,7 @@ class MainActivity : ComponentActivity() {
 //                        }
 //                        )
 
-                        MainScreen(
+                        MainNavigator(
                             userData = googleAuthUiClient.getSignedInUser(),
                             onSignOut = {
                                 lifecycleScope.launch {
@@ -223,13 +216,6 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 }
-
-//                val homeNavController = rememberNavController()
-//                NavHost(navController = homeNavController, startDestination = "home"){
-//
-//                }
-
             }
-
         }
 }}

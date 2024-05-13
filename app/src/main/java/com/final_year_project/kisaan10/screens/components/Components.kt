@@ -1,4 +1,4 @@
-package com.final_year_project.kisaan10.components
+package com.final_year_project.kisaan10.screens.components
 
 import android.content.Context
 import android.widget.Toast
@@ -47,9 +47,11 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.final_year_project.kisaan10.R
-import com.final_year_project.kisaan10.auth.cornerRadius
-import com.final_year_project.kisaan10.auth.textFieldPadding
+import com.final_year_project.kisaan10.screens.cornerRadius
+import com.final_year_project.kisaan10.screens.textFieldPadding
 
+
+// ---------------------- Sign Up with Google Button -----------------------//
 @Composable
 fun WithIcons(iconRes: Int, contentDescription: String, context: Context, onClick: () -> Unit){
     OutlinedButton(
@@ -75,6 +77,9 @@ fun WithIcons(iconRes: Int, contentDescription: String, context: Context, onClic
         )
     }
 }
+
+
+// ---------------------- Lines Around Text(Or) on login/signup page ---------------------//
 @Composable
 fun Devider(){
     HorizontalDivider(
@@ -84,14 +89,15 @@ fun Devider(){
     )
 }
 
+
+// ----------------- Text Input on all Inputs Screen -------------------//
 @Composable
 fun ScreenTextFeild(
     text: String,
     hint: String,
     leadingIcon: ImageVector,
     password:Boolean,
-    onText: (String)->Unit,
-){
+    onText: (String)->Unit,){
     var passwordHidden by rememberSaveable{ mutableStateOf(true) }
     OutlinedTextField(
         visualTransformation =  if (password) {
@@ -143,28 +149,35 @@ fun ScreenTextFeild(
             }
         }
     )
-
-
 }
 
+
+
+// ------------------ Used in Above Component for text------------------//
 @Composable
-fun screenTextField(textColor: Color) = androidx.compose.ui.text.TextStyle(
+fun screenTextField(textColor: Color) = TextStyle(
     fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
     letterSpacing = 1.sp,
     color = textColor
 )
 
+
+// ------------------ Function to Show Toast -------------------//
 fun showToast(context: Context, message:String){
     Toast.makeText(
         context.applicationContext, message,
         Toast.LENGTH_SHORT
     ).show()
 }
+
+
+
+// ----------------------Heading on all pages ---------------//
 @Composable
 fun navTextHeading(text: String){
     Text(
         text =text,
-        style = androidx.compose.ui.text.TextStyle(
+        style = TextStyle(
             fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
             fontSize = 30.sp,
             color = MaterialTheme.colorScheme.primary
@@ -173,11 +186,14 @@ fun navTextHeading(text: String){
     )
 }
 
+
+
+// ----------------------Description on all pages ---------------//
 @Composable
 fun navTextDescription(text: String){
     Text(
         text =text,
-        style = androidx.compose.ui.text.TextStyle(
+        style = TextStyle(
             fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.primary
@@ -186,6 +202,8 @@ fun navTextDescription(text: String){
     )
 }
 
+
+// ----------------------Recent disease picture on Main page ---------------//
 @Composable
 fun recentDisease(name:String, image:Int){
     Row(
@@ -216,62 +234,4 @@ fun recentDisease(name:String, image:Int){
         }
     }
 }
-//
-//@Composable
-//fun settingsItem(name: String) {
-//    Row(
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .width(70.sp)
-//        ){
-//            Text(
-//                text = name,
-//                modifier = Modifier.padding(start = 15.dp, top = 10.dp),
-//                style = TextStyle(
-//                    fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
-//                    fontSize = 14.sp,
-//                    color = Color.Black,
-//                )
-//            )
-//            Divider(
-//                modifier = Modifier
-//                    .padding(horizontal = 7.dp),
-//                color = Color.White,
-//                thickness = 1.dp
-//            )
-//        }
-//        Column(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//        ){
-//
-//        }
-//
-//        Icon(
-//            imageVector = Icons.AutoMirrored.Outlined.ArrowForwardIos,
-//            contentDescription = "forwardArrow",
-//            tint = Color.Black,
-//            modifier = Modifier.size(15.dp)
-//        )
-//    }
-//    Spacer(modifier = Modifier.height(10.dp))
-//}
-//
-//
-//@Composable
-//fun arrowIcon(){
-//    Icon(
-//        imageVector = Icons.AutoMirrored.Outlined.ArrowForwardIos,
-//        contentDescription = "forwardArrow",
-//        tint = Color.Black,
-//        modifier = Modifier.size(15.dp)
-//    )
-//}
-//@Composable
-//@Preview
-//fun prevv(){
-//    settingsItem(name = "Abc")
-//}
-//
+

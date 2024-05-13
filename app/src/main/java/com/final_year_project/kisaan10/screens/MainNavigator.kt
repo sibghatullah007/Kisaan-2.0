@@ -17,7 +17,7 @@ import com.final_year_project.kisaan10.utils.bottomNavigationItemsList
 
 
 @Composable
-fun MainScreen(userData: UserData?,
+fun MainNavigator(userData: UserData?,
                onSignOut:()->Unit) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
