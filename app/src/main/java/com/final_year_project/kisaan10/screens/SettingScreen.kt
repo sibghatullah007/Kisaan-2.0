@@ -381,15 +381,6 @@ private fun prepareOptionsData() {
             subTitle = "Logout your Account"
         )
     )
-    optionsList.add(
-        OptionsData(
-            icon = appIcons.FavoriteBorder,
-            title = "Wishlist",
-            subTitle = "Items you saved"
-        )
-    )
-
-
 
 }
 

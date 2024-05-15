@@ -1,4 +1,4 @@
-package com.final_year_project.kisaan10.splash
+package com.final_year_project.kisaan10.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

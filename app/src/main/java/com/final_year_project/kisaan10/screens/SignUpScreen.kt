@@ -1,4 +1,4 @@
-package com.final_year_project.kisaan10.auth
+package com.final_year_project.kisaan10.screens
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -39,10 +39,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.final_year_project.kisaan10.R
 import com.final_year_project.kisaan10.auth.googleAuth.SignInState
-import com.final_year_project.kisaan10.components.Devider
-import com.final_year_project.kisaan10.components.ScreenTextFeild
-import com.final_year_project.kisaan10.components.WithIcons
-import com.final_year_project.kisaan10.components.showToast
+import com.final_year_project.kisaan10.screens.components.Devider
+import com.final_year_project.kisaan10.screens.components.ScreenTextFeild
+import com.final_year_project.kisaan10.screens.components.WithIcons
+import com.final_year_project.kisaan10.screens.components.showToast
 import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
 
 val textFieldPadding = 32.dp

@@ -2,6 +2,7 @@
 package com.final_year_project.kisaan10
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -9,28 +10,34 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.unit.ExperimentalUnitApi
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.final_year_project.kisaan10.ViewModel.UserViewModel
 import com.final_year_project.kisaan10.auth.EmailAuth.signUpUser
-import com.final_year_project.kisaan10.auth.LoginScreen
-import com.final_year_project.kisaan10.auth.SignUpScreen
+import com.final_year_project.kisaan10.screens.LoginScreen
+import com.final_year_project.kisaan10.screens.SignUpScreen
 import com.final_year_project.kisaan10.auth.googleAuth.GoogleAuthUiClient
 import com.final_year_project.kisaan10.auth.googleAuth.SignInViewModel
+import com.final_year_project.kisaan10.auth.googleAuth.UserData
 import com.final_year_project.kisaan10.auth.googleAuth.validateSignUp
-import com.final_year_project.kisaan10.components.showToast
+import com.final_year_project.kisaan10.screens.components.showToast
 import com.final_year_project.kisaan10.screens.MainScreen
-import com.final_year_project.kisaan10.splash.SplashScreen
+import com.final_year_project.kisaan10.screens.SplashScreen
 import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -70,7 +77,26 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
+
+
+
+
                     composable("login") {
+                        val viewModel = viewModel<SignInViewModel>()
+                        val state by viewModel.state.collectAsState()
+
+                        val launcher = rememberLauncherForActivityResult(
+                            contract = ActivityResultContracts.StartIntentSenderForResult()
+                        ) { result ->
+                            if (result.resultCode == RESULT_OK) {
+                                lifecycleScope.launch {
+                                    val signInResult = googleAuthUiClient.signInWithIntent(
+                                        intent = result.data ?: return@launch
+                                    )
+                                    viewModel.onSignInResult(signInResult)
+                                }
+                            }
+                        }
                         LoginScreen(
                             onLoginClicked = { username, password ->
                                 val uname = username
@@ -80,20 +106,46 @@ class MainActivity : ComponentActivity() {
                                     "Username: $uname\nPassword: $upas",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                auth.signInWithEmailAndPassword(username, password)
-                                    .addOnCompleteListener() { task ->
-                                        if (task.isSuccessful) {
-                                            // Sign in success, update UI with the signed-in user's information
-                                            navController.navigate("home") {
-                                                popUpTo("login") {
-                                                    inclusive = true
+//                                auth.signInWithEmailAndPassword(username, password)
+//                                    .addOnCompleteListener() { task ->
+//                                        if (task.isSuccessful) {
+
+
+                                lifecycleScope.launch(){
+                                    googleAuthUiClient.signInWithEmailPassword(uname, upas)
+                                        .let { signInResult ->
+                                            viewModel.onSignInResult(signInResult)
+                                            if (signInResult.data != null) {
+                                                // User signed in successfully
+                                                val userData = signInResult.data
+
+
+                                                Log.d(
+                                                    "SignIn",
+                                                    "User signed in successfully: $userData"
+                                                )
+                                                navController.navigate("home") {
+                                                    popUpTo("login") {
+                                                        inclusive = true
+                                                    }
                                                 }
+                                            } else {
+                                                // Failed to sign in user
+                                                val errorMessage = signInResult.errorMessage
+                                                Log.e(
+                                                    "SignIn",
+                                                    "Failed to sign in user: $errorMessage"
+                                                )
                                             }
-                                        } else {
-                                            // If sign in fails, display a message to the user.
-                                            showToast(this@MainActivity,"Something went wrong")
                                         }
-                                    }
+                                }
+                                            // Sign in success, update UI with the signed-in user's information
+
+//                                        } else {
+//                                            // If sign in fails, display a message to the user.
+//                                            showToast(this@MainActivity,"Something went wrong")
+//                                        }
+//                                    }
                             },
                             signUpNavigation = {
                                 navController.navigate("signup") {
@@ -150,20 +202,26 @@ class MainActivity : ComponentActivity() {
                                     // showToast(this@MainActivity, "Hello $username")
                                     // Call your signUp function here
                                     // Example call
-                                    signUpUser(username,email, password) { success, exception ->
-                                        if (success) {
-                                            // User signed up successfully
-                                            showToast(this@MainActivity,"Successful")
-                                            navController.navigate("home") {
-                                                popUpTo("signup") {
-                                                    inclusive = true
+                                    lifecycleScope.launch(){
+                                        googleAuthUiClient.signUpUser(
+                                            username,
+                                            email,
+                                            password
+                                        ) { success, exception ->
+                                            if (success) {
+                                                // User signed up successfully
+                                                showToast(this@MainActivity, "Successful")
+                                                navController.navigate("home") {
+                                                    popUpTo("signup") {
+                                                        inclusive = true
+                                                    }
                                                 }
-                                            }
-                                        } else {
-                                            // Failed to sign up user, handle exception
-                                            exception?.let {
-                                                // Handle exception
-                                                showToast(this@MainActivity,"UnSuccessful")
+                                            } else {
+                                                // Failed to sign up user, handle exception
+                                                exception?.let {
+                                                    // Handle exception
+                                                    showToast(this@MainActivity, "UnSuccessful")
+                                                }
                                             }
                                         }
                                     }
@@ -206,9 +264,12 @@ class MainActivity : ComponentActivity() {
 //                            }
 //                        }
 //                        )
-
+                        var userData by remember { mutableStateOf<UserData?>(null) }
+                        LaunchedEffect(Unit) {
+                            userData = googleAuthUiClient.getSignedInUser()
+                        }
                         MainScreen(
-                            userData = googleAuthUiClient.getSignedInUser(),
+                            userData = userData,
                             onSignOut = {
                                 lifecycleScope.launch {
                                     googleAuthUiClient.signOut()

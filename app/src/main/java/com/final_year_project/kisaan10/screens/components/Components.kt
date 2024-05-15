@@ -1,4 +1,4 @@
-package com.final_year_project.kisaan10.components
+package com.final_year_project.kisaan10.screens.components
 
 import android.content.Context
 import android.widget.Toast
@@ -47,8 +47,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.final_year_project.kisaan10.R
-import com.final_year_project.kisaan10.auth.cornerRadius
-import com.final_year_project.kisaan10.auth.textFieldPadding
+import com.final_year_project.kisaan10.screens.cornerRadius
+import com.final_year_project.kisaan10.screens.textFieldPadding
 
 @Composable
 fun WithIcons(iconRes: Int, contentDescription: String, context: Context, onClick: () -> Unit){
