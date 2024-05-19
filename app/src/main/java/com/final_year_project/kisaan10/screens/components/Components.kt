@@ -186,37 +186,37 @@ fun navTextDescription(text: String){
     )
 }
 
-@Composable
-fun recentDisease(name:String, image:Int){
-    Row(
-        Modifier.padding(
-            start = 10.dp,
-            end = 10.dp
-        )
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(top = 10.dp, start = 10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painterResource(id = image),
-                contentDescription = null,
-                modifier = Modifier.size(80.dp)
-            )
-            Text(text = name,
-                modifier = Modifier
-                    .padding(top = 7.dp),
-                style = TextStyle(
-                    fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
-                    fontSize = 14.sp,
-                    color = Color.Black,
-                ),
-            )
-        }
-    }
-}
-//
+//@Composable
+//fun recentDisease(name:String, image:Int){
+//    Row(
+//        Modifier.padding(
+//            start = 10.dp,
+//            end = 10.dp
+//        )
+//    ) {
+//        Column(
+//            modifier = Modifier
+//                .padding(top = 10.dp, start = 10.dp),
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            Image(
+//                painterResource(id = image),
+//                contentDescription = null,
+//                modifier = Modifier.size(80.dp)
+//            )
+//            Text(text = name,
+//                modifier = Modifier
+//                    .padding(top = 7.dp),
+//                style = TextStyle(
+//                    fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+//                    fontSize = 14.sp,
+//                    color = Color.Black,
+//                ),
+//            )
+//        }
+//    }
+//}
+////
 //@Composable
 //fun settingsItem(name: String) {
 //    Row(

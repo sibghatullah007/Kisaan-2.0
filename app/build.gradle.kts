@@ -100,7 +100,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
 
-
+    implementation ("io.coil-kt:coil-compose:2.0.0")
+    implementation ("com.google.accompanist:accompanist-permissions:0.23.1")
 
 
 }

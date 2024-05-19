@@ -1,15 +1,20 @@
 package com.final_year_project.kisaan10.screens
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.final_year_project.kisaan10.ViewModel.ImageSelectionViewModel
 import com.final_year_project.kisaan10.auth.googleAuth.UserData
 import com.final_year_project.kisaan10.navigation.BottomNavigationBar
 import com.final_year_project.kisaan10.navigation.Screens
@@ -75,7 +80,9 @@ fun MainScreen(userData: UserData?,
         NavHost(navController = navController,
             startDestination = Screens.Home.route){
             composable(Screens.Home.route){
-                HomeScreen()
+                HomeScreen(onOkClick = {
+                    navController.navigate("confirm_screen_route")
+                })
             }
             composable(Screens.Notification.route){
                 NotificationScreen()
@@ -86,6 +93,13 @@ fun MainScreen(userData: UserData?,
 
             composable(Screens.Setting.route){
                 SettingScreen(context = LocalContext.current,userData,onSignOut)
+            }
+
+            composable("confirm_screen_route"){
+                val viewModel: ImageSelectionViewModel = viewModel()
+                val imageUri = viewModel.selectedImageUri.value
+                Log.v("uris",imageUri.toString())
+                ConfirmScreen(imageUri = imageUri)
             }
         }
 
