@@ -97,11 +97,14 @@ dependencies {
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
 
     implementation ("io.coil-kt:coil-compose:2.0.0")
     implementation ("com.google.accompanist:accompanist-permissions:0.23.1")
+
+    //TensorFlow
+    implementation("org.tensorflow:tensorflow-lite:2.4.0")
 
 
 }

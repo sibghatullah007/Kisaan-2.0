@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -20,6 +21,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.final_year_project.kisaan10.ViewModel.WheatViewModel
 import com.final_year_project.kisaan10.auth.googleAuth.GoogleAuthUiClient
 import com.final_year_project.kisaan10.auth.googleAuth.SignInViewModel
 import com.final_year_project.kisaan10.auth.googleAuth.UserData
@@ -37,6 +39,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+private lateinit var wheatViewModel: WheatViewModel
 class MainActivity : ComponentActivity() {
     private val googleAuthUiClient by lazy {
         GoogleAuthUiClient(
@@ -48,6 +51,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Wheat ViewModel
+        wheatViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))
+            .get(WheatViewModel::class.java)
+
         initializeFirebase()
         setContent {
             Kisaan10Theme {

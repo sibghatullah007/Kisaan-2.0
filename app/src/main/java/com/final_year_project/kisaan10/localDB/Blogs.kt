@@ -1,6 +1,5 @@
 package com.final_year_project.kisaan10.localDB
 
-import android.media.Image
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
