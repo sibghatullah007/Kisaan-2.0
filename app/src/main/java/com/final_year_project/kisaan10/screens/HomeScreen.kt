@@ -1,5 +1,6 @@
 package com.final_year_project.kisaan10.screens
 
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
@@ -70,7 +71,8 @@ import java.io.ByteArrayOutputStream
 
 @Composable
 fun HomeScreen(
-    onOkClick: ()->Unit
+    onOkClick: ()->Unit,
+    viewModel: ImageSelectionViewModel
 ) {
     val gradient = Brush.radialGradient(
         colors = listOf(Color.Green, Color.Black),
@@ -85,7 +87,7 @@ fun HomeScreen(
     ) {
         navTextHeading(text = "Diagnose")
         navTextDescription(text = "Identify and Cure Plant Disease")
-        DiagnoseButton(gradient,ImageSelectionViewModel(),onOkClick)
+        DiagnoseButton(gradient,viewModel,onOkClick)
         RecentDiseasesSection()
     }
 }
@@ -258,20 +260,46 @@ fun DiagnoseButton(gradient: Brush,
     }
 }
 
-private fun saveBitmapToUri(context: Context, bitmap: Bitmap): Uri {
+//private fun saveBitmapToUri(context: Context, bitmap: Bitmap): Uri {
+//    val bytes = ByteArrayOutputStream()
+//    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+//    val path = MediaStore.Images.Media.insertImage(
+//        context.contentResolver,
+//        bitmap,
+//        "Title",
+//        null
+//    )
+//    Log.v("justUri",path)
+//    Log.v("parsed", Uri.parse(path).toString())
+//    return Uri.parse(path)
+//}
+fun saveBitmapToUri(context: Context, bitmap: Bitmap): Uri? {
     val bytes = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-    val path = MediaStore.Images.Media.insertImage(
-        context.contentResolver,
-        bitmap,
-        "Title",
-        null
-    )
-    Log.v("justUri",path)
-    Log.v("parsed", Uri.parse(path).toString())
-    return Uri.parse(path)
-}
 
+    // Using PNG for lossless compression
+    bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes)
+
+    // Using the MediaStore API for saving
+    val contentValues = ContentValues().apply {
+        put(MediaStore.Images.Media.TITLE, "Title")
+        put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+        put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000)
+    }
+
+    // Inserting image into the MediaStore
+    val uri: Uri? = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+    uri?.let {
+        context.contentResolver.openOutputStream(it).use { outputStream ->
+            outputStream?.write(bytes.toByteArray())
+        }
+    }
+
+    Log.v("justUri", uri.toString())
+    Log.v("parsed", uri?.toString() ?: "null")
+
+    return uri
+}
 
 @Composable
 fun RecentDiseasesSection() {
@@ -346,14 +374,15 @@ fun recentDisease(name: String, image: Int) {
 }
 
 @Composable
-fun ConfirmScreen(imageUri: Uri?) {
+fun ConfirmScreen(viewModel: ImageSelectionViewModel) {
+    val imageUri = viewModel.getSelectedImageUri()
     Log.v("urii", imageUri.toString())
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (imageUri != null) {
+        if (imageUri!=null) {
             Image(
                 painter = rememberImagePainter(data = imageUri),
                 contentDescription = "Selected Image",

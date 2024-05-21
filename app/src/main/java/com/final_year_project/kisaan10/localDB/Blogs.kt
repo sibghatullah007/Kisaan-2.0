@@ -8,7 +8,7 @@ data class Blogs(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val name: String,
-    val picture: String,
+    val pictureResId: Int,
     val symptom: String,
     val treatment: String,
     val prevention: String

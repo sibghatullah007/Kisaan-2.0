@@ -4,13 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 
 @Dao
 interface BlogsDAO {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBlog(blogs: Blogs)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(blogs: List<Blogs>)
     @Update
     suspend fun updateBlog(blogs: Blogs)
     @Delete

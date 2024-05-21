@@ -13,9 +13,10 @@ class ImageSelectionViewModel : ViewModel() {
     private val _navigateToConfirmation = MutableLiveData<Boolean>()
     val navigateToConfirmation: LiveData<Boolean> = _navigateToConfirmation
 
+
     fun setSelectedImageUri(uri: Uri?) {
         _selectedImageUri.value = uri
-        Log.v("uriii",selectedImageUri.toString())
+        Log.v("Set uri From ViewModel",selectedImageUri.value.toString())
     }
 
     fun clearSelectedImageUri() {
@@ -30,6 +31,7 @@ class ImageSelectionViewModel : ViewModel() {
         _navigateToConfirmation.value = false
     }
     fun getSelectedImageUri(): Uri? {
-        return _selectedImageUri.value
+        Log.v("Get uri From ViewModel",this._selectedImageUri.value.toString())
+        return selectedImageUri.value
     }
 }
