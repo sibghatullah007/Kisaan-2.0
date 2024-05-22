@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.final_year_project.kisaan10.ViewModel.BlogsViewModel
 import com.final_year_project.kisaan10.ViewModel.ImageSelectionViewModel
 import com.final_year_project.kisaan10.auth.googleAuth.UserData
 import com.final_year_project.kisaan10.navigation.BottomNavigationBar
@@ -22,7 +23,7 @@ import com.final_year_project.kisaan10.navigation.Screens
 import com.final_year_project.kisaan10.utils.bottomNavigationItemsList
 
 @Composable
-fun MainScreen(userData: UserData?, onSignOut: () -> Unit) {
+fun MainScreen(blogsViewModel: BlogsViewModel,userData: UserData?, onSignOut: () -> Unit) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute by remember(navBackStackEntry) {
@@ -45,6 +46,7 @@ fun MainScreen(userData: UserData?, onSignOut: () -> Unit) {
         }
     ) { innerPadding ->
         SetUpNavGraph(
+            blogsViewModel,
             navController = navController,
             innerPadding = innerPadding,
             userData = userData,
@@ -55,6 +57,7 @@ fun MainScreen(userData: UserData?, onSignOut: () -> Unit) {
 
 @Composable
 fun SetUpNavGraph(
+    blogsViewModel: BlogsViewModel,
     navController: NavHostController,
     innerPadding: PaddingValues,
     userData: UserData?,
@@ -76,7 +79,7 @@ fun SetUpNavGraph(
             NotificationScreen()
         }
         composable(Screens.Blog.route) {
-            BlogScreen()
+            BlogScreen(blogsViewModel)
         }
         composable(Screens.Setting.route) {
             SettingScreen(context = LocalContext.current, userData = userData, onSignOut = onSignOut)
