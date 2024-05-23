@@ -17,13 +17,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.final_year_project.kisaan10.ViewModel.BlogsViewModel
 import com.final_year_project.kisaan10.ViewModel.ImageSelectionViewModel
+import com.final_year_project.kisaan10.ViewModel.WheatViewModel
 import com.final_year_project.kisaan10.auth.googleAuth.UserData
 import com.final_year_project.kisaan10.navigation.BottomNavigationBar
 import com.final_year_project.kisaan10.navigation.Screens
 import com.final_year_project.kisaan10.utils.bottomNavigationItemsList
 
 @Composable
-fun MainScreen(blogsViewModel: BlogsViewModel,userData: UserData?, onSignOut: () -> Unit) {
+fun MainScreen(blogsViewModel: BlogsViewModel, wheatViewModel: WheatViewModel,userData: UserData?, onSignOut: () -> Unit) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute by remember(navBackStackEntry) {
@@ -47,6 +48,7 @@ fun MainScreen(blogsViewModel: BlogsViewModel,userData: UserData?, onSignOut: ()
     ) { innerPadding ->
         SetUpNavGraph(
             blogsViewModel,
+            wheatViewModel,
             navController = navController,
             innerPadding = innerPadding,
             userData = userData,
@@ -58,12 +60,13 @@ fun MainScreen(blogsViewModel: BlogsViewModel,userData: UserData?, onSignOut: ()
 @Composable
 fun SetUpNavGraph(
     blogsViewModel: BlogsViewModel,
+    wheatViewModel: WheatViewModel,
     navController: NavHostController,
     innerPadding: PaddingValues,
     userData: UserData?,
     onSignOut: () -> Unit
 ) {
-    val viewModel: ImageSelectionViewModel = viewModel()
+    val imageSelectionViewModel: ImageSelectionViewModel = viewModel()
     NavHost(
         navController = navController,
         startDestination = Screens.Home.route,
@@ -72,7 +75,7 @@ fun SetUpNavGraph(
         composable(Screens.Home.route) {
             HomeScreen(
                 onOkClick = { navController.navigate("confirm_screen_route") },
-                viewModel = viewModel
+                viewModel = imageSelectionViewModel
             )
         }
         composable(Screens.Notification.route) {
@@ -85,7 +88,7 @@ fun SetUpNavGraph(
             SettingScreen(context = LocalContext.current, userData = userData, onSignOut = onSignOut)
         }
         composable("confirm_screen_route") {
-            ConfirmScreen(viewModel = viewModel,navController = navController)
+            ConfirmScreen(imagewheatViewModel = imageSelectionViewModel,wheatViewModel,navController = navController)
         }
     }
 }

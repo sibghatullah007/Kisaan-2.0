@@ -67,6 +67,7 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.final_year_project.kisaan10.R
 import com.final_year_project.kisaan10.ViewModel.ImageSelectionViewModel
+import com.final_year_project.kisaan10.ViewModel.WheatViewModel
 import com.final_year_project.kisaan10.screens.components.navTextDescription
 import com.final_year_project.kisaan10.screens.components.navTextHeading
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -378,8 +379,11 @@ fun recentDisease(name: String, image: Int) {
 }
 
 @Composable
-fun ConfirmScreen(viewModel: ImageSelectionViewModel, navController: NavHostController) {
-    val imageUri = viewModel.getSelectedImageUri()
+fun ConfirmScreen(imagewheatViewModel: ImageSelectionViewModel, wheatViewModel: WheatViewModel, navController: NavHostController) {
+    val imageUri = imagewheatViewModel.getSelectedImageUri()
+    val imageBitmap = imagewheatViewModel.uriToBitmap(LocalContext.current)
+    imageBitmap?.let { wheatViewModel.detectWheat(it) }
+    val isWheat = wheatViewModel.wheatDetectionResult.value?.isWheat
     Log.v("urii", imageUri.toString())
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -405,15 +409,31 @@ fun ConfirmScreen(viewModel: ImageSelectionViewModel, navController: NavHostCont
                         ),
                     shape = RoundedCornerShape(cornerRadius),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                    onClick = {/* Todo */}) {
-                    Text(
-                        text ="View Results",
-                        style = TextStyle(
-                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
-                            fontSize = 18.sp,
-                            color = Color.White
+                    onClick = {
+                        if (isWheat != true){
+                            navController.popBackStack()
+                        }
+                    }) {
+                    if (isWheat == true){
+                        Text(
+                            text ="View Results",
+                            style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
+                                fontSize = 18.sp,
+                                color = Color.White
+                            )
                         )
-                    )
+                    }
+                    else{
+                        Text(
+                            text ="Not a Wheat",
+                            style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
+                                fontSize = 18.sp,
+                                color = Color.White
+                            )
+                        )
+                    }
                 }
                 Button(
                     modifier = Modifier

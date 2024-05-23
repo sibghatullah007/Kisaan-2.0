@@ -205,6 +205,7 @@ class MainActivity : ComponentActivity() {
 
         MainScreen(
             blogsViewModel,
+            wheatViewModel,
             userData = userData,
             onSignOut = {
                 lifecycleScope.launch {
