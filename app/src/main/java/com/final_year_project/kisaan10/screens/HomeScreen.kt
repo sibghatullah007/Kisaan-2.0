@@ -32,6 +32,8 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -54,12 +56,14 @@ import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.final_year_project.kisaan10.R
 import com.final_year_project.kisaan10.ViewModel.ImageSelectionViewModel
@@ -324,7 +328,7 @@ fun RecentDiseasesSection() {
                 modifier = Modifier
                     .padding(top = 10.dp)
                     .align(Alignment.CenterHorizontally),
-                style = androidx.compose.ui.text.TextStyle(
+                style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
                     fontSize = 18.sp,
                     color = Color.Black
@@ -364,7 +368,7 @@ fun recentDisease(name: String, image: Int) {
         Text(
             text = name,
             modifier = Modifier.padding(top = 7.dp),
-            style = androidx.compose.ui.text.TextStyle(
+            style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                 fontSize = 14.sp,
                 color = Color.Black
@@ -374,7 +378,7 @@ fun recentDisease(name: String, image: Int) {
 }
 
 @Composable
-fun ConfirmScreen(viewModel: ImageSelectionViewModel) {
+fun ConfirmScreen(viewModel: ImageSelectionViewModel, navController: NavHostController) {
     val imageUri = viewModel.getSelectedImageUri()
     Log.v("urii", imageUri.toString())
     Column(
@@ -383,17 +387,60 @@ fun ConfirmScreen(viewModel: ImageSelectionViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (imageUri!=null) {
-            Image(
-                painter = rememberImagePainter(data = imageUri),
-                contentDescription = "Selected Image",
-                modifier = Modifier.size(200.dp),
-                contentScale = ContentScale.FillBounds
-            )
+                Image(
+                    painter = rememberImagePainter(data = imageUri),
+                    contentDescription = "Selected Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(500.dp),
+                    contentScale = ContentScale.FillBounds
+                )
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = textFieldPadding,
+                            end = textFieldPadding,
+                            top = textFieldPadding
+                        ),
+                    shape = RoundedCornerShape(cornerRadius),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    onClick = {/* Todo */}) {
+                    Text(
+                        text ="View Results",
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
+                            fontSize = 18.sp,
+                            color = Color.White
+                        )
+                    )
+                }
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = textFieldPadding,
+                            end = textFieldPadding,
+                            top = textFieldPadding
+                        ),
+                    shape = RoundedCornerShape(cornerRadius),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                    onClick = {navController.popBackStack()}) {
+                    Text(
+                        text ="Cancel",
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
+                            fontSize = 18.sp,
+                            color = Color.White
+                        )
+                    )
+                }
         } else {
             Text("No image selected")
         }
     }
 }
+
 
 
 

@@ -85,7 +85,7 @@ fun SetUpNavGraph(
             SettingScreen(context = LocalContext.current, userData = userData, onSignOut = onSignOut)
         }
         composable("confirm_screen_route") {
-            ConfirmScreen(viewModel = viewModel)
+            ConfirmScreen(viewModel = viewModel,navController = navController)
         }
     }
 }

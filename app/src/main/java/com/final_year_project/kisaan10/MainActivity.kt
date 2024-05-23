@@ -44,23 +44,30 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.log
 
-private lateinit var wheatViewModel: WheatViewModel
 class MainActivity : ComponentActivity() {
+    private lateinit var auth: FirebaseAuth
+    //Blogs ViewModel
+    private val blogsViewModel: BlogsViewModel by lazy {
+        ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))
+            .get(BlogsViewModel::class.java)
+    }
+//  Wheat ViewModel
+    private val wheatViewModel: WheatViewModel by lazy {
+        ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))
+            .get(WheatViewModel::class.java)
+    }
+//  private lateinit var database: KissanDatabase
+
+
     private val googleAuthUiClient by lazy {
         GoogleAuthUiClient(
             context = applicationContext,
             oneTapClient = com.google.android.gms.auth.api.identity.Identity.getSignInClient(applicationContext)
         )
     }
-    private lateinit var auth: FirebaseAuth
-//    private lateinit var database: KissanDatabase
-    private val blogsViewModel: BlogsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Wheat ViewModel
-        wheatViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))
-            .get(WheatViewModel::class.java)
 
 //        //Testing Database
 //        database = KissanDatabase.getDatabase(this)
