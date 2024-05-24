@@ -24,7 +24,7 @@ import com.final_year_project.kisaan10.navigation.Screens
 import com.final_year_project.kisaan10.utils.bottomNavigationItemsList
 
 @Composable
-fun MainScreen(blogsViewModel: BlogsViewModel, wheatViewModel: WheatViewModel,userData: UserData?, onSignOut: () -> Unit) {
+fun MainScreen(imageSelectionViewModel: ImageSelectionViewModel,blogsViewModel: BlogsViewModel, wheatViewModel: WheatViewModel,userData: UserData?, onSignOut: () -> Unit) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute by remember(navBackStackEntry) {
@@ -58,6 +58,7 @@ fun MainScreen(blogsViewModel: BlogsViewModel, wheatViewModel: WheatViewModel,us
         SetUpNavGraph(
             blogsViewModel,
             wheatViewModel,
+            imageSelectionViewModel,
             navController = navController,
             innerPadding = innerPadding,
             userData = userData,
@@ -70,12 +71,12 @@ fun MainScreen(blogsViewModel: BlogsViewModel, wheatViewModel: WheatViewModel,us
 fun SetUpNavGraph(
     blogsViewModel: BlogsViewModel,
     wheatViewModel: WheatViewModel,
+    imageSelectionViewModel: ImageSelectionViewModel,
     navController: NavHostController,
     innerPadding: PaddingValues,
     userData: UserData?,
     onSignOut: () -> Unit
 ) {
-    val imageSelectionViewModel: ImageSelectionViewModel = viewModel()
     NavHost(
         navController = navController,
         startDestination = Screens.Home.route,
@@ -100,7 +101,7 @@ fun SetUpNavGraph(
             ConfirmScreen(imagewheatViewModel = imageSelectionViewModel,wheatViewModel,navController = navController)
         }
         composable("diseased_result_route") {
-            DiseasedResultScreen(navController)
+            DiseasedResultScreen(imageSelectionViewModel,wheatViewModel, navController)
         }
         composable("blog_result_route/{blogId}") {
             val blogId = it.arguments?.getString("blogId")

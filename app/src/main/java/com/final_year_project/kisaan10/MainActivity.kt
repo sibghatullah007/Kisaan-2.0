@@ -23,6 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.final_year_project.kisaan10.ViewModel.BlogsViewModel
+import com.final_year_project.kisaan10.ViewModel.ImageSelectionViewModel
 import com.final_year_project.kisaan10.ViewModel.WheatViewModel
 import com.final_year_project.kisaan10.auth.googleAuth.GoogleAuthUiClient
 import com.final_year_project.kisaan10.auth.googleAuth.SignInViewModel
@@ -55,6 +56,11 @@ class MainActivity : ComponentActivity() {
     private val wheatViewModel: WheatViewModel by lazy {
         ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))
             .get(WheatViewModel::class.java)
+    }
+    //
+    private val imageSelectionViewModel : ImageSelectionViewModel by lazy {
+        ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))
+            .get(ImageSelectionViewModel::class.java)
     }
 //  private lateinit var database: KissanDatabase
 
@@ -204,6 +210,7 @@ class MainActivity : ComponentActivity() {
         }
 
         MainScreen(
+            imageSelectionViewModel,
             blogsViewModel,
             wheatViewModel,
             userData = userData,

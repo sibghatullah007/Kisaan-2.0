@@ -394,7 +394,8 @@ fun recentDisease(name: String, image: Int) {
                 fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                 fontSize = 14.sp,
                 color = Color.Black
-            )
+            ),
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -484,7 +485,18 @@ fun ConfirmScreen(imagewheatViewModel: ImageSelectionViewModel, wheatViewModel: 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DiseasedResultScreen(navController: NavHostController) {
+fun DiseasedResultScreen(selectionViewModel: ImageSelectionViewModel, wheatViewModel: WheatViewModel, navController: NavHostController) {
+    val imageUri = selectionViewModel.selectedImageUri.value
+    val bitmapofImage = selectionViewModel.uriToBitmap(LocalContext.current)
+    bitmapofImage?.let { wheatViewModel.predictDisease(it) }
+    val diseaseName = wheatViewModel.diseasePredictionResult.value?.diseaseName
+    val diseaseConfidence = wheatViewModel.diseasePredictionResult.value?.confidence
+
+    if (diseaseName != null && diseaseConfidence!=null) {
+        Log.v("HomeScreen", diseaseName)
+        Log.v("HomeScreen", diseaseConfidence.toString())
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
