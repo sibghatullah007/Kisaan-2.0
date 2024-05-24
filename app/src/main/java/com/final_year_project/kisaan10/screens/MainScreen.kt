@@ -89,7 +89,18 @@ fun SetUpNavGraph(
             )
         }
         composable(Screens.Notification.route) {
-            NotificationScreen()
+            val notifications = listOf(
+                Notification("Welcome to KisaanApp", "Version 1.2 is now available with new features.", "March 24, 2020"),
+                Notification("Disease Detected", "Loose Smut is being detected in your crop. Make sure its treatments.", "March 24, 2020"),
+                Notification("Disease Detected", "Loose Smut is being detected in your crop. Make sure its treatments.", "March 24, 2020"),
+                Notification("Disease Detected", "Loose Smut is being detected in your crop. Make sure its treatments.", "March 24, 2020"),
+                Notification("Disease Detected", "Loose Smut is being detected in your crop. Make sure its treatments.", "March 24, 2020"),
+                Notification("Disease Detected", "Loose Smut is being detected in your crop. Make sure its treatments.", "March 24, 2020"),
+                Notification("Disease Detected", "Loose Smut is being detected in your crop. Make sure its treatments.", "March 24, 2020"),
+                Notification("Disease Detected", "Loose Smut is being detected in your crop. Make sure its treatments.", "March 24, 2020"),
+                // Add more notifications here
+            )
+            NotificationScreen(notifications)
         }
         composable(Screens.Blog.route) {
             BlogScreen(navController = navController,blogsViewModel)
@@ -101,7 +112,7 @@ fun SetUpNavGraph(
             ConfirmScreen(imagewheatViewModel = imageSelectionViewModel,wheatViewModel,navController = navController)
         }
         composable("diseased_result_route") {
-            DiseasedResultScreen(imageSelectionViewModel,wheatViewModel, navController)
+            DiseasedResultScreen(blogsViewModel,imageSelectionViewModel,wheatViewModel, navController)
         }
         composable("blog_result_route/{blogId}") {
             val blogId = it.arguments?.getString("blogId")

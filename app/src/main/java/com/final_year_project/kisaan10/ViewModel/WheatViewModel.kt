@@ -99,6 +99,7 @@ class WheatViewModel(application: Application) : AndroidViewModel(application) {
         return WheatDetectionResult(isWheat)
     }
 
+
     private fun runPredictDiseaseModel(image: Bitmap): DiseasePredictionResult? {
         val wheatDetectionResult = runDetectWheatModel(image)
         if (!wheatDetectionResult.isWheat) {
@@ -124,9 +125,65 @@ class WheatViewModel(application: Application) : AndroidViewModel(application) {
         wheatModelInterpreter.run(input, modelOutput)
 
         modelOutput.rewind()
-        val probabilities = modelOutput.asFloatBuffer()
-        val diseaseName = "Disease"  // Replace with actual disease name logic
-        val confidence = probabilities.get(0)  // Replace with actual confidence score from your model
+        val probabilities = FloatArray(5)
+        modelOutput.asFloatBuffer().get(probabilities)
+
+        // Find the index of the maximum probability
+        val maxIndex = probabilities.indices.maxByOrNull { probabilities[it] } ?: -1
+
+        // Map the index to the disease name
+        val diseaseNames = listOf("Septoria Leaf Blotch", "Loose Smut", "Healthy Wheat", "Brown Rust (Leaf Rust)","Yellow Rust (Stripe Rust)")
+        val diseaseName = if (maxIndex != -1) diseaseNames[maxIndex] else "Unknown"
+
+        // Get the confidence score for the predicted disease
+        val confidence = if (maxIndex != -1) probabilities[maxIndex] else 0.0f
+
         return DiseasePredictionResult(diseaseName, confidence)
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    private fun runPredictDiseaseModel(image: Bitmap): DiseasePredictionResult? {
+//        val wheatDetectionResult = runDetectWheatModel(image)
+//        if (!wheatDetectionResult.isWheat) {
+//            return null
+//        }
+//
+//        val bitmap = Bitmap.createScaledBitmap(image, 224, 224, true)
+//        val input = ByteBuffer.allocateDirect(224 * 224 * 3 * 4).order(ByteOrder.nativeOrder())
+//        for (y in 0 until 224) {
+//            for (x in 0 until 224) {
+//                val px = bitmap.getPixel(x, y)
+//                val r = Color.red(px)
+//                val g = Color.green(px)
+//                val b = Color.blue(px)
+//                input.putFloat((r - 127) / 255f)
+//                input.putFloat((g - 127) / 255f)
+//                input.putFloat((b - 127) / 255f)
+//            }
+//        }
+//
+//        val bufferSize = 5 * java.lang.Float.SIZE / java.lang.Byte.SIZE
+//        val modelOutput = ByteBuffer.allocateDirect(bufferSize).order(ByteOrder.nativeOrder())
+//        wheatModelInterpreter.run(input, modelOutput)
+//
+//        modelOutput.rewind()
+//        val probabilities = modelOutput.asFloatBuffer()
+//        val diseaseName = "Disease"  // Replace with actual disease name logic
+//        val confidence = probabilities.get(0)  // Replace with actual confidence score from your model
+//        return DiseasePredictionResult(diseaseName, confidence)
+//    }
 }

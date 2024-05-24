@@ -56,6 +56,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -80,6 +81,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.final_year_project.kisaan10.R
+import com.final_year_project.kisaan10.ViewModel.BlogsViewModel
 import com.final_year_project.kisaan10.ViewModel.ImageSelectionViewModel
 import com.final_year_project.kisaan10.ViewModel.WheatViewModel
 import com.final_year_project.kisaan10.screens.components.navTextDescription
@@ -433,7 +435,7 @@ fun ConfirmScreen(imagewheatViewModel: ImageSelectionViewModel, wheatViewModel: 
                     shape = RoundedCornerShape(cornerRadius),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     onClick = {
-                        navController.navigate("diseased_result_route")
+                        navController.navigate("diseased_result_route"){ popUpTo("home") { inclusive = false } }
                     }) {
                     Text(
                         text = "View Results",
@@ -485,13 +487,14 @@ fun ConfirmScreen(imagewheatViewModel: ImageSelectionViewModel, wheatViewModel: 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DiseasedResultScreen(selectionViewModel: ImageSelectionViewModel, wheatViewModel: WheatViewModel, navController: NavHostController) {
+fun DiseasedResultScreen(viewModel: BlogsViewModel, selectionViewModel: ImageSelectionViewModel, wheatViewModel: WheatViewModel, navController: NavHostController) {
     val imageUri = selectionViewModel.selectedImageUri.value
     val bitmapofImage = selectionViewModel.uriToBitmap(LocalContext.current)
     bitmapofImage?.let { wheatViewModel.predictDisease(it) }
     val diseaseName = wheatViewModel.diseasePredictionResult.value?.diseaseName
     val diseaseConfidence = wheatViewModel.diseasePredictionResult.value?.confidence
-
+    val blogs by viewModel.allBlogs.observeAsState(initial = emptyList())
+    val specificBlog = blogs.find { it.name == diseaseName }
     if (diseaseName != null && diseaseConfidence!=null) {
         Log.v("HomeScreen", diseaseName)
         Log.v("HomeScreen", diseaseConfidence.toString())
@@ -510,6 +513,7 @@ fun DiseasedResultScreen(selectionViewModel: ImageSelectionViewModel, wheatViewM
             )
         }
     ) { innerPadding ->
+        if (specificBlog != null) {
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -527,7 +531,7 @@ fun DiseasedResultScreen(selectionViewModel: ImageSelectionViewModel, wheatViewM
                     val context = LocalContext.current
 
                     // Remove the "@drawable/" prefix
-                    val resourceName = "brown_rust_wheat"
+                    val resourceName =  specificBlog.pictureResId.removePrefix("@drawable/")
 
                     // Get the resource ID dynamically
                     val resourceId = context.resources.getIdentifier(resourceName, "drawable", context.packageName)
@@ -543,7 +547,7 @@ fun DiseasedResultScreen(selectionViewModel: ImageSelectionViewModel, wheatViewM
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     Text(
-                        text = "Disease Name",
+                        text = specificBlog.name,
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
                             fontSize = 24.sp,
@@ -575,7 +579,7 @@ fun DiseasedResultScreen(selectionViewModel: ImageSelectionViewModel, wheatViewM
                     Spacer(modifier = Modifier.height(15.dp))
 
                     Text(
-                        text = "These are disease symptoms",
+                        text = specificBlog.symptom,
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                             fontSize = 15.sp,
@@ -601,7 +605,7 @@ fun DiseasedResultScreen(selectionViewModel: ImageSelectionViewModel, wheatViewM
                     )
                     Spacer(modifier = Modifier.height(15.dp))
                     Text(
-                        text = "These are disease treatment",
+                        text = specificBlog.treatment,
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                             fontSize = 15.sp,
@@ -627,7 +631,7 @@ fun DiseasedResultScreen(selectionViewModel: ImageSelectionViewModel, wheatViewM
                     )
                     Spacer(modifier = Modifier.height(15.dp))
                     Text(
-                        text ="These are disease preventions",
+                        text =specificBlog.prevention,
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                             fontSize = 15.sp,
@@ -642,6 +646,7 @@ fun DiseasedResultScreen(selectionViewModel: ImageSelectionViewModel, wheatViewM
                 }
             }
         }
+    }
     }
 }
 
