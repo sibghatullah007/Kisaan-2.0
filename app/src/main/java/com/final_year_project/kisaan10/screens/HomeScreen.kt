@@ -14,15 +14,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -34,6 +37,9 @@ import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -59,10 +65,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.final_year_project.kisaan10.R
@@ -72,6 +79,7 @@ import com.final_year_project.kisaan10.screens.components.navTextDescription
 import com.final_year_project.kisaan10.screens.components.navTextHeading
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import kotlinx.coroutines.delay
 import java.io.ByteArrayOutputStream
 
 @Composable
@@ -142,17 +150,17 @@ fun DiagnoseButton(gradient: Brush,
             modifier = Modifier
                 .background(gradient, CircleShape)
                 .size(200.dp),
-            shape = CircleShape
+            shape = CircleShape,
+            contentPadding = PaddingValues(0.dp) // Remove content padding
         ) {
             if (imageUri != null) {
                 Image(
                     painter = rememberImagePainter(data = imageUri),
                     contentDescription = "Selected Image",
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth()
+                        .size(200.dp)
                         .clip(CircleShape),
-                    contentScale = ContentScale.FillBounds
+                    contentScale = ContentScale.Crop // Fill the button with the image
                 )
             } else {
                 Icon(
@@ -265,19 +273,6 @@ fun DiagnoseButton(gradient: Brush,
     }
 }
 
-//private fun saveBitmapToUri(context: Context, bitmap: Bitmap): Uri {
-//    val bytes = ByteArrayOutputStream()
-//    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-//    val path = MediaStore.Images.Media.insertImage(
-//        context.contentResolver,
-//        bitmap,
-//        "Title",
-//        null
-//    )
-//    Log.v("justUri",path)
-//    Log.v("parsed", Uri.parse(path).toString())
-//    return Uri.parse(path)
-//}
 fun saveBitmapToUri(context: Context, bitmap: Bitmap): Uri? {
     val bytes = ByteArrayOutputStream()
 
@@ -335,22 +330,40 @@ fun RecentDiseasesSection() {
                     color = Color.Black
                 )
             )
-            DiseaseRow()
-            DiseaseRow(modifier = Modifier.padding(top = 15.dp))
+            val defaultImage = R.drawable.recentimg
+            val defaultName = "No File"
+
+            val recentDiseases = listOf(
+                Disease(name = "Healthy Wheat", image = R.drawable.healthy_wheat_),
+                Disease(name = "Yellow Rust", image = R.drawable.yellow_rust_wheat_),
+                Disease(name = "Healthy Wheat", image = R.drawable.healthy_wheat_),
+                Disease(name = "Yellow Rust", image = R.drawable.yellow_rust_wheat_),
+                Disease(name = "Healthy Wheat", image = R.drawable.healthy_wheat_),
+                Disease(name = "Yellow Rust", image = R.drawable.yellow_rust_wheat_),
+                Disease(name = "Healthy Wheat", image = R.drawable.healthy_wheat_),
+                Disease(name = "Yellow Rust", image = R.drawable.yellow_rust_wheat_),
+                Disease(name = defaultName, image = defaultImage), // Add default data if no recent diseas
+                Disease(name = defaultName, image = defaultImage) // Add default data if no recent disease
+
+            )
+
+//            DiseaseRow(diseases = recentDiseases)
+            DiseaseRow(diseases = recentDiseases)
+
         }
     }
 }
 
+data class Disease(val name: String, val image: Int)
 @Composable
-fun DiseaseRow(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+fun DiseaseRow(diseases: List<Disease>, modifier: Modifier = Modifier) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3), // 3 columns
+        modifier = modifier.padding(12.dp)
     ) {
-        recentDisease(name = "Yellow Rust", image = R.drawable.crops)
-        recentDisease(name = "Yellow Rust", image = R.drawable.crops)
-        recentDisease(name = "Yellow Rust", image = R.drawable.crops)
+        items(diseases) { disease ->
+            recentDisease(name = disease.name, image = disease.image)
+        }
     }
 }
 
@@ -364,7 +377,8 @@ fun recentDisease(name: String, image: Int) {
         Image(
             painter = painterResource(id = image),
             contentDescription = null,
-            modifier = Modifier.size(80.dp)
+            modifier = Modifier.size(80.dp),
+            contentScale = ContentScale.Fit
         )
         Text(
             text = name,
@@ -396,9 +410,10 @@ fun ConfirmScreen(imagewheatViewModel: ImageSelectionViewModel, wheatViewModel: 
                     contentDescription = "Selected Image",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(500.dp),
-                    contentScale = ContentScale.FillBounds
+                        .height(580.dp),
+                    contentScale = ContentScale.Fit
                 )
+            if (isWheat == true) {
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -410,31 +425,29 @@ fun ConfirmScreen(imagewheatViewModel: ImageSelectionViewModel, wheatViewModel: 
                     shape = RoundedCornerShape(cornerRadius),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     onClick = {
-                        if (isWheat != true){
-                            navController.popBackStack()
-                        }
+                        navController.navigate("diseased_result_route")
                     }) {
-                    if (isWheat == true){
-                        Text(
-                            text ="View Results",
-                            style = TextStyle(
-                                fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
-                                fontSize = 18.sp,
-                                color = Color.White
-                            )
+                    Text(
+                        text = "View Results",
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
+                            fontSize = 18.sp,
+                            color = Color.White
                         )
-                    }
-                    else{
-                        Text(
-                            text ="Not a Wheat",
-                            style = TextStyle(
-                                fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
-                                fontSize = 18.sp,
-                                color = Color.White
-                            )
-                        )
-                    }
+                    )
                 }
+            }
+            else{
+                Text(
+                    text = "Please select the Valid Image of Wheat Crop",
+                    modifier = Modifier.padding(top = 20.dp),
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                )
+            }
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -461,6 +474,135 @@ fun ConfirmScreen(imagewheatViewModel: ImageSelectionViewModel, wheatViewModel: 
     }
 }
 
+
+@Composable
+fun DiseasedResultScreen() {
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            val context = LocalContext.current
+
+            // Remove the "@drawable/" prefix
+            val resourceName = "brown_rust_wheat"
+
+            // Get the resource ID dynamically
+            val resourceId = context.resources.getIdentifier(resourceName, "drawable", context.packageName)
+
+            Image(
+                painter = painterResource(id = resourceId), // Ensure pictureResId is a valid resource ID
+                contentDescription = "Disease Name",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .height(200.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(
+                text = "Disease Name",
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                    fontSize = 24.sp,
+                    color = MaterialTheme.colorScheme.primary),
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            HorizontalDivider(
+                modifier = Modifier.fillMaxWidth(),
+                thickness = 1.dp,
+                color = Color(0xFF333333)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(text = "Check if your crop has following symptoms",
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.error,
+                    fontStyle = FontStyle.Italic)
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+            Text(text = "Symptoms",
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                    fontSize = 20.sp,
+                    color = Color.Black
+                )
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+
+            Text(
+                text = "These are disease symptoms",
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                    fontSize = 15.sp,
+                    color = Color.Black,
+                    lineHeight = 25.sp,
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Justify
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            HorizontalDivider(
+                modifier = Modifier.fillMaxWidth(),
+                thickness = 1.dp,
+                color = Color(0xFF333333)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(text = "Treatment",
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                    fontSize = 20.sp,
+                    color = Color.Black
+                )
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+            Text(
+                text = "These are disease treatment",
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                    fontSize = 15.sp,
+                    color = Color.Black,
+                    lineHeight = 25.sp,
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Justify
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            HorizontalDivider(
+                modifier = Modifier.fillMaxWidth(),
+                thickness = 1.dp,
+                color = Color(0xFF333333)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(text = "Preventions",
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                    fontSize = 20.sp,
+                    color = Color.Black
+                )
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+            Text(
+                text ="These are disease preventions",
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                    fontSize = 15.sp,
+                    color = Color.Black,
+                    lineHeight = 25.sp,
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Justify
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+
+        }
+    }
+}
 
 
 

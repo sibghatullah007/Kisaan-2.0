@@ -30,18 +30,27 @@ fun MainScreen(blogsViewModel: BlogsViewModel, wheatViewModel: WheatViewModel,us
     val currentRoute by remember(navBackStackEntry) {
         derivedStateOf { navBackStackEntry?.destination?.route }
     }
+    val routesWithoutBottomBar = listOf(
+        "confirm_screen_route",
+        "diseased_result_route",
+        "blog_result_route/{blogId}")
 
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(items = bottomNavigationItemsList, currentRoute = currentRoute) { currentNavigationItem ->
-                navController.navigate(currentNavigationItem.route) {
-                    navController.graph.startDestinationRoute?.let { startDestinationRoute ->
-                        popUpTo(startDestinationRoute) {
-                            saveState = true
+            if (!routesWithoutBottomBar.contains(currentRoute)) {
+                BottomNavigationBar(
+                    items = bottomNavigationItemsList,
+                    currentRoute = currentRoute
+                ) { currentNavigationItem ->
+                    navController.navigate(currentNavigationItem.route) {
+                        navController.graph.startDestinationRoute?.let { startDestinationRoute ->
+                            popUpTo(startDestinationRoute) {
+                                saveState = true
+                            }
                         }
+                        launchSingleTop = true
+                        restoreState = true
                     }
-                    launchSingleTop = true
-                    restoreState = true
                 }
             }
         }
@@ -82,13 +91,20 @@ fun SetUpNavGraph(
             NotificationScreen()
         }
         composable(Screens.Blog.route) {
-            BlogScreen(blogsViewModel)
+            BlogScreen(navController = navController,blogsViewModel)
         }
         composable(Screens.Setting.route) {
             SettingScreen(context = LocalContext.current, userData = userData, onSignOut = onSignOut)
         }
         composable("confirm_screen_route") {
             ConfirmScreen(imagewheatViewModel = imageSelectionViewModel,wheatViewModel,navController = navController)
+        }
+        composable("diseased_result_route") {
+            DiseasedResultScreen()
+        }
+        composable("blog_result_route/{blogId}") {
+            val blogId = it.arguments?.getString("blogId")
+            BlogResult(blogsViewModel, blogId = blogId, navController)
         }
     }
 }

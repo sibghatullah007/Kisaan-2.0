@@ -1,19 +1,25 @@
 package com.final_year_project.kisaan10.screens.components
 
 import android.content.Context
+import android.text.style.LineHeightSpan
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -47,10 +53,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.LineBreak
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.final_year_project.kisaan10.R
@@ -194,57 +203,258 @@ fun navTextDescription(text: String){
     )
 }
 
+
 @Composable
 fun BlogItem(blog: Blogs) {
-    Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            val context = LocalContext.current
+    Box(modifier = Modifier.fillMaxSize()) {
+        Card(
+            modifier = Modifier
+                .padding(4.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(2.dp),
+            elevation = CardDefaults.cardElevation(4.dp)
+        ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.onBackground),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                item {
+                    val context = LocalContext.current
 
-            // Remove the "@drawable/" prefix
-            val resourceName = blog.pictureResId.removePrefix("@drawable/")
+                    // Remove the "@drawable/" prefix
+                    val resourceName = blog.pictureResId.removePrefix("@drawable/")
 
-            // Get the resource ID dynamically
-            val resourceId = context.resources.getIdentifier(resourceName, "drawable", context.packageName)
+                    // Get the resource ID dynamically
+                    val resourceId = context.resources.getIdentifier(
+                        resourceName,
+                        "drawable",
+                        context.packageName
+                    )
 
-            Image(
-                painter = painterResource(id = resourceId), // Ensure pictureResId is a valid resource ID
-                contentDescription = blog.name,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .height(200.dp)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = blog.name,
-                style = MaterialTheme.typography.headlineSmall,
-                fontSize = 20.sp
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Symptom: ${blog.symptom}",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Treatment: ${blog.treatment}",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Prevention: ${blog.prevention}",
-                style = MaterialTheme.typography.bodyMedium
-            )
+                    Image(
+                        painter = painterResource(id = resourceId), // Ensure pictureResId is a valid resource ID
+                        contentDescription = blog.name,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .height(200.dp)
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                    )
+                    Text(
+                        text = blog.name,
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                            fontSize = 24.sp,
+                            color = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = Modifier.padding(vertical = 20.dp)
+                    )
+                }
+                item {
+                    HorizontalDivider(
+                        modifier = Modifier.fillMaxWidth(),
+                        thickness = 1.dp,
+                        color = Color(0xFF333333)
+                    )
+                }
+                item {
+                    SectionTitle(text = "Symptoms")
+                    Text(
+                        text = blog.symptom,
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                            fontSize = 15.sp,
+                            color = Color.Black,
+                            lineHeight = 25.sp,
+                        ),
+                        textAlign = TextAlign.Justify
+                    )
+                }
+                item {
+                    HorizontalDivider(
+                        modifier = Modifier.fillMaxWidth(),
+                        thickness = 1.dp,
+                        color = Color(0xFF333333)
+                    )
+                }
+                item {
+                    SectionTitle(text = "Treatment")
+                    Text(
+                        text = blog.treatment,
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                            fontSize = 15.sp,
+                            color = Color.Black,
+                            lineHeight = 25.sp,
+                        ),
+                        textAlign = TextAlign.Justify
+                    )
+                }
+                item {
+                    HorizontalDivider(
+                        modifier = Modifier.fillMaxWidth(),
+                        thickness = 1.dp,
+                        color = Color(0xFF333333)
+                    )
+                }
+                item {
+                    SectionTitle(text = "Preventions")
+                    Text(
+                        text = blog.prevention,
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                            fontSize = 15.sp,
+                            color = Color.Black,
+                            lineHeight = 25.sp,
+                        ),
+                        textAlign = TextAlign.Justify
+                    )
+                }
+                item {
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
+            }
         }
     }
 }
+        @Composable
+        fun SectionTitle(text: String) {
+            Text(
+                text = text,
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                    fontSize = 20.sp,
+                    color = Color.Black
+                ),
+                modifier = Modifier.padding(vertical = 15.dp)
+            )
+        }
+
+
+
+
+//@Composable
+//fun BlogItem(blog: Blogs) {
+//    Card(
+//        modifier = Modifier
+//            .padding(8.dp)
+//            .fillMaxWidth(),
+//        shape = RoundedCornerShape(8.dp),
+//        elevation = CardDefaults.cardElevation(4.dp)
+//    ) {
+//
+//        Column(modifier = Modifier.padding(16.dp)) {
+//            val context = LocalContext.current
+//
+//            // Remove the "@drawable/" prefix
+//            val resourceName = blog.pictureResId.removePrefix("@drawable/")
+//
+//            // Get the resource ID dynamically
+//            val resourceId = context.resources.getIdentifier(resourceName, "drawable", context.packageName)
+//
+//            Image(
+//                painter = painterResource(id = resourceId), // Ensure pictureResId is a valid resource ID
+//                contentDescription = blog.name,
+//                contentScale = ContentScale.Crop,
+//                modifier = Modifier
+//                    .height(200.dp)
+//                    .fillMaxWidth()
+//                    .clip(RoundedCornerShape(8.dp))
+//            )
+//            Spacer(modifier = Modifier.height(20.dp))
+//            Text(
+//                text = blog.name,
+//                style = TextStyle(
+//                    fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+//                    fontSize = 24.sp,
+//                    color = MaterialTheme.colorScheme.primary),
+//            )
+//            Spacer(modifier = Modifier.height(20.dp))
+//            HorizontalDivider(
+//                modifier = Modifier.fillMaxWidth(),
+//                thickness = 1.dp,
+//                color = Color(0xFF333333)
+//            )
+//            Spacer(modifier = Modifier.height(20.dp))
+//            Text(text = "Symptoms",
+//                style = TextStyle(
+//                    fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+//                    fontSize = 20.sp,
+//                    color = Color.Black
+//                )
+//            )
+//            Spacer(modifier = Modifier.height(15.dp))
+//
+//            Text(
+//                text = blog.symptom,
+//                style = TextStyle(
+//                    fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+//                    fontSize = 15.sp,
+//                    color = Color.Black,
+//                    lineHeight = 25.sp,
+//                ),
+//                modifier = Modifier.fillMaxWidth(),
+//                textAlign = TextAlign.Justify
+//            )
+//            Spacer(modifier = Modifier.height(20.dp))
+//            HorizontalDivider(
+//                modifier = Modifier.fillMaxWidth(),
+//                thickness = 1.dp,
+//                color = Color(0xFF333333)
+//            )
+//            Spacer(modifier = Modifier.height(20.dp))
+//            Text(text = "Treatment",
+//                style = TextStyle(
+//                    fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+//                    fontSize = 20.sp,
+//                    color = Color.Black
+//                )
+//            )
+//            Spacer(modifier = Modifier.height(15.dp))
+//            Text(
+//                text = blog.treatment,
+//                style = TextStyle(
+//                    fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+//                    fontSize = 15.sp,
+//                    color = Color.Black,
+//                    lineHeight = 25.sp,
+//                ),
+//                modifier = Modifier.fillMaxWidth(),
+//                textAlign = TextAlign.Justify
+//            )
+//            Spacer(modifier = Modifier.height(20.dp))
+//            HorizontalDivider(
+//                modifier = Modifier.fillMaxWidth(),
+//                thickness = 1.dp,
+//                color = Color(0xFF333333)
+//            )
+//            Spacer(modifier = Modifier.height(20.dp))
+//            Text(text = "Preventions",
+//                style = TextStyle(
+//                    fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+//                    fontSize = 20.sp,
+//                    color = Color.Black
+//                )
+//            )
+//            Spacer(modifier = Modifier.height(15.dp))
+//            Text(
+//                text =blog.prevention,
+//                style = TextStyle(
+//                    fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+//                    fontSize = 15.sp,
+//                    color = Color.Black,
+//                    lineHeight = 25.sp,
+//                ),
+//                modifier = Modifier.fillMaxWidth(),
+//                textAlign = TextAlign.Justify
+//            )
+//            Spacer(modifier = Modifier.height(15.dp))
+//
+//        }
+//    }
+//}
+
 
 //@Composable
 //fun recentDisease(name:String, image:Int){
