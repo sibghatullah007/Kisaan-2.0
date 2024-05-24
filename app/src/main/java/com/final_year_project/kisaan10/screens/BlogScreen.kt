@@ -141,7 +141,7 @@ fun BlogResult(
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back" )
                     }
                 },
-                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
             )
         }
     ) { innerPadding ->

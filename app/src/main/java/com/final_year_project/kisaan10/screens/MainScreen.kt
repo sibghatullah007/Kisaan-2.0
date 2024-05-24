@@ -100,7 +100,7 @@ fun SetUpNavGraph(
             ConfirmScreen(imagewheatViewModel = imageSelectionViewModel,wheatViewModel,navController = navController)
         }
         composable("diseased_result_route") {
-            DiseasedResultScreen()
+            DiseasedResultScreen(navController)
         }
         composable("blog_result_route/{blogId}") {
             val blogId = it.arguments?.getString("blogId")
