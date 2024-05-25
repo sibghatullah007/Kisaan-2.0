@@ -1,6 +1,8 @@
 package com.final_year_project.kisaan10
 
 import android.Manifest
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -11,12 +13,14 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -221,10 +225,24 @@ class MainActivity : ComponentActivity() {
             wheatViewModel,
             userData = userData,
             onSignOut = {
-                lifecycleScope.launch {
-                    googleAuthUiClient.signOut()
-                    showToast(applicationContext, "Signed Out")
-                    navController.navigate("signup") { popUpTo("home") { inclusive = true } }
+//                val context = applicationContext
+                val activityContext = this // Assuming MainActivity is your activity
+                activityContext.let {
+                    AlertDialog.Builder(it)
+                        .setTitle("Logout")
+                        .setMessage("Are you sure you want to sign out?")
+                        .setPositiveButton("Logout") { dialog, _ ->
+                            lifecycleScope.launch {
+                                googleAuthUiClient.signOut()
+                                showToast(it, "Signed Out")
+                                navController.navigate("signup") { popUpTo("home") { inclusive = true } }
+                            }
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, _ ->
+                            dialog.dismiss()
+                        })
+                        .show()
                 }
             }
         )

@@ -135,7 +135,7 @@ fun BlogResult(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Blog Details") },
+                title = { Text(text = "Blog Details", color = MaterialTheme.colorScheme.primary) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back" )

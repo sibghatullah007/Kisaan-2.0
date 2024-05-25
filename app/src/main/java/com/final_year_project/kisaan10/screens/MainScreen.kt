@@ -33,7 +33,10 @@ fun MainScreen(imageSelectionViewModel: ImageSelectionViewModel,blogsViewModel: 
     val routesWithoutBottomBar = listOf(
         "confirm_screen_route",
         "diseased_result_route",
-        "blog_result_route/{blogId}")
+        "blog_result_route/{blogId}",
+        "appInfo",
+        "help_center",
+        "suggestion")
 
     Scaffold(
         bottomBar = {
@@ -106,7 +109,7 @@ fun SetUpNavGraph(
             BlogScreen(navController = navController,blogsViewModel)
         }
         composable(Screens.Setting.route) {
-            SettingScreen(context = LocalContext.current, userData = userData, onSignOut = onSignOut)
+            SettingScreen(navController,context = LocalContext.current, userData = userData, onSignOut = onSignOut)
         }
         composable("confirm_screen_route") {
             ConfirmScreen(imagewheatViewModel = imageSelectionViewModel,wheatViewModel,navController = navController)
@@ -118,105 +121,29 @@ fun SetUpNavGraph(
             val blogId = it.arguments?.getString("blogId")
             BlogResult(blogsViewModel, blogId = blogId, navController)
         }
+        composable("appInfo"){
+            AppInfoScreen(navController)
+        }
+//        composable("suggestion"){
+//            SuggestionScreen()
+//        }
+        composable("help_center"){
+            val sampleFaqs = listOf(
+                FAQ("What is KisaanApp?", "KisaanApp is a mobile application designed to assist farmers with crop disease detection, providing quick and accurate diagnoses based on images of crops."),
+                FAQ("How can I detect diseases in my crops using KisaanApp?", "To detect diseases in your crops, simply take a clear picture of the affected area and upload it to the Disease Detection section of the app. Our AI-powered model will analyze the image and provide a diagnosis and possible treatment options."),
+                FAQ("What crops are supported by the disease detection feature?", "Currently, KisaanApp supports disease detection for various crops, including wheat, rice, maize, and more. We are continually expanding our database to include more crops."),
+                FAQ("Is KisaanApp free to use?", "Yes, KisaanApp is free to use. You only need an internet connection for logging in; the rest of the application works offline."),
+                FAQ("How do I update my app to the latest version?", "To update KisaanApp to the latest version, visit the Google Play Store or Apple App Store, search for KisaanApp, and click the update button if an update is available."),
+                FAQ("Can I use KisaanApp offline?", "Yes, after the initial login, KisaanApp can be used offline. All features, including disease detection, are available without an internet connection."),
+                FAQ("How accurate is the disease detection feature?", "Our disease detection model is trained on a large dataset and is continually being improved. While it provides highly accurate results, it is always advisable to consult with a local agricultural expert for confirmation and treatment options."),
+                FAQ("How can I contact customer support?", "You can contact our customer support team through the app's Help section or by emailing kisaan002@gmail.com. We are here to help with any issues or questions you may have."),
+                FAQ("What other features does KisaanApp offer?", "In addition to disease detection, KisaanApp provides tips for best farming practices. We are focused on providing the best crop disease detection to support farmers."),
+                FAQ("How can I contribute to the KisaanApp community?", "You can contribute by providing feedback on the app and suggesting new features. Your input helps us improve and grow the KisaanApp community.")
+            )
+
+            HelpCenter(sampleFaqs,navController)
+        }
     }
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-//
-//@Composable
-//fun MainScreen(userData: UserData?,
-//               onSignOut:()->Unit) {
-//    val navController = rememberNavController()
-//    val navBackStackEntry by navController.currentBackStackEntryAsState()
-//    val currentRoute by remember(navBackStackEntry) {
-//        derivedStateOf {
-//            navBackStackEntry?.destination?.route
-//        }
-//    }
-////    val topBarTitle by remember(currentRoute) {
-////        derivedStateOf {
-////            if (currentRoute != null) {
-////                bottomNavigationItemsList[bottomNavigationItemsList.indexOfFirst {
-////                    it.route == currentRoute
-////                }].title
-////            } else {
-////                bottomNavigationItemsList[0].title
-////            }
-////        }
-////    }
-//    Scaffold(
-////        topBar = {
-////            TopAppBar(title = {
-////                Text(text = topBarTitle)},
-////                colors = TopAppBarDefaults.topAppBarColors(
-////                    MaterialTheme.colorScheme.onBackground),
-////
-////                )
-////        },
-//        bottomBar = {
-//            BottomNavigationBar(items = bottomNavigationItemsList, currentRoute = currentRoute ){ currentNavigationItem->
-//                navController.navigate(currentNavigationItem.route){
-//                    // Pop up to the start destination of the graph to
-//                    // avoid building up a large stack of destinations
-//                    // on the back stack as users select items
-//                    navController.graph.startDestinationRoute?.let { startDestinationRoute ->
-//                        // Pop up to the start destination, clearing the back stack
-//                        popUpTo(startDestinationRoute) {
-//                            // Save the state of popped destinations
-//                            saveState = true
-//                        }
-//                    }
-//
-//                    // Configure navigation to avoid multiple instances of the same destination
-//                    launchSingleTop = true
-//
-//                    // Restore state when re-selecting a previously selected item
-//                    restoreState = true
-//                }
-//            }
-//        }
-//    ) {innerPadding->
-//
-////        SetUpNavGraph(navController = navController, innerPadding = innerPadding,)
-//        val inner = innerPadding
-//        val viewModel = ImageSelectionViewModel()
-//        NavHost(navController = navController,
-//            startDestination = Screens.Home.route){
-//            composable(Screens.Home.route){
-//                HomeScreen(onOkClick = {
-//                    navController.navigate("confirm_screen_route")
-//                },viewModel
-//                )
-//            }
-//            composable(Screens.Notification.route){
-//                NotificationScreen()
-//            }
-//            composable(Screens.Blog.route){
-//                BlogScreen()
-//            }
-//
-//            composable(Screens.Setting.route){
-//                SettingScreen(context = LocalContext.current,userData,onSignOut)
-//            }
-//
-//            composable("confirm_screen_route"){
-//                ConfirmScreen(viewModel)
-//
-//            }
-//        }
-//
-//    }
-//}
-//
-//
