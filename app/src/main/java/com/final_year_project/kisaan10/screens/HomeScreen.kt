@@ -44,7 +44,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -81,6 +80,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
+import com.example.yourapp.AppNotificationManager
 import com.final_year_project.kisaan10.R
 import com.final_year_project.kisaan10.ViewModel.BlogsViewModel
 import com.final_year_project.kisaan10.ViewModel.ImageSelectionViewModel
@@ -90,7 +90,6 @@ import com.final_year_project.kisaan10.screens.components.navTextDescription
 import com.final_year_project.kisaan10.screens.components.navTextHeading
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import kotlinx.coroutines.delay
 import java.io.ByteArrayOutputStream
 
 @Composable
@@ -505,6 +504,13 @@ fun DiseasedResultScreen(
     val blogs by viewModel.allBlogs.observeAsState(initial = emptyList())
     val specificBlog = blogs.find { it.name == diseaseName }
 
+    if (diseaseName != "Healthy Wheat") {
+        AppNotificationManager.sendNotification(
+            context = LocalContext.current,
+            "Disease Detected: $diseaseName",
+            "${diseaseName} is being detected in your crop.\n Make sure its treatment"
+        )
+    }
     Scaffold(
         topBar = {
             TopAppBar(
