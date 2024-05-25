@@ -42,6 +42,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -84,6 +85,7 @@ import com.final_year_project.kisaan10.R
 import com.final_year_project.kisaan10.ViewModel.BlogsViewModel
 import com.final_year_project.kisaan10.ViewModel.ImageSelectionViewModel
 import com.final_year_project.kisaan10.ViewModel.WheatViewModel
+import com.final_year_project.kisaan10.localDB.Blogs
 import com.final_year_project.kisaan10.screens.components.navTextDescription
 import com.final_year_project.kisaan10.screens.components.navTextHeading
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -485,9 +487,16 @@ fun ConfirmScreen(imagewheatViewModel: ImageSelectionViewModel, wheatViewModel: 
 }
 
 
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DiseasedResultScreen(viewModel: BlogsViewModel, selectionViewModel: ImageSelectionViewModel, wheatViewModel: WheatViewModel, navController: NavHostController) {
+fun DiseasedResultScreen(
+    viewModel: BlogsViewModel,
+    selectionViewModel: ImageSelectionViewModel,
+    wheatViewModel: WheatViewModel,
+    navController: NavHostController
+) {
     val imageUri = selectionViewModel.selectedImageUri.value
     val bitmapofImage = selectionViewModel.uriToBitmap(LocalContext.current)
     bitmapofImage?.let { wheatViewModel.predictDisease(it) }
@@ -495,10 +504,6 @@ fun DiseasedResultScreen(viewModel: BlogsViewModel, selectionViewModel: ImageSel
     val diseaseConfidence = wheatViewModel.diseasePredictionResult.value?.confidence
     val blogs by viewModel.allBlogs.observeAsState(initial = emptyList())
     val specificBlog = blogs.find { it.name == diseaseName }
-    if (diseaseName != null && diseaseConfidence!=null) {
-        Log.v("HomeScreen", diseaseName)
-        Log.v("HomeScreen", diseaseConfidence.toString())
-    }
 
     Scaffold(
         topBar = {
@@ -506,147 +511,125 @@ fun DiseasedResultScreen(viewModel: BlogsViewModel, selectionViewModel: ImageSel
                 title = { Text(text = "Disease Details") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back" )
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
             )
         }
     ) { innerPadding ->
-        if (specificBlog != null) {
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
                 .padding(8.dp)
         ) {
-            Card(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                elevation = CardDefaults.cardElevation(4.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    val context = LocalContext.current
-
-                    // Remove the "@drawable/" prefix
-                    val resourceName =  specificBlog.pictureResId.removePrefix("@drawable/")
-
-                    // Get the resource ID dynamically
-                    val resourceId = context.resources.getIdentifier(resourceName, "drawable", context.packageName)
-
-                    Image(
-                        painter = painterResource(id = resourceId), // Ensure pictureResId is a valid resource ID
-                        contentDescription = "Disease Name",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .height(200.dp)
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Text(
-                        text = specificBlog.name,
-                        style = TextStyle(
-                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
-                            fontSize = 24.sp,
-                            color = MaterialTheme.colorScheme.primary),
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
-                    HorizontalDivider(
-                        modifier = Modifier.fillMaxWidth(),
-                        thickness = 1.dp,
-                        color = Color(0xFF333333)
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    Text(text = "Check if your crop has following symptoms",
-                        style = TextStyle(
-                            fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.error,
-                            fontStyle = FontStyle.Italic)
-                    )
-                    Spacer(modifier = Modifier.height(15.dp))
-                    Text(text = "Symptoms",
-                        style = TextStyle(
-                            fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
-                            fontSize = 20.sp,
-                            color = Color.Black
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(15.dp))
-
-                    Text(
-                        text = specificBlog.symptom,
-                        style = TextStyle(
-                            fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
-                            fontSize = 15.sp,
-                            color = Color.Black,
-                            lineHeight = 25.sp,
-                        ),
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Justify
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
-                    HorizontalDivider(
-                        modifier = Modifier.fillMaxWidth(),
-                        thickness = 1.dp,
-                        color = Color(0xFF333333)
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Text(text = "Treatment",
-                        style = TextStyle(
-                            fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
-                            fontSize = 20.sp,
-                            color = Color.Black
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(15.dp))
-                    Text(
-                        text = specificBlog.treatment,
-                        style = TextStyle(
-                            fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
-                            fontSize = 15.sp,
-                            color = Color.Black,
-                            lineHeight = 25.sp,
-                        ),
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Justify
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
-                    HorizontalDivider(
-                        modifier = Modifier.fillMaxWidth(),
-                        thickness = 1.dp,
-                        color = Color(0xFF333333)
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Text(text = "Preventions",
-                        style = TextStyle(
-                            fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
-                            fontSize = 20.sp,
-                            color = Color.Black
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(15.dp))
-                    Text(
-                        text =specificBlog.prevention,
-                        style = TextStyle(
-                            fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
-                            fontSize = 15.sp,
-                            color = Color.Black,
-                            lineHeight = 25.sp,
-                        ),
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Justify
-                    )
-                    Spacer(modifier = Modifier.height(15.dp))
-
-                }
+            specificBlog?.let { blog ->
+                BlogCard(blog = blog)
+            } ?: run {
+                Text(text = "No disease detected")
             }
         }
     }
+}
+
+@Composable
+fun BlogCard(blog: Blogs) {
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.onBackground),
+        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            val context = LocalContext.current
+            val resourceName = blog.pictureResId.removePrefix("@drawable/")
+            val resourceId = context.resources.getIdentifier(resourceName, "drawable", context.packageName)
+
+            Image(
+                painter = painterResource(id = resourceId),
+                contentDescription = blog.name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .height(200.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
+                text = blog.name,
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                    fontSize = 24.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+            Divider()
+            Spacer(modifier = Modifier.height(15.dp))
+            if (blog.name == "Healthy Wheat") {
+                BlogContent(blog = blog, healthMessage = "Your crops look quite healthy", messageColor = MaterialTheme.colorScheme.primary)
+            } else {
+                BlogContent(blog = blog, healthMessage = "Check if your crop has following symptoms", messageColor = MaterialTheme.colorScheme.error )
+            }
+        }
+    }
+}
+
+@Composable
+fun BlogContent(blog: Blogs, healthMessage: String,messageColor:Color) {
+    Column {
+        Text(
+            text = healthMessage,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                fontSize = 14.sp,
+                color = messageColor,
+                fontStyle = FontStyle.Italic
+            )
+        )
+
+        Spacer(modifier = Modifier.height(15.dp))
+        BlogSection(title = "Symptoms", content = blog.symptom)
+        BlogSection(title = if (blog.name == "Healthy Wheat") "Maintenance" else "Treatment", content = blog.treatment)
+        BlogSection(title = if (blog.name == "Healthy Wheat") "Some Tips for Your Crop" else "Preventions", content = blog.prevention)
+    }
+}
+
+@Composable
+fun BlogSection(title: String, content: String) {
+    Column {
+        Text(
+            text = title,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                fontSize = 20.sp,
+                color = MaterialTheme.colorScheme.primary
+            )
+        )
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        Text(
+            text = content,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                fontSize = 15.sp,
+                color = Color.Black,
+                lineHeight = 25.sp,
+                textAlign = TextAlign.Justify
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+        Divider()
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
@@ -672,147 +655,12 @@ fun DiseasedResultScreen(viewModel: BlogsViewModel, selectionViewModel: ImageSel
 
 
 
-//package com.final_year_project.kisaan10.screens
-//
-//import androidx.compose.foundation.background
-//import androidx.compose.foundation.border
-//import androidx.compose.foundation.layout.Arrangement
-//import androidx.compose.foundation.layout.Column
-//import androidx.compose.foundation.layout.Row
-//import androidx.compose.foundation.layout.fillMaxSize
-//import androidx.compose.foundation.layout.fillMaxWidth
-//import androidx.compose.foundation.layout.height
-//import androidx.compose.foundation.layout.padding
-//import androidx.compose.foundation.layout.size
-//import androidx.compose.foundation.layout.width
-//import androidx.compose.foundation.shape.CircleShape
-//import androidx.compose.foundation.shape.RoundedCornerShape
-//import androidx.compose.material.icons.Icons
-//import androidx.compose.material.icons.filled.AddAPhoto
-//import androidx.compose.material3.Icon
-//import androidx.compose.material3.MaterialTheme
-//import androidx.compose.material3.OutlinedButton
-//import androidx.compose.material3.Text
-//import androidx.compose.runtime.Composable
-//import androidx.compose.ui.Alignment
-//import androidx.compose.ui.Modifier
-//import androidx.compose.ui.graphics.Brush
-//import androidx.compose.ui.graphics.Color
-//import androidx.compose.ui.graphics.TileMode
-//import androidx.compose.ui.text.font.Font
-//import androidx.compose.ui.text.font.FontFamily
-//import androidx.compose.ui.text.font.FontWeight
-//import androidx.compose.ui.unit.dp
-//import androidx.compose.ui.unit.sp
-//import com.final_year_project.kisaan10.R
-//import com.final_year_project.kisaan10.screens.components.navTextDescription
-//import com.final_year_project.kisaan10.screens.components.navTextHeading
-//import com.final_year_project.kisaan10.screens.components.recentDisease
-//
-//
-//@Composable
-//fun HomeScreen() {
-//    val gradient = Brush.radialGradient(
-//        0.0f to Color.Green,
-//        1.0f to Color.Black,
-//        radius = 370.0f,
-//        tileMode = TileMode.Clamp
-//    )
-//
-//    Column(
-//        modifier = Modifier
-////            .padding(innerPadding)
-//            .fillMaxSize()
-//            .background(color = MaterialTheme.colorScheme.onBackground),
-////        verticalArrangement = Arrangement.Center,
-////        horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-//        navTextHeading(text = "Diagnose")
-//        navTextDescription(text = "Identify and Cure Plant Disease")
-//        Row(
-//            modifier = Modifier
-////                .padding(innerPadding)
-//                .fillMaxWidth()
-//                .height(230.dp),
-//            horizontalArrangement = Arrangement.Center,
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            OutlinedButton(
-//                onClick = { /*TODO*/ },
-//                Modifier
-//                    .background(gradient, CircleShape)
-//                    .height(200.dp)
-//                    .width(200.dp),
-//                shape = CircleShape
-//
-//                ) {
-//                Icon(
-//                    Icons.Filled.AddAPhoto,
-//                    contentDescription = "Camera Icon",
-//                    tint = Color.White,
-//                    modifier = Modifier.size(55.dp)
-//                    )
-//            }
-//        }
-//        Row (
-//            modifier = Modifier
-//                .background(MaterialTheme.colorScheme.onBackground)
-//                .padding(10.dp)
-//                .fillMaxWidth()
-//                .height(310.dp),
-//            horizontalArrangement = Arrangement.Center,
-//            verticalAlignment = Alignment.CenterVertically
-//        ){
-//            Column(
-//                modifier = Modifier
-//                .background(Color.White, RoundedCornerShape(40.dp))
-//                .fillMaxWidth()
-//                .height(310.dp)
-//                .border(0.5.dp, Color.LightGray, RoundedCornerShape(40.dp)),
-//            ){
-//                Row (modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(40.dp),
-//                    horizontalArrangement = Arrangement.Center,
-//                    verticalAlignment = Alignment.CenterVertically
-//                ){
-//                    Text(text = "Recent Detected Plants",
-//                        modifier = Modifier
-//                            .padding(top = 10.dp),
-//                        style = androidx.compose.ui.text.TextStyle(
-//                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
-//                            fontSize = 18.sp,
-//                            color = Color.Black
-//                        ),
-//                    )
-//                }
-//
-//                Row (
-//                    Modifier.fillMaxWidth(),
-//                    horizontalArrangement = Arrangement.Center,
-//                    verticalAlignment = Alignment.CenterVertically
-//                ){
-//                    recentDisease(name = "Yellow Rust", image = R.drawable.crops)
-//                    recentDisease(name = "Yellow Rust", image = R.drawable.crops)
-//                    recentDisease(name = "Yellow Rust", image = R.drawable.crops)
-////                    recentDisease(name = "Yellow Rust", image = R.drawable.crops)
-//                }
-//                Row (
-//                    Modifier.fillMaxWidth().padding(top = 15.dp),
-//                    horizontalArrangement = Arrangement.Center,
-//                    verticalAlignment = Alignment.CenterVertically
-//                ){
-//                    recentDisease(name = "Yellow Rust", image = R.drawable.crops)
-//                    recentDisease(name = "Yellow Rust", image = R.drawable.crops)
-//                    recentDisease(name = "Yellow Rust", image = R.drawable.crops)
-////                    recentDisease(name = "Yellow Rust", image = R.drawable.crops)
-//                }
-//            }
-//
-//        }
-//    }
-//}
-////
+
+
+
+
+
+
 //@Preview
 //@Composable
 //fun Preview(){
