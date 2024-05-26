@@ -34,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.yourapp.AppNotificationManager
 import com.final_year_project.kisaan10.ViewModel.BlogsViewModel
 import com.final_year_project.kisaan10.ViewModel.ImageSelectionViewModel
+import com.final_year_project.kisaan10.ViewModel.RecentDiseaseViewModel
 import com.final_year_project.kisaan10.ViewModel.WheatViewModel
 import com.final_year_project.kisaan10.auth.googleAuth.GoogleAuthUiClient
 import com.final_year_project.kisaan10.auth.googleAuth.SignInViewModel
@@ -58,6 +59,11 @@ class MainActivity : ComponentActivity() {
     private val blogsViewModel: BlogsViewModel by lazy {
         ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))
             .get(BlogsViewModel::class.java)
+    }
+    //Recent Disease ViewModel
+    private val recentDiseaseViewModel: RecentDiseaseViewModel by lazy {
+        ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))
+            .get(RecentDiseaseViewModel::class.java)
     }
 //  Wheat ViewModel
     private val wheatViewModel: WheatViewModel by lazy {
@@ -220,6 +226,7 @@ class MainActivity : ComponentActivity() {
         }
 
         MainScreen(
+            recentDiseaseViewModel,
             imageSelectionViewModel,
             blogsViewModel,
             wheatViewModel,
