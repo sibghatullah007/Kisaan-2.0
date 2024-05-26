@@ -52,9 +52,7 @@ val cornerRadius = 25.dp
 fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
                  signInNavigation:()->Unit,
                  signUpWithGoogle:()->Unit,
-//                 signUpWithFacebook:()->Unit,
                  state: SignInState,
-//                 errorMessage: String?,
                  context: Context = LocalContext.current) {
 
 

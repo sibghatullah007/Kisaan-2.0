@@ -124,9 +124,9 @@ fun SetUpNavGraph(
         composable("appInfo"){
             AppInfoScreen(navController)
         }
-//        composable("suggestion"){
-//            SuggestionScreen()
-//        }
+        composable("suggestion"){
+            SuggestionScreen(navController)
+        }
         composable("help_center"){
             val sampleFaqs = listOf(
                 FAQ("What is KisaanApp?", "KisaanApp is a mobile application designed to assist farmers with crop disease detection, providing quick and accurate diagnoses based on images of crops."),

@@ -1,17 +1,19 @@
 package com.final_year_project.kisaan10.screens
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,12 +24,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material.icons.automirrored.outlined.Logout
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.Edit
@@ -39,7 +40,6 @@ import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material.icons.outlined.SettingsSuggest
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -74,6 +74,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -194,9 +195,11 @@ private fun OptionsItemStyle(navController:NavController,item: OptionsData, cont
                 } else if (item.title === "Help Center") {
                     navController.navigate("help_center")
                 } else if (item.title == "Tell Friends") {
-                    shareLink(context, "Tired of loosing crops to undetected diseases?\n" +
-                            "Your crop doctor is here with latest technology to save your crops and boost your yeilds.\n" +
-                            "Click the link below to download the Kisaan App & try it now \n\n https://www.kisaan-app.com")
+                    shareLink(
+                        context, "Tired of loosing crops to undetected diseases?\n" +
+                                "Your crop doctor is here with latest technology to save your crops and boost your yeilds.\n" +
+                                "Click the link below to download the Kisaan App & try it now \n\n https://www.kisaan-app.com"
+                    )
                 } else if (item.title == "Clear Cache") {
                     clearCache(context)
                 } else if (item.title === "Suggestion") {
@@ -266,7 +269,7 @@ private fun prepareOptionsData() {
     val options = listOf(
         OptionsData(Icons.Outlined.Person, "Account", "Manage your account"),
         OptionsData(Icons.Outlined.Memory, "Clear Cache", "Clear your cache memory"),
-//        OptionsData(Icons.Outlined.SettingsSuggest, "Suggestion", "Suggest to improve"),
+        OptionsData(Icons.Outlined.SettingsSuggest, "Suggestion", "Suggest to improve"),
         OptionsData(Icons.Outlined.Policy, "Privacy Policy", "Terms and conditions"),
         OptionsData(Icons.AutoMirrored.Outlined.Help, "Help Center", "FAQs and customer support"),
         OptionsData(Icons.Outlined.Share, "Tell Friends", "Share this application"),
@@ -285,11 +288,11 @@ fun AppInfoScreen(navController:NavController) {
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = "App Info", color = MaterialTheme.colorScheme.primary)
+                        Text(text = "Suggestion", color = MaterialTheme.colorScheme.primary)
                     },
                     navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "Back" )
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back" )
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
@@ -449,181 +452,267 @@ private fun formatFileSize(size: Long): String {
 }
 
 
-//@Composable
-//fun SuggestionScreen() {
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("QueryPermissionsNeeded")
+@Composable
+fun SuggestionScreen(navController: NavController) {
 //    var email by remember { mutableStateOf("") }
-//    var description by remember { mutableStateOf("") }
+    var subject by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
 //    var emailError by remember { mutableStateOf(false) }
-//    var descriptionError by remember { mutableStateOf(false) }
-//
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(MaterialTheme.colorScheme.onBackground),
-//            verticalArrangement = Arrangement.Center,
-//            horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-////        Text(
-////            text = "Your email",
-////            fontSize = 16.sp,
-////            color = Color.Black
-////        )
-//        OutlinedTextField(
-//            value = email,
-//            onValueChange = {
-//                email = it
-//                emailError = !android.util.Patterns.EMAIL_ADDRESS.matcher(it).matches()
-//            },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(
-//                    start = textFieldPadding,
-//                    end = textFieldPadding,
-//                    top = textFieldPadding,
-//                )
-//                .background(Color.White, RoundedCornerShape(cornerRadius)),
-//            singleLine = true,
-//            shape = RoundedCornerShape(cornerRadius),
-//            textStyle = screenTextField(MaterialTheme.colorScheme.primary),
-//            placeholder = {
-//                Text(text = "Enter your Email",
-//                    style = screenTextField(Color(0xFF808080))
-//                )
-//            },
-//            leadingIcon = {
-//                Icon(
-//                    imageVector = Icons.Outlined.Mail,
-//                    contentDescription = "mailIcon",
-//                    tint = MaterialTheme.colorScheme.primary
-//                )
-//            },
-//            colors = OutlinedTextFieldDefaults.colors(
-//                cursorColor = MaterialTheme.colorScheme.primary,
-//                focusedBorderColor = MaterialTheme.colorScheme.primary,
-//                unfocusedBorderColor = Color.White,
-//            ),
-//            keyboardOptions = KeyboardOptions.Default.copy(
-//                keyboardType = KeyboardType.Email,
-//                imeAction = ImeAction.Next
-//            )
-//        )
-//        if (emailError) {
-//            Text(text = "Invalid email address", color = Color.Red, fontSize = 12.sp)
-//        }
-//
-//        Spacer(modifier = Modifier.height(16.dp))
-//
-////        Text(
-////            text = "Description",
-////            fontSize = 16.sp,
-////            color = Color.Black
-////        )
-//        OutlinedTextField(
-//            value = description,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(250.dp)
-//                .padding(
-//                    start = 20.dp,
-//                    end = 20.dp,
-//                    top = 20.dp,
-//                )
-//                .background(Color.White, RoundedCornerShape(cornerRadius)),
-//            shape = RoundedCornerShape(cornerRadius),
-//            textStyle = screenTextField(MaterialTheme.colorScheme.primary),
-//            placeholder = {
-//                Text(text = "Enter your Suggestion here",
-//                    style = screenTextField(Color(0xFF808080))
-//                )
-//            },
-//
-//            leadingIcon = {
-//                Box(
+    val subjectError by remember { mutableStateOf(false) }
+    var descriptionError by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+
+    Kisaan10Theme {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(text = "App Info", color = MaterialTheme.colorScheme.primary)
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                )
+            }
+        ) { paddingValues ->
+            val inner = paddingValues
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 20.dp)
+                    .background(MaterialTheme.colorScheme.onBackground),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Column(modifier = Modifier.fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.Red, RoundedCornerShape(20.dp))
+                            .padding(horizontal = 16.dp, vertical = 20.dp)
+                    ) {
+                        Text(
+                            text = "Remember your suggestions are quite valuable to improve the application!",
+                            style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                                fontSize = 14.sp,
+                                color = Color.White,
+                                textAlign = TextAlign.Justify,
+                                lineHeight = 20.sp,
+                                letterSpacing = 2.sp
+                            ),
+                        )
+                    }
+                }
+//                OutlinedTextField(
+//                    value = email,
+//                    onValueChange = {
+//                        email = it
+//                        emailError = !android.util.Patterns.EMAIL_ADDRESS.matcher(it).matches()
+//                    },
 //                    modifier = Modifier
-//                        .padding(top = 8.dp) // Adjust the top padding as needed
-//                        .size(24.dp)
-//                ) {
-//                Icon(
-//                    imageVector = Icons.Outlined.SettingsSuggest,
-//                    contentDescription = "suggestionIcon",
-//                    tint = MaterialTheme.colorScheme.primary,
+//                        .fillMaxWidth()
+//                        .padding(
+//                            start = textFieldPadding,
+//                            end = textFieldPadding,
+//                            top = textFieldPadding,
+//                        )
+//                        .background(Color.White, RoundedCornerShape(cornerRadius)),
+//                    singleLine = true,
+//                    shape = RoundedCornerShape(cornerRadius),
+//                    textStyle = screenTextField(MaterialTheme.colorScheme.primary),
+//                    placeholder = {
+//                        Text(
+//                            text = "Enter your Email",
+//                            style = screenTextField(Color(0xFF808080))
+//                        )
+//                    },
+//                    leadingIcon = {
+//                        Icon(
+//                            imageVector = Icons.Outlined.Mail,
+//                            contentDescription = "mailIcon",
+//                            tint = MaterialTheme.colorScheme.primary
+//                        )
+//                    },
+//                    colors = OutlinedTextFieldDefaults.colors(
+//                        cursorColor = MaterialTheme.colorScheme.primary,
+//                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+//                        unfocusedBorderColor = Color.White,
+//                    ),
+//                    keyboardOptions = KeyboardOptions.Default.copy(
+//                        keyboardType = KeyboardType.Email,
+//                        imeAction = ImeAction.Next
+//                    )
 //                )
-//                }
-//              },
-//            colors = OutlinedTextFieldDefaults.colors(
-//                cursorColor = MaterialTheme.colorScheme.primary,
-//                focusedBorderColor = MaterialTheme.colorScheme.primary,
-//                unfocusedBorderColor = Color.White,
-//            ),
-//            keyboardOptions = KeyboardOptions.Default.copy(
-//                imeAction = ImeAction.Done
-//            ), onValueChange = {}
-//        )
-//        if (descriptionError) {
-//            Text(text = "Description cannot be empty", color = Color.Red, fontSize = 12.sp)
-//        }
+                OutlinedTextField(
+                    value = subject,
+                    onValueChange = { subject = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = textFieldPadding,
+                            end = textFieldPadding,
+                            top = textFieldPadding,
+                        )
+                        .background(Color.White, RoundedCornerShape(cornerRadius)),
+                    singleLine = true,
+                    shape = RoundedCornerShape(cornerRadius),
+                    textStyle = screenTextField(MaterialTheme.colorScheme.primary),
+                    placeholder = {
+                        Text(
+                            text = "Subject of Suggestion",
+                            style = screenTextField(Color(0xFF808080))
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Mail,
+                            contentDescription = "mailIcon",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        cursorColor = MaterialTheme.colorScheme.primary,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = Color.White,
+                    ),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
+                )
+                if (subjectError) {
+                    Text(text = "Subject cannot be empty", color = Color.Red, fontSize = 12.sp)
+                }
+
+                OutlinedTextField(
+                    value = description,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp)
+                        .padding(
+                            start = 20.dp,
+                            end = 20.dp,
+                            top = 20.dp,
+                        )
+                        .background(Color.White, RoundedCornerShape(cornerRadius)),
+                    shape = RoundedCornerShape(cornerRadius),
+                    textStyle = screenTextField(MaterialTheme.colorScheme.primary),
+                    placeholder = {
+                        Text(
+                            text = "Enter your Suggestion here",
+                            style = screenTextField(Color(0xFF808080))
+                        )
+                    },
+
+                    leadingIcon = {
+                        Box(
+                            modifier = Modifier
+                                .padding(top = 14.dp) // Adjust the top padding as needed
+                                .fillMaxHeight()
+                                .align(Alignment.Start),
+                            contentAlignment = Alignment.TopStart
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.SettingsSuggest,
+                                contentDescription = "suggestionIcon",
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                    },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        cursorColor = MaterialTheme.colorScheme.primary,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = Color.White,
+                    ),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Done
+                    ), onValueChange = { description = it }
+                )
+                if (descriptionError) {
+                    Text(text = "Description cannot be empty", color = Color.Red, fontSize = 12.sp)
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = textFieldPadding,
+                            end = textFieldPadding,
+                            top = textFieldPadding
+                        ),
+                    shape = RoundedCornerShape(cornerRadius),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    onClick = {
+//                        emailError = !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+                        descriptionError = description.isBlank()
+                        if (/*!emailError &&*/ !subjectError && !descriptionError) {
+                            val intent = Intent(Intent.ACTION_SENDTO).apply {
+                                data = Uri.parse("mailto:")
+                                putExtra(Intent.EXTRA_EMAIL, arrayOf("kisaan002@gmail.com"))
+                                putExtra(Intent.EXTRA_SUBJECT, subject)
+                                putExtra(Intent.EXTRA_TEXT, description)
+                            }
+                            if (intent.resolveActivity(context.packageManager) != null) {
+                                context.startActivity(intent)
+                            }
+                        }
+                    },
+                ) {
+                    Text(text = "Send", color = Color.White)
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //
-//        Spacer(modifier = Modifier.height(24.dp))
 //
-//        Button(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(
-//                    start = textFieldPadding,
-//                    end = textFieldPadding,
-//                    top = textFieldPadding
-//                ),
-//            shape = RoundedCornerShape(cornerRadius),
-//            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-//            onClick = {
-//                emailError = !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-//                descriptionError = description.isBlank()
-//                if (!emailError && !descriptionError) {
-//                    // Handle send suggestion
-//                }
-//            },
-//        ) {
-//            Text(text = "Send", color = Color.White)
-//        }
-//    }
-//}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //@Preview
 //@Composable
 //fun Preview(){
-// AppInfo()
+// SuggestionScreen()
 //}
