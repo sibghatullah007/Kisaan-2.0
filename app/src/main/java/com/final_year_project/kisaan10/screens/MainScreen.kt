@@ -36,7 +36,8 @@ fun MainScreen(imageSelectionViewModel: ImageSelectionViewModel,blogsViewModel: 
         "blog_result_route/{blogId}",
         "appInfo",
         "help_center",
-        "suggestion")
+        "suggestion",
+        "privacy_policy")
 
     Scaffold(
         bottomBar = {
@@ -126,6 +127,9 @@ fun SetUpNavGraph(
         }
         composable("suggestion"){
             SuggestionScreen(navController)
+        }
+        composable("privacy_policy"){
+            PrivacyPolicyScreen(navController)
         }
         composable("help_center"){
             val sampleFaqs = listOf(

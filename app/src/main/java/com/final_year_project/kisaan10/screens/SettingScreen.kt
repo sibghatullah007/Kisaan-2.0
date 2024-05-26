@@ -22,14 +22,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Info
@@ -204,6 +207,8 @@ private fun OptionsItemStyle(navController:NavController,item: OptionsData, cont
                     clearCache(context)
                 } else if (item.title === "Suggestion") {
                     navController.navigate("suggestion")
+                } else if (item.title === "Privacy Policy") {
+                    navController.navigate("privacy_policy")
                 } else {
                     Toast
                         .makeText(context, item.title, Toast.LENGTH_SHORT)
@@ -490,7 +495,8 @@ fun SuggestionScreen(navController: NavController) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(modifier = Modifier.fillMaxWidth()
+                Column(modifier = Modifier
+                    .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally) {
@@ -678,6 +684,149 @@ fun SuggestionScreen(navController: NavController) {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PrivacyPolicyScreen(navController: NavController) {
+    Kisaan10Theme {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(text = "Privacy Policy", color = MaterialTheme.colorScheme.primary)
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                )
+            }
+        ) { inn ->
+            val innn = inn
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(30.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Spacer(modifier = Modifier.height(35.dp))
+                Text(
+                    text = "Introduction",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    ),
+                )
+                Text(
+                    text = "Welcome to the Kisaan App. Your privacy is important to us. This privacy policy explains how we collect, use, and share information about you when you use our application.",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                        fontSize = 14.sp,
+                        color = Color.Black
+                    ),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Data Collection",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    ),
+                )
+                Text(
+                    text = "We collect information about you when you use our app. This includes information you provide when you register, information collected automatically, and information from third-party sources.",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                        fontSize = 14.sp,
+                        color = Color.Black
+                    ),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Data Usage",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    ),
+                )
+                Text(
+                    text = "We use the information we collect to provide, maintain, and improve our services, to develop new services, and to protect our users.",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                        fontSize = 14.sp,
+                        color = Color.Black
+                    ),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Data Sharing",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    ),
+                )
+                Text(
+                    text = "We do not share your personal information with third parties except as necessary to provide our services, comply with the law, or protect our rights.",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                        fontSize = 14.sp,
+                        color = Color.Black
+                    ),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Your Rights",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    ),
+                )
+                Text(
+                    text = "You have the right to access, modify, or delete your personal information. You can also object to or restrict certain types of processing of your personal information.",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                        fontSize = 14.sp,
+                        color = Color.Black
+                    ),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Contact Us",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    ),
+                )
+                Text(
+                    text = "If you have any questions about this privacy policy, please contact us at kisaan002@gmail.com.",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                        fontSize = 14.sp,
+                        color = Color.Black
+                    ),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = {
+                        navController.navigateUp()
+                              },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Text("Back")
+                }
+            }
+        }
+    }
+}
+
 
 
 
@@ -714,5 +863,5 @@ fun SuggestionScreen(navController: NavController) {
 //@Preview
 //@Composable
 //fun Preview(){
-// SuggestionScreen()
+// PrivacyPolicyScreen()
 //}
