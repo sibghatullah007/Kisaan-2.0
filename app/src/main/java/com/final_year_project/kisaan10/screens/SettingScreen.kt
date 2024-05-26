@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -83,9 +84,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.final_year_project.kisaan10.R
+import com.final_year_project.kisaan10.ViewModel.TAG
 import com.final_year_project.kisaan10.auth.googleAuth.UserData
 import com.final_year_project.kisaan10.screens.components.screenTextField
 import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -835,6 +839,7 @@ fun PrivacyPolicyScreen(navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountDetailsScreen(navController: NavController,userData: UserData?) {
+
     Kisaan10Theme {
         Scaffold(
             topBar = {
@@ -876,14 +881,21 @@ fun AccountDetailsScreen(navController: NavController,userData: UserData?) {
 
                 AccountDetailItem("Full Name", userData?.username.toString()
                 ) { navController.navigate("edit_account_info") }
+
                 AccountDetailItem("E-mail Address", userData?.userEmail.toString())
                 { navController.navigate("edit_account_info") }
-                AccountDetailItem("Password", "***********")
-                { navController.navigate("edit_account_info") }
+                if (userData?.authProvider.toString()=="password") {
+                    AccountDetailItem("Password", "***********")
+                    {
+                        navController.navigate("edit_account_info")
+                        Log.v("The  Current User is", userData?.authProvider.toString())
+                    }
+                }
+            }
             }
         }
     }
-}
+
 
         @Composable
         fun AccountDetailItem(label: String, value: String,onClick:()->Unit) {
@@ -942,7 +954,6 @@ fun EditAccountDetailScreen(navController: NavController, userData: UserData?) {
             }
         ) {it->
             val a = it
-//            Spacer(modifier = Modifier.height(80.dp))
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -964,7 +975,7 @@ fun EditAccountDetailScreen(navController: NavController, userData: UserData?) {
                         )
                     }
                 )
-
+                if (userData?.authProvider.toString() =="password") {
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
@@ -980,24 +991,35 @@ fun EditAccountDetailScreen(navController: NavController, userData: UserData?) {
                     }
                 )
 
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    label = { Text("Password") },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.Lock,
-                            contentDescription = "Password Icon"
-                        )
-                    },
-                    visualTransformation = PasswordVisualTransformation()
-                )
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        label = { Text("Password") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Outlined.Lock,
+                                contentDescription = "Password Icon"
+                            )
+                        },
+                        visualTransformation = PasswordVisualTransformation()
+                    )
 
+                }else{
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text(text = "Google Auth Users can't update their Email & password!",
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.error
+                        ))
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                }
                 Button(
-                    onClick = { /* TODO: Save changes */ },
+                    onClick = { saveChanges(name, email, password)},
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp)
@@ -1009,8 +1031,44 @@ fun EditAccountDetailScreen(navController: NavController, userData: UserData?) {
     }
 }
 
+private fun saveChanges(name: String, email: String, password: String) {
+    val auth = FirebaseAuth.getInstance()
+    val currentUser = auth.currentUser
 
+    if (currentUser != null) {
+        // Update user information
+        val profileUpdates = UserProfileChangeRequest.Builder()
+            .setDisplayName(name)
+            .build()
 
+        currentUser.updateProfile(profileUpdates).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Username updated successfully
+                Log.d(TAG, "User profile updated.")
+            }
+        }
+
+        // Check if the password is changed
+        if (password.isNotEmpty()) {
+            currentUser.updatePassword(password).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Password updated successfully
+                    Log.d(TAG, "User password updated.")
+                }
+            }
+        }
+
+        // Update email if changed
+        if (currentUser.email != email) {
+            currentUser.updateEmail(email).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Email updated successfully
+                    Log.d(TAG, "User email updated.")
+                }
+            }
+        }
+    }
+}
 
 
 

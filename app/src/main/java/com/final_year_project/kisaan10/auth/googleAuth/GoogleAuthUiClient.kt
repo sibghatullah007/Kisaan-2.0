@@ -9,7 +9,9 @@ import com.final_year_project.kisaan10.ViewModel.UserViewModel
 import com.final_year_project.kisaan10.model.UserInfo
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -31,7 +33,8 @@ class GoogleAuthUiClient(
                     UserData(
                         userId = it.uid,
                         username = username,
-                        userEmail = it.email
+                        userEmail = it.email,
+                        authProvider = getAuthProvider(it)
                     )
                 },
                 errorMessage = null
@@ -91,7 +94,8 @@ class GoogleAuthUiClient(
                     UserData(
                         userId = uid,
                         username = displayName ?: getUserUsernameFromFirestore(email!!),
-                        userEmail = email
+                        userEmail = email,
+                        authProvider = getAuthProvider(auth.currentUser!!)
                     )
                 },
                 errorMessage = null
@@ -123,7 +127,8 @@ class GoogleAuthUiClient(
             UserData(
                 userId = uid,
                 username = username,
-                userEmail = email
+                userEmail = email,
+                authProvider = getAuthProvider(auth.currentUser!!)
             )
         }
     }
@@ -140,6 +145,16 @@ class GoogleAuthUiClient(
             .setAutoSelectEnabled(true)
             .build()
     }
+    private fun getAuthProvider(user: FirebaseUser): String? {
+        user.providerData.forEach {
+            when (it.providerId) {
+                GoogleAuthProvider.PROVIDER_ID -> return "google"
+                EmailAuthProvider.PROVIDER_ID -> return "password"
+            }
+        }
+        return null
+    }
+
 }
 
 
