@@ -34,7 +34,9 @@ import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.Memory
 import androidx.compose.material.icons.outlined.Person
@@ -74,9 +76,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -208,7 +210,7 @@ private fun OptionsItemStyle(navController:NavController,item: OptionsData, cont
                     navController.navigate("suggestion")
                 } else if (item.title === "Privacy Policy") {
                     navController.navigate("privacy_policy")
-                }else if (item.title === "Account") {
+                } else if (item.title === "Account") {
                     navController.navigate("account_info")
                 } else {
                     Toast
@@ -872,20 +874,24 @@ fun AccountDetailsScreen(navController: NavController,userData: UserData?) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                AccountDetailItem("Full Name", userData?.username.toString())
+                AccountDetailItem("Full Name", userData?.username.toString()
+                ) { navController.navigate("edit_account_info") }
                 AccountDetailItem("E-mail Address", userData?.userEmail.toString())
+                { navController.navigate("edit_account_info") }
                 AccountDetailItem("Password", "***********")
+                { navController.navigate("edit_account_info") }
             }
         }
     }
 }
 
         @Composable
-        fun AccountDetailItem(label: String, value: String) {
+        fun AccountDetailItem(label: String, value: String,onClick:()->Unit) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .clickable { onClick() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
@@ -912,6 +918,96 @@ fun AccountDetailsScreen(navController: NavController,userData: UserData?) {
         }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditAccountDetailScreen(navController: NavController, userData: UserData?) {
+    var name by remember { mutableStateOf(userData?.username ?: "") }
+    var email by remember { mutableStateOf(userData?.userEmail ?: "") }
+    var password by remember { mutableStateOf("") }
+
+    Kisaan10Theme {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(text = "Edit Account Details", color = MaterialTheme.colorScheme.primary)
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                )
+            }
+        ) {it->
+            val a = it
+//            Spacer(modifier = Modifier.height(80.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 80.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    label = { Text("Full Name") },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Person,
+                            contentDescription = "Full Name Icon"
+                        )
+                    }
+                )
+
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    label = { Text("E-mail Address") },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Email,
+                            contentDescription = "Email Icon"
+                        )
+                    }
+                )
+
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    label = { Text("Password") },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Lock,
+                            contentDescription = "Password Icon"
+                        )
+                    },
+                    visualTransformation = PasswordVisualTransformation()
+                )
+
+                Button(
+                    onClick = { /* TODO: Save changes */ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp)
+                ) {
+                    Text(text = "Save Changes")
+                }
+            }
+        }
+    }
+}
 
 
 

@@ -9,7 +9,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -38,7 +37,8 @@ fun MainScreen(imageSelectionViewModel: ImageSelectionViewModel,blogsViewModel: 
         "help_center",
         "suggestion",
         "privacy_policy",
-        "account_info")
+        "account_info",
+        "edit_account_info")
 
     Scaffold(
         bottomBar = {
@@ -134,6 +134,9 @@ fun SetUpNavGraph(
         }
         composable("account_info"){
             AccountDetailsScreen(navController,userData)
+        }
+        composable("edit_account_info"){
+            EditAccountDetailScreen(navController,userData)
         }
         composable("help_center"){
             val sampleFaqs = listOf(

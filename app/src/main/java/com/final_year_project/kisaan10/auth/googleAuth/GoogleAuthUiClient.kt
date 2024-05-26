@@ -119,6 +119,7 @@ class GoogleAuthUiClient(
             if (displayName==null || displayName.toString()==""){
                 username = getUserUsernameFromFirestore(email!!)
             }
+
             UserData(
                 userId = uid,
                 username = username,
