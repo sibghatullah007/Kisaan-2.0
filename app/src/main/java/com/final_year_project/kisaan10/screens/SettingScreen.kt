@@ -32,7 +32,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Info
@@ -209,6 +208,8 @@ private fun OptionsItemStyle(navController:NavController,item: OptionsData, cont
                     navController.navigate("suggestion")
                 } else if (item.title === "Privacy Policy") {
                     navController.navigate("privacy_policy")
+                }else if (item.title === "Account") {
+                    navController.navigate("account_info")
                 } else {
                     Toast
                         .makeText(context, item.title, Toast.LENGTH_SHORT)
@@ -293,7 +294,7 @@ fun AppInfoScreen(navController:NavController) {
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = "Suggestion", color = MaterialTheme.colorScheme.primary)
+                        Text(text = "App Info", color = MaterialTheme.colorScheme.primary)
                     },
                     navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }) {
@@ -475,7 +476,7 @@ fun SuggestionScreen(navController: NavController) {
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = "App Info", color = MaterialTheme.colorScheme.primary)
+                        Text(text = "Suggestion", color = MaterialTheme.colorScheme.primary)
                     },
                     navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }) {
@@ -565,9 +566,9 @@ fun SuggestionScreen(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            start = textFieldPadding,
-                            end = textFieldPadding,
-                            top = textFieldPadding,
+                            start = 20.dp,
+                            end = 20.dp,
+                            top = 20.dp,
                         )
                         .background(Color.White, RoundedCornerShape(cornerRadius)),
                     singleLine = true,
@@ -669,6 +670,7 @@ fun SuggestionScreen(navController: NavController) {
                                 putExtra(Intent.EXTRA_EMAIL, arrayOf("kisaan002@gmail.com"))
                                 putExtra(Intent.EXTRA_SUBJECT, subject)
                                 putExtra(Intent.EXTRA_TEXT, description)
+                                navController.navigateUp()
                             }
                             if (intent.resolveActivity(context.packageManager) != null) {
                                 context.startActivity(intent)
@@ -828,6 +830,86 @@ fun PrivacyPolicyScreen(navController: NavController) {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AccountDetailsScreen(navController: NavController,userData: UserData?) {
+    Kisaan10Theme {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(text = "Account Details", color = MaterialTheme.colorScheme.primary)
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                )
+            }
+        ) { inn ->
+            val innn = inn
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 30.dp)
+                    .background(Color(0xFFEAE2E0)),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
+            ) {
+                Spacer(modifier = Modifier.height(50.dp))
+
+                Icon(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .background(Color.Black),
+                    imageVector = Icons.Outlined.Person,
+                    contentDescription = "Your Image",
+                )
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                AccountDetailItem("Full Name", userData?.username.toString())
+                AccountDetailItem("E-mail Address", userData?.userEmail.toString())
+                AccountDetailItem("Password", "***********")
+            }
+        }
+    }
+}
+
+        @Composable
+        fun AccountDetailItem(label: String, value: String) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = label,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Gray
+                    )
+                    Text(
+                        text = value,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                Icon(
+                    imageVector = Icons.Outlined.ChevronRight,
+                    contentDescription = "right",
+                    tint = Color.Black.copy(alpha = 0.70f)
+                )
+            }
+        }
 
 
 
@@ -859,9 +941,9 @@ fun PrivacyPolicyScreen(navController: NavController) {
 
 
 //
-//
+
 //@Preview
 //@Composable
 //fun Preview(){
-// PrivacyPolicyScreen()
+// AccountDetailsScreen()
 //}

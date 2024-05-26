@@ -73,7 +73,7 @@ class GoogleAuthUiClient(
     suspend fun signIn(): IntentSender? {
         return try {
             val result = oneTapClient.beginSignIn(buildSignInRequest()).await()
-            result.pendingIntent?.intentSender
+            result.pendingIntent.intentSender
         } catch (e: Exception) {
             e.printStackTrace()
             if (e is CancellationException) throw e
@@ -115,7 +115,10 @@ class GoogleAuthUiClient(
 
     suspend fun getSignedInUser(): UserData? {
         return auth.currentUser?.run {
-            val username = displayName ?: getUserUsernameFromFirestore(email!!)
+            var username = displayName ?: getUserUsernameFromFirestore(email!!)
+            if (displayName==null || displayName.toString()==""){
+                username = getUserUsernameFromFirestore(email!!)
+            }
             UserData(
                 userId = uid,
                 username = username,
