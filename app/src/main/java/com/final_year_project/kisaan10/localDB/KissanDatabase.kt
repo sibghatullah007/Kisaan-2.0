@@ -5,9 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Blogs::class], version = 1, exportSchema = true)
+@Database(entities = [Blogs::class, RecentDisease::class], version = 1, exportSchema = true)
 abstract class KissanDatabase : RoomDatabase() {
     abstract fun blogsDAO(): BlogsDAO
+    abstract fun RecentDiseaseDAO(): RecentDiseaseDAO
 
     companion object {
         @Volatile

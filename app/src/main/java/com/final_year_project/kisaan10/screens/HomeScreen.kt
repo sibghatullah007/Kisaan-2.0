@@ -78,14 +78,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.yourapp.AppNotificationManager
 import com.final_year_project.kisaan10.R
 import com.final_year_project.kisaan10.ViewModel.BlogsViewModel
 import com.final_year_project.kisaan10.ViewModel.ImageSelectionViewModel
+import com.final_year_project.kisaan10.ViewModel.RecentDiseaseViewModel
 import com.final_year_project.kisaan10.ViewModel.WheatViewModel
 import com.final_year_project.kisaan10.localDB.Blogs
+import com.final_year_project.kisaan10.localDB.RecentDisease
 import com.final_year_project.kisaan10.screens.components.navTextDescription
 import com.final_year_project.kisaan10.screens.components.navTextHeading
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -95,7 +99,8 @@ import java.io.ByteArrayOutputStream
 @Composable
 fun HomeScreen(
     onOkClick: ()->Unit,
-    viewModel: ImageSelectionViewModel
+    imageSelectionViewModel: ImageSelectionViewModel,
+    recentDiseaseViewModel: RecentDiseaseViewModel
 ) {
     val gradient = Brush.radialGradient(
         colors = listOf(Color.Green, Color.Black),
@@ -110,8 +115,8 @@ fun HomeScreen(
     ) {
         navTextHeading(text = "Diagnose")
         navTextDescription(text = "Identify and Cure Plant Disease")
-        DiagnoseButton(gradient,viewModel,onOkClick)
-        RecentDiseasesSection()
+        DiagnoseButton(gradient,imageSelectionViewModel,onOkClick)
+        RecentDiseasesSection(recentDiseaseViewModel)
     }
 }
 
@@ -312,7 +317,7 @@ fun saveBitmapToUri(context: Context, bitmap: Bitmap): Uri? {
 }
 
 @Composable
-fun RecentDiseasesSection() {
+fun RecentDiseasesSection(recentDiseaseViewModel: RecentDiseaseViewModel) {
     Row(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.onBackground)
@@ -342,6 +347,7 @@ fun RecentDiseasesSection() {
             )
             val defaultImage = R.drawable.recentimg
             val defaultName = "No File"
+            val listOfRecentDisease by recentDiseaseViewModel.allDiseases.observeAsState(initial = emptyList())
 
             val recentDiseases = listOf(
                 Disease(name = "Healthy Wheat", image = R.drawable.healthy_wheat_),
@@ -358,7 +364,7 @@ fun RecentDiseasesSection() {
             )
 
 //            DiseaseRow(diseases = recentDiseases)
-            DiseaseRow(diseases = recentDiseases)
+            DiseaseRow(diseases = listOfRecentDisease)
 
         }
     }
@@ -366,30 +372,41 @@ fun RecentDiseasesSection() {
 
 data class Disease(val name: String, val image: Int)
 @Composable
-fun DiseaseRow(diseases: List<Disease>, modifier: Modifier = Modifier) {
+fun DiseaseRow(diseases: List<RecentDisease>, modifier: Modifier = Modifier) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3), // 3 columns
         modifier = modifier.padding(12.dp)
     ) {
         items(diseases) { disease ->
-            recentDisease(name = disease.name, image = disease.image)
+            recentDisease(name = disease.name, image = disease.pictureResId)
         }
     }
 }
 
 @Composable
-fun recentDisease(name: String, image: Int) {
+fun recentDisease(name: String, image: String?) {
     Column(
         modifier = Modifier
             .padding(horizontal = 10.dp, vertical = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(id = image),
-            contentDescription = null,
-            modifier = Modifier.size(80.dp),
-            contentScale = ContentScale.Fit
-        )
+        if (image != null){
+            val uri = image.toUri()
+            Image(
+                painter = rememberImagePainter(uri),
+                contentDescription = null,
+                modifier = Modifier.size(80.dp),
+                contentScale = ContentScale.Fit
+            )
+        }
+        else{
+            Image(
+                painter = painterResource(id = R.drawable.recentimg),
+                contentDescription = null,
+                modifier = Modifier.size(80.dp),
+                contentScale = ContentScale.Fit
+            )
+        }
         Text(
             text = name,
             modifier = Modifier.padding(top = 7.dp),
@@ -436,6 +453,7 @@ fun ConfirmScreen(imagewheatViewModel: ImageSelectionViewModel, wheatViewModel: 
                     shape = RoundedCornerShape(cornerRadius),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     onClick = {
+
                         navController.navigate("diseased_result_route"){ popUpTo("home") { inclusive = false } }
                     }) {
                     Text(
@@ -491,7 +509,8 @@ fun ConfirmScreen(imagewheatViewModel: ImageSelectionViewModel, wheatViewModel: 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiseasedResultScreen(
-    viewModel: BlogsViewModel,
+    recentDiseaseViewModel: RecentDiseaseViewModel,
+    blogsViewModel: BlogsViewModel,
     selectionViewModel: ImageSelectionViewModel,
     wheatViewModel: WheatViewModel,
     navController: NavHostController
@@ -501,8 +520,21 @@ fun DiseasedResultScreen(
     bitmapofImage?.let { wheatViewModel.predictDisease(it) }
     val diseaseName = wheatViewModel.diseasePredictionResult.value?.diseaseName
     val diseaseConfidence = wheatViewModel.diseasePredictionResult.value?.confidence
-    val blogs by viewModel.allBlogs.observeAsState(initial = emptyList())
+    val blogs by blogsViewModel.allBlogs.observeAsState(initial = emptyList())
     val specificBlog = blogs.find { it.name == diseaseName }
+
+    val disease = specificBlog?.let {
+        RecentDisease(
+        name = diseaseName!!,
+        pictureResId = imageUri.toString(),
+        symptom = it.symptom,
+        treatment = specificBlog.treatment,
+        prevention = specificBlog.prevention
+        )
+    }
+    if (disease != null) {
+        recentDiseaseViewModel.insert(disease)
+    }
 
     if (diseaseName != "Healthy Wheat") {
         AppNotificationManager.sendNotification(

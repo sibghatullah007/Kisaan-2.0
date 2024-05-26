@@ -16,6 +16,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.final_year_project.kisaan10.ViewModel.BlogsViewModel
 import com.final_year_project.kisaan10.ViewModel.ImageSelectionViewModel
+import com.final_year_project.kisaan10.ViewModel.RecentDiseaseViewModel
 import com.final_year_project.kisaan10.ViewModel.WheatViewModel
 import com.final_year_project.kisaan10.auth.googleAuth.UserData
 import com.final_year_project.kisaan10.navigation.BottomNavigationBar
@@ -23,7 +24,7 @@ import com.final_year_project.kisaan10.navigation.Screens
 import com.final_year_project.kisaan10.utils.bottomNavigationItemsList
 
 @Composable
-fun MainScreen(imageSelectionViewModel: ImageSelectionViewModel,blogsViewModel: BlogsViewModel, wheatViewModel: WheatViewModel,userData: UserData?, onSignOut: () -> Unit) {
+fun MainScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionViewModel: ImageSelectionViewModel,blogsViewModel: BlogsViewModel, wheatViewModel: WheatViewModel,userData: UserData?, onSignOut: () -> Unit) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute by remember(navBackStackEntry) {
@@ -61,6 +62,7 @@ fun MainScreen(imageSelectionViewModel: ImageSelectionViewModel,blogsViewModel: 
         }
     ) { innerPadding ->
         SetUpNavGraph(
+            recentDiseaseViewModel,
             blogsViewModel,
             wheatViewModel,
             imageSelectionViewModel,
@@ -74,6 +76,7 @@ fun MainScreen(imageSelectionViewModel: ImageSelectionViewModel,blogsViewModel: 
 
 @Composable
 fun SetUpNavGraph(
+    recentDiseaseViewModel: RecentDiseaseViewModel,
     blogsViewModel: BlogsViewModel,
     wheatViewModel: WheatViewModel,
     imageSelectionViewModel: ImageSelectionViewModel,
@@ -90,7 +93,8 @@ fun SetUpNavGraph(
         composable(Screens.Home.route) {
             HomeScreen(
                 onOkClick = { navController.navigate("confirm_screen_route") },
-                viewModel = imageSelectionViewModel
+                recentDiseaseViewModel = recentDiseaseViewModel,
+                imageSelectionViewModel = imageSelectionViewModel
             )
         }
         composable(Screens.Notification.route) {
@@ -117,7 +121,7 @@ fun SetUpNavGraph(
             ConfirmScreen(imagewheatViewModel = imageSelectionViewModel,wheatViewModel,navController = navController)
         }
         composable("diseased_result_route") {
-            DiseasedResultScreen(blogsViewModel,imageSelectionViewModel,wheatViewModel, navController)
+            DiseasedResultScreen(recentDiseaseViewModel,blogsViewModel,imageSelectionViewModel,wheatViewModel, navController)
         }
         composable("blog_result_route/{blogId}") {
             val blogId = it.arguments?.getString("blogId")
