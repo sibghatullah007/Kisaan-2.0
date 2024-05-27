@@ -118,7 +118,7 @@ fun SetUpNavGraph(
             SettingScreen(navController,context = LocalContext.current, userData = userData, onSignOut = onSignOut)
         }
         composable("confirm_screen_route") {
-            ConfirmScreen(imagewheatViewModel = imageSelectionViewModel,wheatViewModel,navController = navController)
+            ConfirmScreen(recentDiseaseViewModel,imageSelectionViewModel, blogsViewModel, wheatViewModel,navController)
         }
         composable("diseased_result_route") {
             DiseasedResultScreen(recentDiseaseViewModel,blogsViewModel,imageSelectionViewModel,wheatViewModel, navController)

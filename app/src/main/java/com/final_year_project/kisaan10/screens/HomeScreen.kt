@@ -345,25 +345,8 @@ fun RecentDiseasesSection(recentDiseaseViewModel: RecentDiseaseViewModel) {
                     color = Color.Black
                 )
             )
-            val defaultImage = R.drawable.recentimg
-            val defaultName = "No File"
             val listOfRecentDisease by recentDiseaseViewModel.allDiseases.observeAsState(initial = emptyList())
 
-            val recentDiseases = listOf(
-                Disease(name = "Healthy Wheat", image = R.drawable.healthy_wheat_),
-                Disease(name = "Yellow Rust", image = R.drawable.yellow_rust_wheat_),
-                Disease(name = "Healthy Wheat", image = R.drawable.healthy_wheat_),
-                Disease(name = "Yellow Rust", image = R.drawable.yellow_rust_wheat_),
-                Disease(name = "Healthy Wheat", image = R.drawable.healthy_wheat_),
-                Disease(name = "Yellow Rust", image = R.drawable.yellow_rust_wheat_),
-                Disease(name = "Healthy Wheat", image = R.drawable.healthy_wheat_),
-                Disease(name = "Yellow Rust", image = R.drawable.yellow_rust_wheat_),
-                Disease(name = defaultName, image = defaultImage), // Add default data if no recent diseas
-                Disease(name = defaultName, image = defaultImage) // Add default data if no recent disease
-
-            )
-
-//            DiseaseRow(diseases = recentDiseases)
             DiseaseRow(diseases = listOfRecentDisease)
 
         }
@@ -392,11 +375,22 @@ fun recentDisease(name: String, image: String?) {
     ) {
         if (image != null){
             val uri = image.toUri()
+            Log.v("Image Path",image)
             Image(
                 painter = rememberImagePainter(uri),
                 contentDescription = null,
                 modifier = Modifier.size(80.dp),
                 contentScale = ContentScale.Fit
+            )
+            Text(
+                text = name,
+                modifier = Modifier.padding(top = 7.dp),
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                    fontSize = 14.sp,
+                    color = Color.Black
+                ),
+                textAlign = TextAlign.Center
             )
         }
         else{
@@ -406,26 +400,35 @@ fun recentDisease(name: String, image: String?) {
                 modifier = Modifier.size(80.dp),
                 contentScale = ContentScale.Fit
             )
+            Text(
+                text = name,
+                modifier = Modifier.padding(top = 7.dp),
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                    fontSize = 14.sp,
+                    color = Color.Black
+                ),
+                textAlign = TextAlign.Center
+            )
         }
-        Text(
-            text = name,
-            modifier = Modifier.padding(top = 7.dp),
-            style = TextStyle(
-                fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
-                fontSize = 14.sp,
-                color = Color.Black
-            ),
-            textAlign = TextAlign.Center
-        )
     }
 }
 
 @Composable
-fun ConfirmScreen(imagewheatViewModel: ImageSelectionViewModel, wheatViewModel: WheatViewModel, navController: NavHostController) {
-    val imageUri = imagewheatViewModel.getSelectedImageUri()
-    val imageBitmap = imagewheatViewModel.uriToBitmap(LocalContext.current)
+fun ConfirmScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionViewModel: ImageSelectionViewModel, blogsViewModel: BlogsViewModel, wheatViewModel: WheatViewModel, navController: NavHostController) {
+    val imageUri = imageSelectionViewModel.getSelectedImageUri()
+    val imageBitmap = imageSelectionViewModel.uriToBitmap(LocalContext.current)
+    val imageRealPath = imageSelectionViewModel.getRealPathFromURI(LocalContext.current,imageUri)
     imageBitmap?.let { wheatViewModel.detectWheat(it) }
     val isWheat = wheatViewModel.wheatDetectionResult.value?.isWheat
+
+    if (imageBitmap != null) {
+        wheatViewModel.predictDisease(imageBitmap)
+    }
+    val diseaseName = wheatViewModel.diseasePredictionResult.value?.diseaseName
+    val diseaseConfidence = wheatViewModel.diseasePredictionResult.value?.confidence
+    val blogs by blogsViewModel.allBlogs.observeAsState(initial = emptyList())
+    val specificBlog = blogs.find { it.name == diseaseName }
     Log.v("urii", imageUri.toString())
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -454,6 +457,20 @@ fun ConfirmScreen(imagewheatViewModel: ImageSelectionViewModel, wheatViewModel: 
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     onClick = {
 
+                        val disease = specificBlog?.let {
+                            imageRealPath?.let { it1 ->
+                                RecentDisease(
+                                    name = diseaseName!!,
+                                    pictureResId = it1,
+                                    symptom = it.symptom,
+                                    treatment = specificBlog.treatment,
+                                    prevention = specificBlog.prevention
+                                )
+                            }
+                        }
+                        if (disease != null) {
+                            recentDiseaseViewModel.insert(disease)
+                        }
                         navController.navigate("diseased_result_route"){ popUpTo("home") { inclusive = false } }
                     }) {
                     Text(
@@ -522,20 +539,6 @@ fun DiseasedResultScreen(
     val diseaseConfidence = wheatViewModel.diseasePredictionResult.value?.confidence
     val blogs by blogsViewModel.allBlogs.observeAsState(initial = emptyList())
     val specificBlog = blogs.find { it.name == diseaseName }
-
-    val disease = specificBlog?.let {
-        RecentDisease(
-        name = diseaseName!!,
-        pictureResId = imageUri.toString(),
-        symptom = it.symptom,
-        treatment = specificBlog.treatment,
-        prevention = specificBlog.prevention
-        )
-    }
-    if (disease != null) {
-        recentDiseaseViewModel.insert(disease)
-    }
-
     if (diseaseName != "Healthy Wheat") {
         AppNotificationManager.sendNotification(
             context = LocalContext.current,
