@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -319,18 +320,17 @@ fun RecentDiseasesSection(recentDiseaseViewModel: RecentDiseaseViewModel) {
     Row(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.onBackground)
-            .padding(8.dp)
+            .padding(horizontal = 8.dp)
             .fillMaxWidth()
-            .height(310.dp),
+            .fillMaxHeight(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
             modifier = Modifier
-                .background(Color.White, RoundedCornerShape(40.dp))
+                .background(Color.White, RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp))
                 .fillMaxWidth()
-                .height(310.dp)
-                .border(0.5.dp, Color.LightGray, RoundedCornerShape(40.dp))
+                .fillMaxHeight()
         ) {
             Text(
                 text = "Recent Detected Plants",
@@ -338,14 +338,16 @@ fun RecentDiseasesSection(recentDiseaseViewModel: RecentDiseaseViewModel) {
                     .padding(top = 10.dp)
                     .align(Alignment.CenterHorizontally),
                 style = TextStyle(
-                    fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                    fontFamily = FontFamily(Font(R.font.montserrat)),
                     fontSize = 18.sp,
                     color = Color.Black
                 )
             )
+
+            Divider(Modifier.padding(top = 20.dp, bottom = 20.dp))
             val listOfRecentDisease by recentDiseaseViewModel.allDiseases.observeAsState(initial = emptyList())
 
-            DiseaseRow(diseases = listOfRecentDisease)
+             DiseaseRow(diseases = listOfRecentDisease)
 
         }
     }
@@ -355,8 +357,7 @@ data class Disease(val name: String, val image: Int)
 @Composable
 fun DiseaseRow(diseases: List<RecentDisease>, modifier: Modifier = Modifier) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(3), // 3 columns
-        modifier = modifier.padding(12.dp)
+        columns = GridCells.Fixed(2), // 2 columns
     ) {
         items(diseases) { disease ->
             recentDisease(name = disease.name, image = disease.pictureResId)
@@ -377,14 +378,14 @@ fun recentDisease(name: String, image: String?) {
             Image(
                 painter = rememberImagePainter(uri),
                 contentDescription = null,
-                modifier = Modifier.size(80.dp),
-                contentScale = ContentScale.Fit
+                modifier = Modifier.size(width = 142.dp, height = 110.dp).clip(RoundedCornerShape(15.dp)),
+                contentScale = ContentScale.Crop
             )
             Text(
                 text = name,
                 modifier = Modifier.padding(top = 7.dp),
                 style = TextStyle(
-                    fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                    fontFamily = FontFamily(Font(R.font.montserrat_medium)),
                     fontSize = 14.sp,
                     color = Color.Black
                 ),
@@ -395,14 +396,14 @@ fun recentDisease(name: String, image: String?) {
             Image(
                 painter = painterResource(id = R.drawable.recentimg),
                 contentDescription = null,
-                modifier = Modifier.size(80.dp),
-                contentScale = ContentScale.Fit
+                modifier = Modifier.size(80.dp).clip(RoundedCornerShape(15.dp)),
+                contentScale = ContentScale.Crop
             )
             Text(
                 text = name,
                 modifier = Modifier.padding(top = 7.dp),
                 style = TextStyle(
-                    fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                    fontFamily = FontFamily(Font(R.font.montserrat_medium)),
                     fontSize = 14.sp,
                     color = Color.Black
                 ),

@@ -32,7 +32,7 @@ fun BottomNavigationBar(
     onClick: (NavigationItem) -> Unit,
 ) {
     NavigationBar(
-        containerColor= Color.White
+        containerColor= MaterialTheme.colorScheme.onBackground
     ) {
         items.forEachIndexed { index, navigationItem ->
             NavigationBarItem(
@@ -76,7 +76,7 @@ fun BottomNavigationBar(
                             fontSize = 13.sp,
                         ))
                 },
-                modifier = Modifier.background(Color.White),
+                modifier = Modifier.background(MaterialTheme.colorScheme.onBackground),
                 alwaysShowLabel = false)
         }
     }
