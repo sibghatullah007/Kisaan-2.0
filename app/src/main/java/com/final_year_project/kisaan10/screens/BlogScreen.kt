@@ -34,6 +34,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
@@ -81,7 +82,7 @@ fun BlogsGrid(blogs: List<Blogs>, navController: NavHostController, modifier: Mo
     val context = LocalContext.current
 
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2), // 3 columns
+        columns = GridCells.Fixed(2), // 2 columns
         modifier = modifier.padding(12.dp)
     ) {
         items(blogs) { blog ->
@@ -92,18 +93,21 @@ fun BlogsGrid(blogs: List<Blogs>, navController: NavHostController, modifier: Mo
 
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 10.dp, vertical = 10.dp)
+                    .padding(10.dp)
                     .fillMaxWidth()
                     .height(180.dp)
-                    .background(color = Color.White, RoundedCornerShape(10.dp))
+                    .background(color = Color.White, shape = RoundedCornerShape(10.dp))
                     .clickable { navController.navigate("blog_result_route/${blog.id}") },
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
                 Image(
                     painter = painterResource(id = resourceId),
                     contentDescription = null,
-                    modifier = Modifier.size(120.dp),
-                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(RoundedCornerShape(5.dp)),
+                    contentScale = ContentScale.Crop,
                 )
                 Text(
                     text = blog.name,

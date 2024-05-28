@@ -31,6 +31,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.Help
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.ChevronRight
@@ -250,7 +251,7 @@ private fun OptionsItemStyle(navController:NavController,item: OptionsData, cont
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
-                        color = MaterialTheme.colorScheme.primary
+                        color = Color.Black
                     )
                 )
                 Spacer(modifier = Modifier.height(2.dp))
@@ -286,7 +287,7 @@ private fun prepareOptionsData() {
         OptionsData(Icons.Outlined.Memory, "Clear Cache", "Clear your cache memory"),
         OptionsData(Icons.Outlined.SettingsSuggest, "Suggestion", "Suggest to improve"),
         OptionsData(Icons.Outlined.Policy, "Privacy Policy", "Terms and conditions"),
-        OptionsData(Icons.AutoMirrored.Outlined.Help, "Help Center", "FAQs and customer support"),
+        OptionsData(Icons.AutoMirrored.Outlined.HelpOutline, "Help Center", "FAQs and customer support"),
         OptionsData(Icons.Outlined.Share, "Tell Friends", "Share this application"),
         OptionsData(Icons.Outlined.Info, "App Info", "About the app"),
         OptionsData(Icons.AutoMirrored.Outlined.Logout, "Logout", "Logout your Account")
