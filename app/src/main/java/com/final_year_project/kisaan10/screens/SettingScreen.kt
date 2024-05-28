@@ -111,7 +111,7 @@ fun SettingScreen(
 
     if (listPrepared) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            item { UserDetails(context, userData) }
+            item { UserDetails(context, userData,navController) }
             items(optionsList) { item -> OptionsItemStyle(navController,item, context, onSignOut) }
         }
     }
@@ -120,11 +120,14 @@ fun SettingScreen(
 }
 
 @Composable
-private fun UserDetails(context: Context, userData: UserData?) {
+private fun UserDetails(context: Context, userData: UserData?,navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable {
+                navController.navigate("account_info")
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(

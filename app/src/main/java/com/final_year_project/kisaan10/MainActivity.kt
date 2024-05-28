@@ -13,14 +13,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -192,6 +190,11 @@ class MainActivity : ComponentActivity() {
                             if (success) {
                                 showToast(this@MainActivity, "Successful")
                                 navController.navigate("home") { popUpTo("signup") { inclusive = true } }
+                                AppNotificationManager.sendNotification(
+                                    context = this@MainActivity,
+                                    "Welcome to Kisaan App",
+                                    "Version 1.2 is now available with new features"
+                                )
                             } else {
                                 exception?.let { showToast(this@MainActivity, exception.toString()) }
                             }

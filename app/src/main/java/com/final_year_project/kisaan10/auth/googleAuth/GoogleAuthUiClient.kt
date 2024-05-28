@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.util.Log
+import com.example.yourapp.AppNotificationManager
 import com.final_year_project.kisaan10.R
 import com.final_year_project.kisaan10.ViewModel.UserViewModel
 import com.final_year_project.kisaan10.model.UserInfo
@@ -89,6 +90,11 @@ class GoogleAuthUiClient(
             val credential = oneTapClient.getSignInCredentialFromIntent(intent)
             val googleCredential = GoogleAuthProvider.getCredential(credential.googleIdToken, null)
             val user = auth.signInWithCredential(googleCredential).await().user
+            AppNotificationManager.sendNotification(
+                context =context ,
+                "Welcome to Kisaan App",
+                "Version 1.1 is now available with new features"
+            )
             SignInResult(
                 data = user?.run {
                     UserData(
@@ -134,6 +140,7 @@ class GoogleAuthUiClient(
     }
 
     private fun buildSignInRequest(): BeginSignInRequest {
+
         return BeginSignInRequest.Builder()
             .setGoogleIdTokenRequestOptions(
                 BeginSignInRequest.GoogleIdTokenRequestOptions.builder()

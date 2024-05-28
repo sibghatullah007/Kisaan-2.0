@@ -99,14 +99,7 @@ fun SetUpNavGraph(
         }
         composable(Screens.Notification.route) {
             val notifications = listOf(
-                Notification("Welcome to KisaanApp", "Version 1.2 is now available with new features.", "March 24, 2020"),
-                Notification("Disease Detected", "Loose Smut is being detected in your crop. Make sure its treatments.", "March 24, 2020"),
-                Notification("Disease Detected", "Loose Smut is being detected in your crop. Make sure its treatments.", "March 24, 2020"),
-                Notification("Disease Detected", "Loose Smut is being detected in your crop. Make sure its treatments.", "March 24, 2020"),
-                Notification("Disease Detected", "Loose Smut is being detected in your crop. Make sure its treatments.", "March 24, 2020"),
-                Notification("Disease Detected", "Loose Smut is being detected in your crop. Make sure its treatments.", "March 24, 2020"),
-                Notification("Disease Detected", "Loose Smut is being detected in your crop. Make sure its treatments.", "March 24, 2020"),
-                Notification("Disease Detected", "Loose Smut is being detected in your crop. Make sure its treatments.", "March 24, 2020"),
+                Notification("Welcome to KisaanApp", "Version 1.1 is now available with new features.", "May 29, 2024"),
                 // Add more notifications here
             )
             NotificationScreen(notifications)

@@ -80,9 +80,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
-import com.example.yourapp.AppNotificationManager
 import com.final_year_project.kisaan10.R
 import com.final_year_project.kisaan10.ViewModel.BlogsViewModel
 import com.final_year_project.kisaan10.ViewModel.ImageSelectionViewModel
@@ -539,13 +537,13 @@ fun DiseasedResultScreen(
     val diseaseConfidence = wheatViewModel.diseasePredictionResult.value?.confidence
     val blogs by blogsViewModel.allBlogs.observeAsState(initial = emptyList())
     val specificBlog = blogs.find { it.name == diseaseName }
-    if (diseaseName != "Healthy Wheat") {
-        AppNotificationManager.sendNotification(
-            context = LocalContext.current,
-            "Disease Detected: $diseaseName",
-            "${diseaseName} is being detected in your crop.\n Make sure its treatment"
-        )
-    }
+//    if (diseaseName != "Healthy Wheat") {
+//        AppNotificationManager.sendNotification(
+//            context = LocalContext.current,
+//            "Disease Detected: $diseaseName",
+//            "${diseaseName} is being detected in your crop.\n Make sure its treatment"
+//        )
+//    }
     Scaffold(
         topBar = {
             TopAppBar(
