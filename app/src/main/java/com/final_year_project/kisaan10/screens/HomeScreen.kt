@@ -8,13 +8,12 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.launch
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -28,17 +27,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material.icons.filled.PhotoLibrary
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -48,10 +43,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -159,83 +152,127 @@ fun DiagnoseButton(gradient: Brush,
         }
     )
 
-    Row(
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .height(230.dp),
+//        horizontalArrangement = Arrangement.Center,
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        OutlinedButton(
+//            onClick = { showDialog = true },
+//            modifier = Modifier
+//                .background(gradient, CircleShape)
+//                .size(200.dp),
+//            shape = CircleShape,
+//            contentPadding = PaddingValues(0.dp) // Remove content padding
+//        ) {
+//            if (imageUri != null) {
+//                Image(
+//                    painter = rememberImagePainter(data = imageUri),
+//                    contentDescription = "Selected Image",
+//                    modifier = Modifier
+//                        .size(200.dp)
+//                        .clip(CircleShape),
+//                    contentScale = ContentScale.Crop // Fill the button with the image
+//                )
+//            } else {
+//                Icon(
+//                    Icons.Filled.AddAPhoto,
+//                    contentDescription = "Camera Icon",
+//                    tint = Color.White,
+//                    modifier = Modifier.size(55.dp)
+//                )
+//            }
+//        }
+//
+//        if (showDialog) {
+//            AlertDialog(
+//                onDismissRequest = { showDialog = false },
+//                title = { Text(text = "Select Option") },
+//                text = {
+//                    Column {
+//                        TextButton(modifier = Modifier.fillMaxWidth(),
+//                            onClick = {
+//                            showDialog = false
+//                            galleryLauncher.launch("image/*")
+//                        }) {
+//                            Icon(
+//                                Icons.Filled.PhotoLibrary,
+//                                contentDescription = "Gallery Icon",
+//                                tint = Color.Black,
+//                                modifier = Modifier.size(24.dp)
+//                            )
+//                            Spacer(modifier = Modifier.width(8.dp))
+//                            Text("Gallery")
+//                        }
+//                        TextButton( modifier = Modifier.fillMaxWidth(),
+//                        onClick = {
+//                            showDialog = false
+//                            cameraLauncher.launch()
+//                        }) {
+//                            Icon(
+//                                Icons.Filled.PhotoCamera,
+//                                contentDescription = "Camera Icon",
+//                                tint = Color.Black,
+//                                modifier = Modifier.size(24.dp)
+//                            )
+//                            Spacer(modifier = Modifier.width(8.dp))
+//                            Text("Camera")
+//                        }
+//                    }
+//                },
+//                confirmButton = {
+//                    TextButton(onClick = { showDialog = false }) {
+//                        Text("Cancel")
+//                    }
+//                },
+//                containerColor = Color.White
+//            )
+//        }
+//    }
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(230.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(16.dp)
+            .background(Color.White, shape = RoundedCornerShape(8.dp))
+            .border(1.dp, Color.Gray, shape = RoundedCornerShape(8.dp))
+            .padding(16.dp)
     ) {
-        OutlinedButton(
-            onClick = { showDialog = true },
-            modifier = Modifier
-                .background(gradient, CircleShape)
-                .size(200.dp),
-            shape = CircleShape,
-            contentPadding = PaddingValues(0.dp) // Remove content padding
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (imageUri != null) {
-                Image(
-                    painter = rememberImagePainter(data = imageUri),
-                    contentDescription = "Selected Image",
-                    modifier = Modifier
-                        .size(200.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop // Fill the button with the image
-                )
-            } else {
-                Icon(
-                    Icons.Filled.AddAPhoto,
-                    contentDescription = "Camera Icon",
-                    tint = Color.White,
-                    modifier = Modifier.size(55.dp)
+            Icon(
+                Icons.Filled.CameraAlt, // Replace with your camera icon resource
+                contentDescription = "Camera Icon",
+                modifier = Modifier.size(40.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Start Diagnosis",
+                style = TextStyle(fontSize = 20.sp,
+                    fontFamily = FontFamily(Font(R.font.montserrat_bold)),
+                    color = Color.Black)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Identify the crop diseases",
+                style = TextStyle(fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.montserrat)),
+                    color = Color.Black)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = { /*TODO*/ },
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            ) {
+                Text(text = "Take A Photo",
+                    style = TextStyle(fontSize = 16.sp,
+                        fontFamily = FontFamily(Font(R.font.montserrat_medium)),
+                        color = Color.White)
                 )
             }
-        }
-
-        if (showDialog) {
-            AlertDialog(
-                onDismissRequest = { showDialog = false },
-                title = { Text(text = "Select Option") },
-                text = {
-                    Column {
-                        TextButton(modifier = Modifier.fillMaxWidth(),
-                            onClick = {
-                            showDialog = false
-                            galleryLauncher.launch("image/*")
-                        }) {
-                            Icon(
-                                Icons.Filled.PhotoLibrary,
-                                contentDescription = "Gallery Icon",
-                                tint = Color.Black,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Gallery")
-                        }
-                        TextButton( modifier = Modifier.fillMaxWidth(),
-                        onClick = {
-                            showDialog = false
-                            cameraLauncher.launch()
-                        }) {
-                            Icon(
-                                Icons.Filled.PhotoCamera,
-                                contentDescription = "Camera Icon",
-                                tint = Color.Black,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Camera")
-                        }
-                    }
-                },
-                confirmButton = {
-                    TextButton(onClick = { showDialog = false }) {
-                        Text("Cancel")
-                    }
-                },
-                containerColor = Color.White
-            )
         }
     }
     if (imageUri != null) {
