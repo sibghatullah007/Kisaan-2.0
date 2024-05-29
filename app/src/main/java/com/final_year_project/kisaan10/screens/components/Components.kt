@@ -1,23 +1,18 @@
 package com.final_year_project.kisaan10.screens.components
 
 import android.content.Context
-import android.text.style.LineHeightSpan
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -28,7 +23,6 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,7 +36,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -53,12 +46,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -186,7 +177,7 @@ fun navTextHeading(text: String){
             fontSize = 30.sp,
             color = MaterialTheme.colorScheme.primary
         ),
-        modifier = Modifier.padding(start = 15.dp, top = 5.dp)
+        modifier = Modifier.padding(start = 25.dp, top = 7.dp)
     )
 }
 
@@ -195,11 +186,11 @@ fun navTextDescription(text: String){
     Text(
         text =text,
         style = androidx.compose.ui.text.TextStyle(
-            fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
-            fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.primary
+            fontFamily = FontFamily(Font(R.font.montserrat, FontWeight.Normal)),
+            fontSize = 14.sp,
+            color = Color.Black
         ),
-        modifier = Modifier.padding(start = 15.dp, top = 5.dp)
+        modifier = Modifier.padding(start = 25.dp, top = 7.dp)
     )
 }
 

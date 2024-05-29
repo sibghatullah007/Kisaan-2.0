@@ -1,7 +1,13 @@
 package com.final_year_project.kisaan10.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,11 +34,11 @@ fun NotificationScreen(notifications: List<Notification>) {
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.onBackground)
-            .padding(16.dp)
+//            .padding(top = 16.dp)
     ) {
         item {
             navTextHeading(text = "Notifications")
-            Spacer(modifier = Modifier.height(8.dp))
+//            Spacer(modifier = Modifier.height(8.dp))
             navTextDescription(text = "Stay informed with Kisaan App")
 
             Spacer(modifier = Modifier.height(16.dp))

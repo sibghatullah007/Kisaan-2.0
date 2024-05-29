@@ -90,7 +90,6 @@ import com.final_year_project.kisaan10.ViewModel.WheatViewModel
 import com.final_year_project.kisaan10.localDB.Blogs
 import com.final_year_project.kisaan10.localDB.RecentDisease
 import com.final_year_project.kisaan10.screens.components.navTextDescription
-import com.final_year_project.kisaan10.screens.components.navTextHeading
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import java.io.ByteArrayOutputStream
@@ -112,7 +111,15 @@ fun HomeScreen(
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.onBackground)
     ) {
-        navTextHeading(text = "Diagnose")
+//        navTextHeading(text = "Diagnose")
+        Text(text = "DIAGNOSE, \nTREAT, THRIVE",
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_black_italic)),
+                fontSize = 30.sp,
+                color = MaterialTheme.colorScheme.primary
+            ),
+            modifier = Modifier.padding(start = 25.dp, top = 10.dp)
+        )
         navTextDescription(text = "Identify and Cure Plant Disease")
         DiagnoseButton(gradient,imageSelectionViewModel,onOkClick)
         RecentDiseasesSection(recentDiseaseViewModel)
@@ -192,7 +199,8 @@ fun DiagnoseButton(gradient: Brush,
                 title = { Text(text = "Select Option") },
                 text = {
                     Column {
-                        TextButton(onClick = {
+                        TextButton(modifier = Modifier.fillMaxWidth(),
+                            onClick = {
                             showDialog = false
                             galleryLauncher.launch("image/*")
                         }) {
@@ -205,7 +213,8 @@ fun DiagnoseButton(gradient: Brush,
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("Gallery")
                         }
-                        TextButton(onClick = {
+                        TextButton( modifier = Modifier.fillMaxWidth(),
+                        onClick = {
                             showDialog = false
                             cameraLauncher.launch()
                         }) {
@@ -320,7 +329,7 @@ fun RecentDiseasesSection(recentDiseaseViewModel: RecentDiseaseViewModel) {
     Row(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.onBackground)
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .fillMaxHeight(),
         horizontalArrangement = Arrangement.Center,
@@ -328,14 +337,14 @@ fun RecentDiseasesSection(recentDiseaseViewModel: RecentDiseaseViewModel) {
     ) {
         Column(
             modifier = Modifier
-                .background(Color.White, RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp))
+                .background(Color.White, RoundedCornerShape(topStart = 18.dp, topEnd = 18.dp))
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
             Text(
                 text = "Recent Detected Plants",
                 modifier = Modifier
-                    .padding(top = 10.dp)
+                    .padding(top = 20.dp)
                     .align(Alignment.CenterHorizontally),
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.montserrat)),
@@ -344,7 +353,7 @@ fun RecentDiseasesSection(recentDiseaseViewModel: RecentDiseaseViewModel) {
                 )
             )
 
-            Divider(Modifier.padding(top = 20.dp, bottom = 20.dp))
+            Divider(Modifier.padding(top = 20.dp, bottom = 20.dp), color = MaterialTheme.colorScheme.onBackground)
             val listOfRecentDisease by recentDiseaseViewModel.allDiseases.observeAsState(initial = emptyList())
 
              DiseaseRow(diseases = listOfRecentDisease)
@@ -378,7 +387,9 @@ fun recentDisease(name: String, image: String?) {
             Image(
                 painter = rememberImagePainter(uri),
                 contentDescription = null,
-                modifier = Modifier.size(width = 142.dp, height = 110.dp).clip(RoundedCornerShape(15.dp)),
+                modifier = Modifier
+                    .size(width = 142.dp, height = 110.dp)
+                    .clip(RoundedCornerShape(15.dp)),
                 contentScale = ContentScale.Crop
             )
             Text(
@@ -396,7 +407,9 @@ fun recentDisease(name: String, image: String?) {
             Image(
                 painter = painterResource(id = R.drawable.recentimg),
                 contentDescription = null,
-                modifier = Modifier.size(80.dp).clip(RoundedCornerShape(15.dp)),
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(RoundedCornerShape(15.dp)),
                 contentScale = ContentScale.Crop
             )
             Text(
