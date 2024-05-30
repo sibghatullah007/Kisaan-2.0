@@ -5,22 +5,31 @@ import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -36,6 +45,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -57,6 +67,7 @@ import com.final_year_project.kisaan10.R
 import com.final_year_project.kisaan10.localDB.Blogs
 import com.final_year_project.kisaan10.screens.cornerRadius
 import com.final_year_project.kisaan10.screens.textFieldPadding
+import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
 
 @Composable
 fun WithIcons(iconRes: Int, contentDescription: String, context: Context, onClick: () -> Unit){
@@ -322,3 +333,102 @@ fun BlogItem(blog: Blogs) {
             )
         }
 
+
+
+@Composable
+fun ForgotPasswordScreen(onResetPasswordClicked: (String) -> Unit, loginNavigation: () -> Unit) {
+    Kisaan10Theme {
+        var userEmail by rememberSaveable {
+            mutableStateOf("")
+        }
+        Column(
+            modifier = Modifier
+                .background(color = MaterialTheme.colorScheme.onBackground)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    modifier = Modifier
+                        .padding(top = 24.dp),
+                    text = "Forgot Password",
+                    style = androidx.compose.ui.text.TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                        fontSize = 30.sp,
+                        letterSpacing = 1.sp,
+                        color = Color.Black
+                    )
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(top = 4.dp),
+                    text = "Enter your email to reset your password",
+                    style = androidx.compose.ui.text.TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                        fontSize = 18.sp,
+                        letterSpacing = 1.sp,
+                        color = Color.Black
+                    )
+                )
+                Spacer(modifier = Modifier.height(25.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = null,
+                    modifier = Modifier.size(100.dp)
+                )
+                ScreenTextFeild(
+                    text = userEmail,
+                    hint = "Enter Email",
+                    leadingIcon = Icons.Outlined.Email,
+                    false
+                ) {
+                    userEmail = it
+                }
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = textFieldPadding,
+                            end = textFieldPadding,
+                            top = textFieldPadding
+                        ),
+                    shape = RoundedCornerShape(cornerRadius),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    onClick = {
+                        onResetPasswordClicked.invoke(userEmail)
+                    }
+                ) {
+                    Text(
+                        text = "Reset Password",
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                            fontSize = 18.sp,
+                            color = Color.White
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.clickable {
+                            loginNavigation()
+                        },
+                        text = "Back to Login",
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
+                            fontSize = 18.sp,
+                            color = Color.Black
+                        )
+                    )
+                }
+            }
+        }
+    }
+}

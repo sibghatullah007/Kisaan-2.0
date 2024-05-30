@@ -106,6 +106,7 @@ dependencies {
 
     //TensorFlow
     implementation("org.tensorflow:tensorflow-lite:2.4.0")
+    implementation ("org.tensorflow:tensorflow-lite-support:0.3.1")
 
 
 }

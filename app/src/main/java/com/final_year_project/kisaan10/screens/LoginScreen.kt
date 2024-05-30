@@ -1,6 +1,7 @@
 package com.final_year_project.kisaan10.screens
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -46,6 +48,7 @@ import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
 
 @Composable
 fun LoginScreen(onLoginClicked: (String, String) -> Unit,
+                onForgetPassClicked:  () -> Unit,
                 signUpNavigation: () -> Unit,
                 context: Context = LocalContext.current) {
 
@@ -136,6 +139,9 @@ Kisaan10Theme {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
+                    modifier = Modifier.clickable {
+                        onForgetPassClicked()
+                    },
                     text ="Forgot your password ?",
                     style = androidx.compose.ui.text.TextStyle(
                         fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),

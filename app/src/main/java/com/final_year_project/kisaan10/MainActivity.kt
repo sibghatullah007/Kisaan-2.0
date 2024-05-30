@@ -42,6 +42,7 @@ import com.final_year_project.kisaan10.screens.LoginScreen
 import com.final_year_project.kisaan10.screens.MainScreen
 import com.final_year_project.kisaan10.screens.SignUpScreen
 import com.final_year_project.kisaan10.screens.SplashScreen
+import com.final_year_project.kisaan10.screens.components.ForgotPasswordScreen
 import com.final_year_project.kisaan10.screens.components.showToast
 import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
 import com.google.firebase.FirebaseApp
@@ -52,6 +53,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private val Maincontext = this
     private lateinit var auth: FirebaseAuth
     //Blogs ViewModel
     private val blogsViewModel: BlogsViewModel by lazy {
@@ -102,6 +104,8 @@ class MainActivity : ComponentActivity() {
                     composable("login") { LoginScreen(navController) }
                     composable("signup") { SignUpScreen(navController) }
                     composable("home") { HomeScreen(navController) }
+                    composable("forgetPassword") { ForgetPassword(navController) }
+
                 }
             }
         }
@@ -136,6 +140,9 @@ class MainActivity : ComponentActivity() {
     fun LoginScreen(navController: NavController) {
         val viewModel = viewModel<SignInViewModel>()
         LoginScreen(
+            onForgetPassClicked = {
+                navController.navigate("forgetPassword") { popUpTo("login") { inclusive = true } }
+            },
             onLoginClicked = { username, password ->
                 showToast(this@MainActivity, "Username: $username\nPassword: $password")
                 lifecycleScope.launch {
@@ -258,6 +265,25 @@ class MainActivity : ComponentActivity() {
         )
     }
 
+    @Composable
+    fun ForgetPassword(navController: NavController){
+        
+        ForgotPasswordScreen(
+            onResetPasswordClicked = {
+               auth.sendPasswordResetEmail(it).addOnCompleteListener { task ->
+                   if (task.isSuccessful) {
+                       Toast.makeText(Maincontext, "Password reset email sent", Toast.LENGTH_LONG).show()
+                   } else {
+                       Toast.makeText(Maincontext, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                   }
+               }
+            },
+            loginNavigation = {
+                navController.navigate("login") { popUpTo("forgetPassword") { inclusive = true } }
+            }
+        )
+        
+    }
 
 
 
