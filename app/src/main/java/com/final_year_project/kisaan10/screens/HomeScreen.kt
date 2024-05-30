@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -98,7 +99,7 @@ import java.io.ByteArrayOutputStream
 
 @Composable
 fun HomeScreen(
-    onOkClick: ()->Unit,
+    onOkClick: () -> Unit,
     imageSelectionViewModel: ImageSelectionViewModel,
     recentDiseaseViewModel: RecentDiseaseViewModel
 ) {
@@ -111,10 +112,12 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+//            .verticalScroll(rememberScrollState())
             .background(color = MaterialTheme.colorScheme.onBackground)
     ) {
-//        navTextHeading(text = "Diagnose")
-        Text(text = "DIAGNOSE, \nTREAT, THRIVE",
+        //        navTextHeading(text = "Diagnose")
+        Text(
+            text = "DIAGNOSE, \nTREAT, THRIVE",
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.montserrat_black_italic)),
                 fontSize = 30.sp,
@@ -123,7 +126,7 @@ fun HomeScreen(
             modifier = Modifier.padding(start = 25.dp, top = 10.dp)
         )
         navTextDescription(text = "Identify and Cure Plant Disease")
-        DiagnoseButton(gradient,imageSelectionViewModel,onOkClick)
+        DiagnoseButton(gradient, imageSelectionViewModel, onOkClick)
         RecentDiseasesSection(recentDiseaseViewModel)
     }
 }
@@ -246,34 +249,51 @@ fun DiagnoseButton(gradient: Brush,
                 title = { Text(text = "Select Option") },
                 text = {
                     Column {
-                        TextButton(modifier = Modifier.fillMaxWidth(),
+                        TextButton(
                             onClick = {
-                            showDialog = false
-                            galleryLauncher.launch("image/*")
-                        }) {
-                            Icon(
-                                Icons.Filled.PhotoLibrary,
-                                contentDescription = "Gallery Icon",
-                                tint = Color.Black,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Gallery")
+                                showDialog = false
+                                galleryLauncher.launch("image/*")
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    Icons.Filled.PhotoLibrary,
+                                    contentDescription = "Gallery Icon",
+                                    tint = Color.Black,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Gallery")
+                            }
                         }
-                        TextButton( modifier = Modifier.fillMaxWidth(),
-                        onClick = {
-                            showDialog = false
-                            cameraLauncher.launch()
-                        }) {
-                            Icon(
-                                Icons.Filled.PhotoCamera,
-                                contentDescription = "Camera Icon",
-                                tint = Color.Black,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Camera")
+                        TextButton(
+                            onClick = {
+                                showDialog = false
+                                cameraLauncher.launch()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    Icons.Filled.PhotoCamera,
+                                    contentDescription = "Camera Icon",
+                                    tint = Color.Black,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Camera")
+                            }
                         }
+
                     }
                 },
                 confirmButton = {
@@ -353,7 +373,9 @@ fun DiagnoseButton(gradient: Brush,
                     contentDescription = null,
                     modifier = Modifier
                         .padding(7.dp)
-                        .clip(RoundedCornerShape(10.dp)),
+                        .clip(RoundedCornerShape(10.dp))
+                        .height(150.dp)
+                        .fillMaxWidth(),
                     contentScale = ContentScale.Fit
                 )
             }
@@ -560,12 +582,13 @@ fun ConfirmScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionV
     val blogs by blogsViewModel.allBlogs.observeAsState(initial = emptyList())
     val specificBlog = blogs.find { it.name == diseaseName }
     Log.v("urii", imageUri.toString())
-    Column(
+    LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (imageUri!=null) {
+        item {
+            if (imageUri != null) {
                 Image(
                     painter = rememberImagePainter(data = imageUri),
                     contentDescription = "Selected Image",
@@ -574,56 +597,55 @@ fun ConfirmScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionV
                         .height(580.dp),
                     contentScale = ContentScale.Fit
                 )
-            if (isWheat == true) {
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = textFieldPadding,
-                            end = textFieldPadding,
-                            top = textFieldPadding
-                        ),
-                    shape = RoundedCornerShape(cornerRadius),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                    onClick = {
-
-                        val disease = specificBlog?.let {
-                            imageRealPath?.let { it1 ->
-                                RecentDisease(
-                                    name = diseaseName!!,
-                                    pictureResId = it1,
-                                    symptom = it.symptom,
-                                    treatment = specificBlog.treatment,
-                                    prevention = specificBlog.prevention
-                                )
+                if (isWheat == true) {
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = textFieldPadding,
+                                end = textFieldPadding,
+                                top = textFieldPadding
+                            ),
+                        shape = RoundedCornerShape(cornerRadius),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                        onClick = {
+                            val disease = specificBlog?.let {
+                                imageRealPath?.let { it1 ->
+                                    RecentDisease(
+                                        name = diseaseName!!,
+                                        pictureResId = it1,
+                                        symptom = it.symptom,
+                                        treatment = specificBlog.treatment,
+                                        prevention = specificBlog.prevention
+                                    )
+                                }
                             }
+                            if (disease != null) {
+                                recentDiseaseViewModel.insert(disease)
+                            }
+                            navController.navigate("diseased_result_route") { popUpTo("home") { inclusive = false } }
                         }
-                        if (disease != null) {
-                            recentDiseaseViewModel.insert(disease)
-                        }
-                        navController.navigate("diseased_result_route"){ popUpTo("home") { inclusive = false } }
-                    }) {
+                    ) {
+                        Text(
+                            text = "View Results",
+                            style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
+                                fontSize = 18.sp,
+                                color = Color.White
+                            )
+                        )
+                    }
+                } else {
                     Text(
-                        text = "View Results",
+                        text = "Please select the Valid Image of Wheat Crop",
+                        modifier = Modifier.padding(top = 20.dp),
                         style = TextStyle(
-                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
-                            fontSize = 18.sp,
-                            color = Color.White
+                            fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.error
                         )
                     )
                 }
-            }
-            else{
-                Text(
-                    text = "Please select the Valid Image of Wheat Crop",
-                    modifier = Modifier.padding(top = 20.dp),
-                    style = TextStyle(
-                        fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                )
-            }
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -634,9 +656,10 @@ fun ConfirmScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionV
                         ),
                     shape = RoundedCornerShape(cornerRadius),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                    onClick = {navController.popBackStack()}) {
+                    onClick = { navController.popBackStack() }
+                ) {
                     Text(
-                        text ="Cancel",
+                        text = "Cancel",
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
                             fontSize = 18.sp,
@@ -644,8 +667,9 @@ fun ConfirmScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionV
                         )
                     )
                 }
-        } else {
-            Text("No image selected")
+            } else {
+                Text("No image selected")
+            }
         }
     }
 }
