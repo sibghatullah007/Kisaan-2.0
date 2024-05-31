@@ -14,6 +14,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.PhotoLibrary
@@ -102,7 +104,8 @@ import java.io.ByteArrayOutputStream
 fun HomeScreen(
     onOkClick: () -> Unit,
     imageSelectionViewModel: ImageSelectionViewModel,
-    recentDiseaseViewModel: RecentDiseaseViewModel
+    recentDiseaseViewModel: RecentDiseaseViewModel,
+    navController: NavHostController
 ) {
     val gradient = Brush.radialGradient(
         colors = listOf(Color.Green, Color.Black),
@@ -128,7 +131,7 @@ fun HomeScreen(
         )
         navTextDescription(text = "Identify and Cure Plant Disease")
         DiagnoseButton(gradient, imageSelectionViewModel, onOkClick)
-        RecentDiseasesSection(recentDiseaseViewModel)
+        RecentDiseasesSection(recentDiseaseViewModel, navController)
     }
 }
 
@@ -466,7 +469,7 @@ fun saveBitmapToUri(context: Context, bitmap: Bitmap): Uri? {
 }
 
 @Composable
-fun RecentDiseasesSection(recentDiseaseViewModel: RecentDiseaseViewModel) {
+fun RecentDiseasesSection(recentDiseaseViewModel: RecentDiseaseViewModel,navController: NavHostController) {
     Row(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.onBackground)
@@ -497,29 +500,30 @@ fun RecentDiseasesSection(recentDiseaseViewModel: RecentDiseaseViewModel) {
             Divider(Modifier.padding(top = 20.dp, bottom = 20.dp), color = MaterialTheme.colorScheme.onBackground)
             val listOfRecentDisease by recentDiseaseViewModel.allDiseases.observeAsState(initial = emptyList())
 
-             DiseaseRow(diseases = listOfRecentDisease)
+             DiseaseRow(diseases = listOfRecentDisease, navController)
 
         }
     }
 }
 
-data class Disease(val name: String, val image: Int)
+//data class Disease(val name: String, val image: Int)
 @Composable
-fun DiseaseRow(diseases: List<RecentDisease>, modifier: Modifier = Modifier) {
+fun DiseaseRow(diseases: List<RecentDisease>, navController: NavHostController) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2), // 2 columns
     ) {
         items(diseases) { disease ->
-            recentDisease(name = disease.name, image = disease.pictureResId)
+            recentDisease(name = disease.name, image = disease.pictureResId, navController)
         }
     }
 }
 
 @Composable
-fun recentDisease(name: String, image: String?) {
+fun recentDisease(name: String, image: String?,navController: NavHostController) {
     Column(
         modifier = Modifier
-            .padding(horizontal = 10.dp, vertical = 10.dp),
+            .padding(horizontal = 10.dp, vertical = 10.dp)
+            .clickable { navController.navigate("recent_disease_result/${name}") },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (image != null){
@@ -564,6 +568,94 @@ fun recentDisease(name: String, image: String?) {
                 textAlign = TextAlign.Center
             )
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RecentDiseaseResult(navController: NavHostController,
+                        blogsViewModel: BlogsViewModel,
+                        diseaseName:String?){
+    val blogs by blogsViewModel.allBlogs.observeAsState(initial = emptyList())
+    val specificBlog = blogs.find { it.name == diseaseName }
+    var showDialog by remember { mutableStateOf(false) }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Disease Details") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {showDialog = true},
+                        modifier = Modifier.padding(end = 16.dp)) {
+                        Icon(Icons.Filled.Delete, contentDescription = "Delete")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .padding(8.dp)
+        ) {
+            specificBlog?.let { blog ->
+                BlogCard(blog = blog)
+            } ?: run {
+                Text(text = "No disease detected")
+            }
+        }
+    }
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = "Delete Confirmation",
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )) },
+            containerColor = Color.White,
+            text = { Text(text = "Do you want to delete this from history?",
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.error
+                )
+            ) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        // Implement The Recent Disease Delete Screen Logic Here
+                        showDialog = false
+                    }
+                ) {
+                    Text("Delete",
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.error
+                        ))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDialog = false }
+                ) {
+                    Text("Cancel",
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                            fontSize = 14.sp,
+                            color = Color.Black
+                        ))
+                }
+            }
+        )
     }
 }
 

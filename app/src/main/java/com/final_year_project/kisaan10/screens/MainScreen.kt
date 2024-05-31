@@ -39,7 +39,8 @@ fun MainScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionView
         "suggestion",
         "privacy_policy",
         "account_info",
-        "edit_account_info")
+        "edit_account_info",
+        "recent_disease_result/{diseaseName}")
 
     Scaffold(
         bottomBar = {
@@ -94,7 +95,8 @@ fun SetUpNavGraph(
             HomeScreen(
                 onOkClick = { navController.navigate("confirm_screen_route") },
                 recentDiseaseViewModel = recentDiseaseViewModel,
-                imageSelectionViewModel = imageSelectionViewModel
+                imageSelectionViewModel = imageSelectionViewModel,
+                navController = navController
             )
         }
         composable(Screens.Notification.route) {
@@ -134,6 +136,10 @@ fun SetUpNavGraph(
         }
         composable("edit_account_info"){
             EditAccountDetailScreen(navController,userData)
+        }
+        composable("recent_disease_result/{diseaseName}"){
+            val diseaseName = it.arguments?.getString("diseaseName")
+            RecentDiseaseResult(navController,blogsViewModel ,diseaseName)
         }
         composable("help_center"){
             val sampleFaqs = listOf(
