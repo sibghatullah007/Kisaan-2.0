@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -609,17 +610,32 @@ fun ConfirmScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionV
                         shape = RoundedCornerShape(cornerRadius),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         onClick = {
-                            val disease = specificBlog?.let {
-                                imageRealPath?.let { it1 ->
-                                    RecentDisease(
-                                        name = diseaseName!!,
-                                        pictureResId = it1,
-                                        symptom = it.symptom,
-                                        treatment = specificBlog.treatment,
-                                        prevention = specificBlog.prevention
-                                    )
+                            val disease = if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) { // Android 10 is Q
+                                specificBlog?.let {
+                                    imageUri.let { it1 ->
+                                        RecentDisease(
+                                            name = diseaseName!!,
+                                            pictureResId = it1.toString(),
+                                            symptom = it.symptom,
+                                            treatment = specificBlog.treatment,
+                                            prevention = specificBlog.prevention
+                                        )
+                                    }
+                                }
+                            } else {
+                                specificBlog?.let {
+                                    imageRealPath?.let { it1 ->
+                                        RecentDisease(
+                                            name = diseaseName!!,
+                                            pictureResId = it1,
+                                            symptom = it.symptom,
+                                            treatment = specificBlog.treatment,
+                                            prevention = specificBlog.prevention
+                                        )
+                                    }
                                 }
                             }
+
                             if (disease != null) {
                                 recentDiseaseViewModel.insert(disease)
                             }
