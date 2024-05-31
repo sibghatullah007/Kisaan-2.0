@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -83,6 +82,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.final_year_project.kisaan10.R
@@ -243,7 +243,6 @@ fun DiagnoseButton(gradient: Brush,
 //            )
 //        }
 //    }
-    Log.v("Image Path3",imageUri.toString())
     if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
@@ -375,7 +374,8 @@ fun DiagnoseButton(gradient: Brush,
                     modifier = Modifier
                         .padding(7.dp)
                         .clip(RoundedCornerShape(10.dp))
-                        .height(150.dp),
+                        .height(150.dp)
+                        .fillMaxWidth(),
                     contentScale = ContentScale.Fit
                 )
             }
@@ -522,9 +522,8 @@ fun recentDisease(name: String, image: String?) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (image != null){
-            val uri = Uri.parse(image)
-            Log.v("Image Path",uri.toString())
-            Log.v("Image Path2",image)
+            val uri = image.toUri()
+            Log.v("Image Path",image)
             Image(
                 painter = rememberImagePainter(uri),
                 contentDescription = null,
@@ -610,44 +609,17 @@ fun ConfirmScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionV
                         shape = RoundedCornerShape(cornerRadius),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         onClick = {
-//                            val disease = specificBlog?.let {
-//                                imageRealPath?.let { it1 ->
-//                                    RecentDisease(
-//                                        name = diseaseName!!,
-//                                        pictureResId = it1,
-//                                        symptom = it.symptom,
-//                                        treatment = specificBlog.treatment,
-//                                        prevention = specificBlog.prevention
-//                                    )
-//                                }
-//                            }
-
-                            val disease = if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) { // Android 10 is Q
-                                specificBlog?.let {
-                                    imageUri.let { it1 ->
-                                        RecentDisease(
-                                            name = diseaseName!!,
-                                            pictureResId = it1.toString(),
-                                            symptom = it.symptom,
-                                            treatment = specificBlog.treatment,
-                                            prevention = specificBlog.prevention
-                                        )
-                                    }
-                                }
-                            } else {
-                                specificBlog?.let {
-                                    imageRealPath?.let { it1 ->
-                                        RecentDisease(
-                                            name = diseaseName!!,
-                                            pictureResId = it1,
-                                            symptom = it.symptom,
-                                            treatment = specificBlog.treatment,
-                                            prevention = specificBlog.prevention
-                                        )
-                                    }
+                            val disease = specificBlog?.let {
+                                imageRealPath?.let { it1 ->
+                                    RecentDisease(
+                                        name = diseaseName!!,
+                                        pictureResId = it1,
+                                        symptom = it.symptom,
+                                        treatment = specificBlog.treatment,
+                                        prevention = specificBlog.prevention
+                                    )
                                 }
                             }
-
                             if (disease != null) {
                                 recentDiseaseViewModel.insert(disease)
                             }
