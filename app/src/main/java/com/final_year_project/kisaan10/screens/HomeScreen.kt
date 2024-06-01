@@ -95,6 +95,7 @@ import com.final_year_project.kisaan10.ViewModel.RecentDiseaseViewModel
 import com.final_year_project.kisaan10.ViewModel.WheatViewModel
 import com.final_year_project.kisaan10.localDB.Blogs
 import com.final_year_project.kisaan10.localDB.RecentDisease
+import com.final_year_project.kisaan10.navigation.Screens
 import com.final_year_project.kisaan10.screens.components.navTextDescription
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -513,17 +514,17 @@ fun DiseaseRow(diseases: List<RecentDisease>, navController: NavHostController) 
         columns = GridCells.Fixed(2), // 2 columns
     ) {
         items(diseases) { disease ->
-            recentDisease(name = disease.name, image = disease.pictureResId, navController)
+            recentDisease(id = disease.id!!, name = disease.name, image = disease.pictureResId, navController)
         }
     }
 }
 
 @Composable
-fun recentDisease(name: String, image: String?,navController: NavHostController) {
+fun recentDisease(id: Long, name: String, image: String?,navController: NavHostController) {
     Column(
         modifier = Modifier
             .padding(horizontal = 10.dp, vertical = 10.dp)
-            .clickable { navController.navigate("recent_disease_result/${name}") },
+            .clickable { navController.navigate("recent_disease_result/${id}") },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (image != null){
@@ -573,11 +574,15 @@ fun recentDisease(name: String, image: String?,navController: NavHostController)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecentDiseaseResult(navController: NavHostController,
-                        blogsViewModel: BlogsViewModel,
-                        diseaseName:String?){
-    val blogs by blogsViewModel.allBlogs.observeAsState(initial = emptyList())
-    val specificBlog = blogs.find { it.name == diseaseName }
+fun RecentDiseaseResult(
+    navController: NavHostController,
+    recentDiseaseViewModel: RecentDiseaseViewModel,
+    diseaseId:String?
+) {
+    val diseases by recentDiseaseViewModel.allDiseases.observeAsState(initial = emptyList())
+    val specificDisease = diseaseId?.toLongOrNull()?.let { id ->
+        diseases.find { it.id == id }
+    }
     var showDialog by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
@@ -589,7 +594,7 @@ fun RecentDiseaseResult(navController: NavHostController,
                     }
                 },
                 actions = {
-                    IconButton(onClick = {showDialog = true},
+                    IconButton(onClick = { showDialog = true },
                         modifier = Modifier.padding(end = 16.dp)) {
                         Icon(Icons.Filled.Delete, contentDescription = "Delete")
                     }
@@ -601,11 +606,12 @@ fun RecentDiseaseResult(navController: NavHostController,
         Column(
             modifier = Modifier
                 .padding(innerPadding)
+                .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
                 .padding(8.dp)
         ) {
-            specificBlog?.let { blog ->
-                BlogCard(blog = blog)
+            specificDisease?.let { disease ->
+                DiseaseCard(disease)
             } ?: run {
                 Text(text = "No disease detected")
             }
@@ -614,24 +620,32 @@ fun RecentDiseaseResult(navController: NavHostController,
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text(text = "Delete Confirmation",
-                style = TextStyle(
-                    fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.primary
-                )) },
+            title = {
+                Text(text = "Delete Confirmation",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    ))
+            },
             containerColor = Color.White,
-            text = { Text(text = "Do you want to delete this from history?",
-                style = TextStyle(
-                    fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.error
+            text = {
+                Text(text = "Do you want to delete this from history?",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.error
+                    )
                 )
-            ) },
+            },
             confirmButton = {
                 TextButton(
                     onClick = {
                         // Implement The Recent Disease Delete Screen Logic Here
+                        if (specificDisease != null) {
+                            recentDiseaseViewModel.delete(specificDisease)
+                            navController.popBackStack()
+                        }
                         showDialog = false
                     }
                 ) {
@@ -658,7 +672,6 @@ fun RecentDiseaseResult(navController: NavHostController,
         )
     }
 }
-
 @Composable
 fun ConfirmScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionViewModel: ImageSelectionViewModel, blogsViewModel: BlogsViewModel, wheatViewModel: WheatViewModel, navController: NavHostController) {
     val imageUri = imageSelectionViewModel.getSelectedImageUri()
@@ -941,7 +954,81 @@ fun BlogSection(title: String, content: String) {
 
 
 
+@Composable
+fun DiseaseCard(recentDisease: RecentDisease) {
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.onBackground),
+        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
+            val image = recentDisease.pictureResId
+            if (image != null) {
+                val uri = image.toUri()
+                Log.v("Image Path", image)
+                Image(
+                    painter = rememberImagePainter(uri),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .height(200.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                )
+            }
+            else{
+                Text(text = "Image not found")
+            }
 
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
+                text = recentDisease.name,
+                style = TextStyle(
+                    fontFamily = FontFamily(
+                        Font(R.font.roboto_bold, FontWeight.Bold),
+                        Font(R.font.roboto_regular)
+                    ),
+                    fontSize = 24.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+            Divider()
+            Spacer(modifier = Modifier.height(15.dp))
+            if (recentDisease.name == "Healthy Wheat") {
+                DiseaseContent(recentDisease = recentDisease, healthMessage = "Your crops look quite healthy", messageColor = MaterialTheme.colorScheme.primary)
+            } else {
+                DiseaseContent(recentDisease = recentDisease, healthMessage = "Check if your crop has following symptoms", messageColor = MaterialTheme.colorScheme.error)
+            }
+        }
+    }
+}
+@Composable
+fun DiseaseContent(recentDisease: RecentDisease, healthMessage: String, messageColor: Color) {
+    Column {
+        Text(
+            text = healthMessage,
+            style = TextStyle(
+                fontFamily = FontFamily(
+                    Font(R.font.roboto_medium, FontWeight.Medium),
+                    Font(R.font.roboto_regular)
+                ),
+                fontSize = 14.sp,
+                color = messageColor,
+                fontStyle = FontStyle.Italic
+            )
+        )
+
+        Spacer(modifier = Modifier.height(15.dp))
+        BlogSection(title = "Symptoms", content = recentDisease.symptom)
+        BlogSection(title = if (recentDisease.name == "Healthy Wheat") "Maintenance" else "Treatment", content = recentDisease.treatment)
+        BlogSection(title = if (recentDisease.name == "Healthy Wheat") "Some Tips for Your Crop" else "Preventions", content = recentDisease.prevention)
+    }
+}
 
 
 

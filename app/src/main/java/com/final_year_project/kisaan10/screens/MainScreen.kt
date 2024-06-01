@@ -137,9 +137,9 @@ fun SetUpNavGraph(
         composable("edit_account_info"){
             EditAccountDetailScreen(navController,userData)
         }
-        composable("recent_disease_result/{diseaseName}"){
-            val diseaseName = it.arguments?.getString("diseaseName")
-            RecentDiseaseResult(navController,blogsViewModel ,diseaseName)
+        composable("recent_disease_result/{id}"){
+            val diseaseId = it.arguments?.getString("id")
+            RecentDiseaseResult(navController,recentDiseaseViewModel,diseaseId)
         }
         composable("help_center"){
             val sampleFaqs = listOf(
