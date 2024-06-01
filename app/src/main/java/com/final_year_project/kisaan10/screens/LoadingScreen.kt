@@ -42,9 +42,12 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun LoadingAnimation1(
-    circleColor: Color = MaterialTheme.colorScheme.primary,
-    animationDelay: Int = 1000
+    loading:Boolean
 ) {
+    if (!loading) return
+
+    val circleColor: Color = MaterialTheme.colorScheme.primary
+    val animationDelay: Int = 1000
     var circleScale by remember { mutableStateOf(0f) }
 
     val circleScaleAnimate = animateFloatAsState(
@@ -72,13 +75,13 @@ fun LoadingAnimation1(
     )
 }
 
-@Preview
-@Composable
-fun prev(){
-        val loading by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
-        delay(3000)
-    }
-    IndeterminateCircularIndicator(!loading)
-    LoadingAnimation1()
-}
+//@Preview
+//@Composable
+//fun prev(){
+//        val loading by remember { mutableStateOf(false) }
+//    LaunchedEffect(Unit) {
+//        delay(3000)
+//    }
+//    IndeterminateCircularIndicator(!loading)
+//    LoadingAnimation1()
+//}

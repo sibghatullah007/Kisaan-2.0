@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.final_year_project.kisaan10.R
 import com.final_year_project.kisaan10.auth.googleAuth.SignInState
+import com.final_year_project.kisaan10.auth.googleAuth.validateSignIn
+import com.final_year_project.kisaan10.auth.googleAuth.validateSignUp
 import com.final_year_project.kisaan10.screens.components.Devider
 import com.final_year_project.kisaan10.screens.components.ScreenTextFeild
 import com.final_year_project.kisaan10.screens.components.WithIcons
@@ -49,10 +53,12 @@ val textFieldPadding = 32.dp
 val cornerRadius = 25.dp
 
 @Composable
-fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
+fun SignUpScreen(onSignUpClicked:(String,String,String,String, (Boolean) -> Unit)->Unit,
                  signInNavigation:()->Unit,
                  signUpWithGoogle:()->Unit,
                  state: SignInState,
+                 loading: Boolean,
+                 setLoading: (Boolean) -> Unit,
                  context: Context = LocalContext.current) {
 
 
@@ -142,16 +148,29 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     onClick = {
 //                    showToast(context = context, message = "Click: Button")
-                        onSignUpClicked.invoke(userName,userEmail,userPassword,confirmUserPassword)
+                        val validateSignUp = validateSignUp(userName,userEmail,userPassword,confirmUserPassword)
+                        if (validateSignUp == null) {
+                            onSignUpClicked.invoke(userName,userEmail,userPassword,confirmUserPassword,setLoading)
+                        } else {
+                            com.final_year_project.kisaan10.screens.components.showToast(context, validateSignUp)
+                        }
                     }) {
-                    Text(
-                        text ="Sign Up",
-                        style = androidx.compose.ui.text.TextStyle(
-                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
-                            fontSize = 18.sp,
-                            color = Color.White
-                        )
-                    )
+                        if (loading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                color = MaterialTheme.colorScheme.primary,
+                                trackColor = Color.White
+                            )
+                        } else {
+                            Text(
+                                text ="Sign Up",
+                                style = androidx.compose.ui.text.TextStyle(
+                                    fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
+                                    fontSize = 18.sp,
+                                    color = Color.White
+                                )
+                            )
+                        }
                 }
 
                 Spacer(modifier = Modifier.height(48.dp))

@@ -55,14 +55,17 @@ class WheatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private val _wheatDetectionResult = MutableLiveData<WheatDetectionResult>()
-    val wheatDetectionResult: LiveData<WheatDetectionResult> get() = _wheatDetectionResult
 
     private val _diseasePredictionResult = MutableLiveData<DiseasePredictionResult?>()
+
+
+    val wheatDetectionResult: LiveData<WheatDetectionResult> get() = _wheatDetectionResult
     val diseasePredictionResult: LiveData<DiseasePredictionResult?> get() = _diseasePredictionResult
 
     fun detectWheat(image: Bitmap) {
         viewModelScope.launch {
             val result = runDetectWheatModel(image)
+            Log.v(TAG,"DetectWheat function runs")
             _wheatDetectionResult.postValue(result)
         }
     }
@@ -70,6 +73,7 @@ class WheatViewModel(application: Application) : AndroidViewModel(application) {
     fun predictDisease(image: Bitmap) {
         viewModelScope.launch {
             val result = runPredictDiseaseModel(image)
+            Log.v(TAG,"predictDisease function runs")
             _diseasePredictionResult.postValue(result)
         }
     }

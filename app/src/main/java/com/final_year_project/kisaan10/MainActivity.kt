@@ -18,7 +18,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -139,13 +141,16 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun LoginScreen(navController: NavController) {
         val viewModel = viewModel<SignInViewModel>()
+        var loading by rememberSaveable { mutableStateOf(false) }
+        val context = LocalContext.current
+
         LoginScreen(
             onForgetPassClicked = {
                 navController.navigate("forgetPassword") { popUpTo("login") { inclusive = true } }
             },
-            onLoginClicked = { username, password ->
-                showToast(this@MainActivity, "Username: $username\nPassword: $password")
+            onLoginClicked = { username, password, setLoading ->
                 lifecycleScope.launch {
+                    setLoading(true)
                     googleAuthUiClient.signInWithEmailPassword(username, password).let { signInResult ->
                         viewModel.onSignInResult(signInResult)
                         if (signInResult.data != null) {
@@ -153,18 +158,24 @@ class MainActivity : ComponentActivity() {
                             navController.navigate("home") { popUpTo("login") { inclusive = true } }
                         } else {
                             Log.e("SignIn", "Failed to sign in user: ${signInResult.errorMessage}")
+                            signInResult.errorMessage?.let { showToast(context, it) }
+                            setLoading(false) // Hide loading animation when sign-in fails
                         }
                     }
                 }
             },
             signUpNavigation = {
                 navController.navigate("signup") { popUpTo("login") { inclusive = true } }
-            }
+            },
+            loading = loading,
+            setLoading = { loading = it }
         )
     }
 
     @Composable
     fun SignUpScreen(navController: NavController) {
+        val context = LocalContext.current
+        var loading by rememberSaveable { mutableStateOf(false) }
         val viewModel = viewModel<SignInViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
         val launcher = rememberLauncherForActivityResult(
@@ -185,25 +196,26 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-
         SignUpScreen(
-            onSignUpClicked = { username, email, password, confirmPassword ->
+            onSignUpClicked = { username, email, password, confirmPassword, setLoading ->
                 val validationError = validateSignUp(username, email, password, confirmPassword)
                 if (validationError != null) {
-                    showToast(this@MainActivity, validationError)
+                    showToast(context, validationError)
                 } else {
+                    setLoading(true)
                     lifecycleScope.launch {
                         googleAuthUiClient.signUpUser(username, email, password) { success, exception ->
                             if (success) {
-                                showToast(this@MainActivity, "Successful")
+                                showToast(context, "Successful")
                                 navController.navigate("home") { popUpTo("signup") { inclusive = true } }
                                 AppNotificationManager.sendNotification(
-                                    context = this@MainActivity,
+                                    context = context,
                                     "Welcome to Kisaan App",
                                     "Version 1.2 is now available with new features"
                                 )
                             } else {
-                                exception?.let { showToast(this@MainActivity, exception.toString()) }
+                                exception?.let { showToast(context, it.toString()) }
+                                setLoading(false) // Hide loading animation when sign-up fails
                             }
                         }
                     }
@@ -222,11 +234,11 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             },
-
             state = state,
+            loading = loading,
+            setLoading = { loading = it }
         )
     }
-
     @Composable
     fun HomeScreen(navController: NavController) {
         var userData by remember { mutableStateOf<UserData?>(null) }
