@@ -1,6 +1,7 @@
 package com.final_year_project.kisaan10.screens
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -67,6 +68,7 @@ fun HelpCenter(faqList: List<FAQ>,navController: NavController) {
                 .fillMaxSize()
                 .padding(16.dp)
                 .padding(top = 50.dp)
+                .background(MaterialTheme.colorScheme.onBackground)
         ) {
             items(faqList) { faq ->
                 FAQItem(faq)

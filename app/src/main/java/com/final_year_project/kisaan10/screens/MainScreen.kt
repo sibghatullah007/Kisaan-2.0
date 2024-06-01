@@ -40,7 +40,7 @@ fun MainScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionView
         "privacy_policy",
         "account_info",
         "edit_account_info",
-        "recent_disease_result/{diseaseName}")
+        "recent_disease_result/{id}")
 
     Scaffold(
         bottomBar = {

@@ -30,7 +30,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.Person
@@ -111,7 +110,9 @@ fun SettingScreen(
     }
 
     if (listPrepared) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.onBackground)) {
             item { UserDetails(context, userData,navController) }
             items(optionsList) { item -> OptionsItemStyle(navController,item, context, onSignOut) }
         }
@@ -721,6 +722,7 @@ fun PrivacyPolicyScreen(navController: NavController) {
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
                     .padding(30.dp)
+                    .background(MaterialTheme.colorScheme.onBackground)
                     .verticalScroll(rememberScrollState())
             ) {
                 Spacer(modifier = Modifier.height(35.dp))
@@ -962,6 +964,7 @@ fun EditAccountDetailScreen(navController: NavController, userData: UserData?) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = 80.dp)
+                    .background(MaterialTheme.colorScheme.onBackground)
                     .verticalScroll(rememberScrollState())
             ) {
 

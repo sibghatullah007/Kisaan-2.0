@@ -64,7 +64,7 @@ fun NotificationBox(
         modifier = Modifier
             .fillMaxWidth()
             .height(120.dp)
-            .padding(horizontal = 2.dp, vertical = 4.dp) // Add 4.dp gap to left and right side
+            .padding(horizontal = 2.dp, vertical = 16.dp) // Add 4.dp gap to left and right side
             .clip(RoundedCornerShape(8.dp))
             .background(Color.White)
             .padding(horizontal = 10.dp, vertical = 16.dp)

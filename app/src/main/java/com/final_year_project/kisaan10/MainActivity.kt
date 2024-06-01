@@ -126,10 +126,10 @@ class MainActivity : ComponentActivity() {
         LaunchedEffect(key1 = Unit) {
 
             if (googleAuthUiClient.getSignedInUser() != null) {
-                delay(3000)
+                delay(2000)
                 navController.navigate("home") { popUpTo("splash") { inclusive = true } }
             }else{
-                delay(3000)
+                delay(2000)
                 navController.navigate("signup") { popUpTo("splash") { inclusive = true }}
             }
         }
