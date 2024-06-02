@@ -95,10 +95,11 @@ import com.final_year_project.kisaan10.ViewModel.RecentDiseaseViewModel
 import com.final_year_project.kisaan10.ViewModel.WheatViewModel
 import com.final_year_project.kisaan10.localDB.Blogs
 import com.final_year_project.kisaan10.localDB.RecentDisease
-import com.final_year_project.kisaan10.navigation.Screens
+import com.final_year_project.kisaan10.screens.components.ShimmerEffect
 import com.final_year_project.kisaan10.screens.components.navTextDescription
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import kotlinx.coroutines.delay
 import java.io.ByteArrayOutputStream
 
 @Composable
@@ -673,28 +674,51 @@ fun RecentDiseaseResult(
     }
 }
 @Composable
-fun ConfirmScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionViewModel: ImageSelectionViewModel, blogsViewModel: BlogsViewModel, wheatViewModel: WheatViewModel, navController: NavHostController) {
-    val imageUri = imageSelectionViewModel.getSelectedImageUri()
-    val imageBitmap = imageSelectionViewModel.uriToBitmap(LocalContext.current)
-    val imageRealPath = imageSelectionViewModel.getRealPathFromURI(LocalContext.current,imageUri)
-    imageBitmap?.let { wheatViewModel.detectWheat(it) }
-    val isWheat = wheatViewModel.wheatDetectionResult.value?.isWheat
-
-    if (imageBitmap != null) {
-        wheatViewModel.predictDisease(imageBitmap)
-    }
-    val diseaseName = wheatViewModel.diseasePredictionResult.value?.diseaseName
-    val diseaseConfidence = wheatViewModel.diseasePredictionResult.value?.confidence
+fun ConfirmScreen(
+    recentDiseaseViewModel: RecentDiseaseViewModel,
+    imageSelectionViewModel: ImageSelectionViewModel,
+    blogsViewModel: BlogsViewModel,
+    wheatViewModel: WheatViewModel,
+    navController: NavHostController
+) {
+    val context = LocalContext.current
+    val imageUri by imageSelectionViewModel.selectedImageUri.observeAsState()
+    val imageBitmap by remember { mutableStateOf(imageUri?.let { imageSelectionViewModel.uriToBitmap(context) }) }
+    val isWheat by wheatViewModel.wheatDetectionResult.observeAsState()
+    val diseasePredictionResult by wheatViewModel.diseasePredictionResult.observeAsState()
     val blogs by blogsViewModel.allBlogs.observeAsState(initial = emptyList())
-    val specificBlog = blogs.find { it.name == diseaseName }
-    Log.v("urii", imageUri.toString())
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        item {
-            if (imageUri != null) {
+    val specificBlog = diseasePredictionResult?.diseaseName?.let { diseaseName ->
+        blogs.find { it.name == diseaseName }
+    }
+
+    var showContent by remember { mutableStateOf(false) }
+
+    LaunchedEffect(imageBitmap) {
+        imageBitmap?.let { wheatViewModel.detectWheat(it) }
+    }
+
+    LaunchedEffect(isWheat) {
+        if (isWheat?.isWheat == true) {
+            imageBitmap?.let { wheatViewModel.predictDisease(it) }
+        }
+    }
+
+    LaunchedEffect(imageUri, isWheat, diseasePredictionResult) {
+        if (imageUri != null && isWheat != null && (isWheat?.isWheat == false || (isWheat?.isWheat == true && diseasePredictionResult != null))) {
+            delay(1500) // Introduce a 1.5 second delay before showing the content
+            showContent = true
+        }
+    }
+
+    if (!showContent) {
+        ShimmerEffect()
+    } else {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            item {
                 Image(
                     painter = rememberImagePainter(data = imageUri),
                     contentDescription = "Selected Image",
@@ -703,7 +727,7 @@ fun ConfirmScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionV
                         .height(580.dp),
                     contentScale = ContentScale.Fit
                 )
-                if (isWheat == true) {
+                if (isWheat?.isWheat == true) {
                     Button(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -717,9 +741,9 @@ fun ConfirmScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionV
                         onClick = {
                             val disease = if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) { // Android 10 is Q
                                 specificBlog?.let {
-                                    imageUri.let { it1 ->
+                                    imageUri?.let { it1 ->
                                         RecentDisease(
-                                            name = diseaseName!!,
+                                            name = diseasePredictionResult?.diseaseName ?: "",
                                             pictureResId = it1.toString(),
                                             symptom = it.symptom,
                                             treatment = specificBlog.treatment,
@@ -729,9 +753,9 @@ fun ConfirmScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionV
                                 }
                             } else {
                                 specificBlog?.let {
-                                    imageRealPath?.let { it1 ->
+                                    imageSelectionViewModel.getRealPathFromURI(context, imageUri)?.let { it1 ->
                                         RecentDisease(
-                                            name = diseaseName!!,
+                                            name = diseasePredictionResult?.diseaseName ?: "",
                                             pictureResId = it1,
                                             symptom = it.symptom,
                                             treatment = specificBlog.treatment,
@@ -758,7 +782,7 @@ fun ConfirmScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionV
                     }
                 } else {
                     Text(
-                        text = "Please select the Valid Image of Wheat Crop",
+                        text = "Please select a valid image of wheat crop",
                         modifier = Modifier.padding(top = 20.dp),
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
@@ -788,16 +812,10 @@ fun ConfirmScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionV
                         )
                     )
                 }
-            } else {
-                Text("No image selected")
             }
         }
     }
 }
-
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiseasedResultScreen(
@@ -964,7 +982,9 @@ fun DiseaseCard(recentDisease: RecentDisease) {
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
+        Column(modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()) {
             val image = recentDisease.pictureResId
             if (image != null) {
                 val uri = image.toUri()
