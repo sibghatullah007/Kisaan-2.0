@@ -95,6 +95,7 @@ import com.final_year_project.kisaan10.ViewModel.RecentDiseaseViewModel
 import com.final_year_project.kisaan10.ViewModel.WheatViewModel
 import com.final_year_project.kisaan10.localDB.Blogs
 import com.final_year_project.kisaan10.localDB.RecentDisease
+import com.final_year_project.kisaan10.screens.components.CustomAlertDialog
 import com.final_year_project.kisaan10.screens.components.ShimmerEffect
 import com.final_year_project.kisaan10.screens.components.navTextDescription
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -120,6 +121,7 @@ fun HomeScreen(
             .fillMaxSize()
 //            .verticalScroll(rememberScrollState())
             .background(color = MaterialTheme.colorScheme.onBackground)
+            .padding(horizontal = 16.dp)
     ) {
         //        navTextHeading(text = "Diagnose")
         Text(
@@ -129,7 +131,6 @@ fun HomeScreen(
                 fontSize = 30.sp,
                 color = MaterialTheme.colorScheme.primary
             ),
-            modifier = Modifier.padding(start = 25.dp, top = 10.dp)
         )
         navTextDescription(text = "Identify and Cure Plant Disease")
         DiagnoseButton(gradient, imageSelectionViewModel, onOkClick)
@@ -250,66 +251,17 @@ fun DiagnoseButton(gradient: Brush,
 //        }
 //    }
     if (showDialog) {
-            AlertDialog(
-                onDismissRequest = { showDialog = false },
-                title = { Text(text = "Select Option") },
-                text = {
-                    Column {
-                        TextButton(
-                            onClick = {
-                                showDialog = false
-                                galleryLauncher.launch("image/*")
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Start,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Icon(
-                                    Icons.Filled.PhotoLibrary,
-                                    contentDescription = "Gallery Icon",
-                                    tint = Color.Black,
-                                    modifier = Modifier.size(24.dp)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text("Gallery")
-                            }
-                        }
-                        TextButton(
-                            onClick = {
-                                showDialog = false
-                                cameraLauncher.launch()
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Start,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Icon(
-                                    Icons.Filled.PhotoCamera,
-                                    contentDescription = "Camera Icon",
-                                    tint = Color.Black,
-                                    modifier = Modifier.size(24.dp)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text("Camera")
-                            }
-                        }
-
-                    }
-                },
-                confirmButton = {
-                    TextButton(onClick = { showDialog = false }) {
-                        Text("Cancel")
-                    }
-                },
-                containerColor = Color.White
-            )
-        }
+        CustomAlertDialog(
+            onDismissRequest = { showDialog = false },
+            onGalleryClick = {
+                galleryLauncher.launch("image/*")
+                showDialog = false },
+            onCameraClick = {
+                cameraLauncher.launch()
+                showDialog = false },
+            onCloseClick = { showDialog = false }
+        )
+    }
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -475,7 +427,6 @@ fun RecentDiseasesSection(recentDiseaseViewModel: RecentDiseaseViewModel,navCont
     Row(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.onBackground)
-            .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .fillMaxHeight(),
         horizontalArrangement = Arrangement.Center,

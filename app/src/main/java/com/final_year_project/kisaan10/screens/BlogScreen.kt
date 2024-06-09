@@ -56,6 +56,7 @@ fun BlogScreen(navController: NavHostController,viewModel: BlogsViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.onBackground)
+            .padding(16.dp)
     ) {
         navTextHeading(text = "Blogs")
         navTextDescription(text = "Check Crop Disease Insights")
@@ -75,7 +76,7 @@ fun BlogsGrid(blogs: List<Blogs>, navController: NavHostController, modifier: Mo
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2), // 2 columns
-        modifier = modifier.padding(12.dp)
+        modifier = modifier.padding(top = 12.dp)
     ) {
         items(blogs) { blog ->
             // Remove the "@drawable/" prefix

@@ -34,7 +34,7 @@ fun NotificationScreen(notifications: List<Notification>) {
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.onBackground)
-//            .padding(top = 16.dp)
+            .padding(16.dp)
     ) {
         item {
             navTextHeading(text = "Notifications")
@@ -64,7 +64,6 @@ fun NotificationBox(
         modifier = Modifier
             .fillMaxWidth()
             .height(120.dp)
-            .padding(horizontal = 2.dp, vertical = 16.dp) // Add 4.dp gap to left and right side
             .clip(RoundedCornerShape(8.dp))
             .background(Color.White)
             .padding(horizontal = 10.dp, vertical = 16.dp)
@@ -74,7 +73,7 @@ fun NotificationBox(
                 text = heading,
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     color = Color.Black
                 )
             )

@@ -46,6 +46,7 @@ import androidx.compose.material.icons.outlined.SettingsSuggest
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -110,10 +111,19 @@ fun SettingScreen(
     }
 
     if (listPrepared) {
-        LazyColumn(modifier = Modifier
+        LazyColumn(
+            modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.onBackground)) {
-            item { UserDetails(context, userData,navController) }
+            .background(MaterialTheme.colorScheme.onBackground),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            item {
+                UserDetails(context, userData,navController)
+                Spacer(modifier = Modifier.height(40.dp))
+                Divider(Modifier.height(1.dp))
+                Spacer(modifier = Modifier.height(40.dp))
+            }
             items(optionsList) { item -> OptionsItemStyle(navController,item, context, onSignOut) }
         }
     }
@@ -134,7 +144,7 @@ private fun UserDetails(context: Context, userData: UserData?,navController: Nav
     ) {
         Icon(
             modifier = Modifier
-                .size(72.dp)
+                .size(62.dp)
                 .clip(CircleShape)
                 .background(Color.Black),
             imageVector = Icons.Filled.Person,
@@ -156,8 +166,8 @@ private fun UserDetails(context: Context, userData: UserData?,navController: Nav
                         text = userData.username!!,
                         textAlign = TextAlign.Center,
                         style = TextStyle(
-                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
-                            fontSize = 18.sp,
+                            fontFamily = FontFamily(Font(R.font.montserrat_bold)),
+                            fontSize = 24.sp,
                             color = MaterialTheme.colorScheme.primary
                         )
                     )
@@ -168,7 +178,7 @@ private fun UserDetails(context: Context, userData: UserData?,navController: Nav
                         text = userData.userEmail!!,
                         style = TextStyle(
                             fontSize = 14.sp,
-                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                            fontFamily = FontFamily(Font(R.font.montserrat_medium)),
                             color = Color.Black,
                             letterSpacing = 0.8.sp
                         ),
@@ -179,7 +189,7 @@ private fun UserDetails(context: Context, userData: UserData?,navController: Nav
             }
 
             IconButton(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(0.3f),
                 onClick = {
                     Toast.makeText(context, "Edit Button", Toast.LENGTH_SHORT).show()
                 }) {
@@ -228,7 +238,8 @@ private fun OptionsItemStyle(navController:NavController,item: OptionsData, cont
                 }
             }
             .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Icon(
             modifier = Modifier.size(32.dp),
@@ -268,7 +279,7 @@ private fun OptionsItemStyle(navController:NavController,item: OptionsData, cont
             }
 
             Icon(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(0.2f),
                 imageVector = Icons.Outlined.ChevronRight,
                 contentDescription = item.title,
                 tint = Color.Black.copy(alpha = 0.70f)

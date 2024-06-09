@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -46,6 +47,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -73,11 +75,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.final_year_project.kisaan10.R
 import com.final_year_project.kisaan10.localDB.Blogs
 import com.final_year_project.kisaan10.screens.cornerRadius
 import com.final_year_project.kisaan10.screens.textFieldPadding
 import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
+import com.final_year_project.kisaan10.ui.theme.lightGrn
 
 @Composable
 fun WithIcons(iconRes: Int, contentDescription: String, context: Context, onClick: () -> Unit){
@@ -198,7 +202,6 @@ fun navTextHeading(text: String){
             fontSize = 30.sp,
             color = MaterialTheme.colorScheme.primary
         ),
-        modifier = Modifier.padding(start = 25.dp, top = 7.dp)
     )
 }
 
@@ -211,7 +214,6 @@ fun navTextDescription(text: String){
             fontSize = 14.sp,
             color = Color.Black
         ),
-        modifier = Modifier.padding(start = 25.dp, top = 7.dp)
     )
 }
 
@@ -505,5 +507,125 @@ fun ShimmerEffect() {
                 .clip(RoundedCornerShape(cornerRadius))
                 .background(brush)
         )
+    }
+}
+//Alert dialog to show option to choose Image from Camera or gallery
+@Composable
+fun CustomAlertDialog(
+    onDismissRequest: () -> Unit,
+    onGalleryClick: () -> Unit,
+    onCameraClick: () -> Unit,
+    onCloseClick: () -> Unit
+) {
+    Dialog(onDismissRequest = onDismissRequest) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            shape = MaterialTheme.shapes.medium,
+            color = Color.White
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_close),
+                    contentDescription = "Close",
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .clickable(onClick = onCloseClick)
+                        .padding(top = 20.dp, end = 20.dp)
+                        .size(24.dp),
+                )
+                    Text(
+                        text = "Add image",
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = 20.dp),
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                            fontSize = 18.sp
+                        )
+                    )
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Center)
+                        .padding(top = 40.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .clickable(onClick = onGalleryClick)
+                                .background(
+                                    lightGrn,
+                                    RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp)
+                                )
+                                .padding(start = 18.dp, top = 18.dp, end = 34.dp, bottom = 18.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.gallery),
+                                contentDescription = null,
+                                modifier = Modifier.size(30.dp),
+                                tint = Color.Unspecified
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                modifier = Modifier,
+                                text = "Gallery",
+                                style = TextStyle(
+                                    color = Color.Black,
+                                    fontFamily = FontFamily(Font(R.font.montserrat_medium)),
+                                    fontSize = 14.sp
+                                )
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(5.dp))
+
+                        Row(
+                            modifier = Modifier
+                                .clickable(onClick = onCameraClick)
+                                .background(
+                                    lightGrn,
+                                    RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
+                                )
+                                .padding(start = 34.dp, top = 18.dp, end = 18.dp, bottom = 18.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.cam),
+                                contentDescription = null,
+                                modifier = Modifier.size(30.dp),
+                                tint = Color.Unspecified
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                modifier = Modifier,
+                                text = "Camera",
+                                style = TextStyle(
+                                    color = Color.Black,
+                                    fontFamily = FontFamily(Font(R.font.montserrat_medium)),
+                                    fontSize = 14.sp
+                                )
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(30.dp))
+                }
+            }
+        }
     }
 }
