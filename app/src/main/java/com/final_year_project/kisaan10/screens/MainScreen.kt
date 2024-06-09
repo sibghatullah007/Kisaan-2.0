@@ -24,7 +24,7 @@ import com.final_year_project.kisaan10.navigation.Screens
 import com.final_year_project.kisaan10.utils.bottomNavigationItemsList
 
 @Composable
-fun MainScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionViewModel: ImageSelectionViewModel,blogsViewModel: BlogsViewModel, wheatViewModel: WheatViewModel,userData: UserData?, onSignOut: () -> Unit) {
+fun MainScreen(recentDiseaseViewModel: RecentDiseaseViewModel,imageSelectionViewModel: ImageSelectionViewModel,blogsViewModel: BlogsViewModel, wheatViewModel: WheatViewModel,userData: UserData?, onSignOut: () ->Unit) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute by remember(navBackStackEntry) {

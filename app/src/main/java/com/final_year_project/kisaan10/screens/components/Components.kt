@@ -36,6 +36,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -77,6 +78,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.final_year_project.kisaan10.R
+import com.final_year_project.kisaan10.auth.googleAuth.validateSignIn
 import com.final_year_project.kisaan10.localDB.Blogs
 import com.final_year_project.kisaan10.screens.cornerRadius
 import com.final_year_project.kisaan10.screens.textFieldPadding
@@ -137,12 +139,12 @@ fun ScreenTextFeild(
                 end = textFieldPadding,
                 top = textFieldPadding,
             )
-            .background(Color.White, RoundedCornerShape(cornerRadius)),
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(cornerRadius)),
         value = text,
         colors = OutlinedTextFieldDefaults.colors(
             cursorColor = MaterialTheme.colorScheme.primary,
             focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = Color.White,
+            unfocusedBorderColor = Color.Transparent,
         ),
         onValueChange = { onText(it) },
         singleLine = true,
@@ -212,7 +214,7 @@ fun navTextDescription(text: String){
         style = androidx.compose.ui.text.TextStyle(
             fontFamily = FontFamily(Font(R.font.montserrat, FontWeight.Normal)),
             fontSize = 14.sp,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onBackground
         ),
     )
 }
@@ -223,7 +225,6 @@ fun BlogItem(blog: Blogs) {
     Box(modifier = Modifier.fillMaxSize()) {
         Card(
             modifier = Modifier
-                .padding(4.dp)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(2.dp),
             elevation = CardDefaults.cardElevation(4.dp)
@@ -231,7 +232,7 @@ fun BlogItem(blog: Blogs) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.onBackground),
+                    .background(MaterialTheme.colorScheme.background),
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
@@ -281,7 +282,7 @@ fun BlogItem(blog: Blogs) {
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                             fontSize = 15.sp,
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             lineHeight = 25.sp,
                         ),
                         textAlign = TextAlign.Justify
@@ -301,7 +302,7 @@ fun BlogItem(blog: Blogs) {
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                             fontSize = 15.sp,
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             lineHeight = 25.sp,
                         ),
                         textAlign = TextAlign.Justify
@@ -321,7 +322,7 @@ fun BlogItem(blog: Blogs) {
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                             fontSize = 15.sp,
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             lineHeight = 25.sp,
                         ),
                         textAlign = TextAlign.Justify
@@ -351,13 +352,14 @@ fun BlogItem(blog: Blogs) {
 
 @Composable
 fun ForgotPasswordScreen(onResetPasswordClicked: (String) -> Unit, loginNavigation: () -> Unit) {
+    val context = LocalContext.current
     Kisaan10Theme {
         var userEmail by rememberSaveable {
             mutableStateOf("")
         }
         Column(
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.onBackground)
+                .background(color = MaterialTheme.colorScheme.background)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -372,7 +374,7 @@ fun ForgotPasswordScreen(onResetPasswordClicked: (String) -> Unit, loginNavigati
                         fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
                         fontSize = 30.sp,
                         letterSpacing = 1.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
                 Text(
@@ -383,7 +385,7 @@ fun ForgotPasswordScreen(onResetPasswordClicked: (String) -> Unit, loginNavigati
                         fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                         fontSize = 18.sp,
                         letterSpacing = 1.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
                 Spacer(modifier = Modifier.height(25.dp))
@@ -411,7 +413,14 @@ fun ForgotPasswordScreen(onResetPasswordClicked: (String) -> Unit, loginNavigati
                     shape = RoundedCornerShape(cornerRadius),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     onClick = {
-                        onResetPasswordClicked.invoke(userEmail)
+                        // Check if email is valid
+                        val emailRegex = Regex(pattern = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})")
+                        if (userEmail.isEmpty() || !userEmail.matches(emailRegex)) {
+                            showToast(context,"Invalid email")
+                        }
+                        else{
+                            onResetPasswordClicked.invoke(userEmail)
+                        }
                     }
                 ) {
                     Text(
@@ -419,7 +428,7 @@ fun ForgotPasswordScreen(onResetPasswordClicked: (String) -> Unit, loginNavigati
                         style = androidx.compose.ui.text.TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
                             fontSize = 18.sp,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     )
                 }
@@ -438,7 +447,7 @@ fun ForgotPasswordScreen(onResetPasswordClicked: (String) -> Unit, loginNavigati
                         style = androidx.compose.ui.text.TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
                             fontSize = 18.sp,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     )
                 }
@@ -523,7 +532,7 @@ fun CustomAlertDialog(
                 .fillMaxWidth()
                 .wrapContentHeight(),
             shape = MaterialTheme.shapes.medium,
-            color = Color.White
+            color = MaterialTheme.colorScheme.surface
         ) {
             Box(
                 modifier = Modifier
@@ -544,7 +553,7 @@ fun CustomAlertDialog(
                             .align(Alignment.TopCenter)
                             .padding(top = 20.dp),
                         style = TextStyle(
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontFamily = FontFamily(Font(R.font.poppins_semibold)),
                             fontSize = 18.sp
                         )
@@ -569,7 +578,7 @@ fun CustomAlertDialog(
                             modifier = Modifier
                                 .clickable(onClick = onGalleryClick)
                                 .background(
-                                    lightGrn,
+                                    MaterialTheme.colorScheme.surfaceContainer,
                                     RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp)
                                 )
                                 .padding(start = 18.dp, top = 18.dp, end = 34.dp, bottom = 18.dp),
@@ -586,7 +595,7 @@ fun CustomAlertDialog(
                                 modifier = Modifier,
                                 text = "Gallery",
                                 style = TextStyle(
-                                    color = Color.Black,
+                                    color = MaterialTheme.colorScheme.onBackground,
                                     fontFamily = FontFamily(Font(R.font.montserrat_medium)),
                                     fontSize = 14.sp
                                 )
@@ -599,7 +608,7 @@ fun CustomAlertDialog(
                             modifier = Modifier
                                 .clickable(onClick = onCameraClick)
                                 .background(
-                                    lightGrn,
+                                    MaterialTheme.colorScheme.surfaceContainer,
                                     RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
                                 )
                                 .padding(start = 34.dp, top = 18.dp, end = 18.dp, bottom = 18.dp),
@@ -616,7 +625,7 @@ fun CustomAlertDialog(
                                 modifier = Modifier,
                                 text = "Camera",
                                 style = TextStyle(
-                                    color = Color.Black,
+                                    color = MaterialTheme.colorScheme.onBackground,
                                     fontFamily = FontFamily(Font(R.font.montserrat_medium)),
                                     fontSize = 14.sp
                                 )
@@ -628,4 +637,36 @@ fun CustomAlertDialog(
             }
         }
     }
+}
+
+@Composable
+fun CustomAlertDialog(
+    title: String,
+    message: String,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onCancel,
+        title = { Text(title) },
+        text = { Text(message) },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onConfirm()
+                    onCancel()
+                }
+            ) {
+                Text("Logout")
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = onCancel
+            ) {
+                Text("Cancel")
+            }
+        },
+        modifier = Modifier.background(Color.Blue) // Change background color of the dialog
+    )
 }

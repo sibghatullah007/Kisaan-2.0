@@ -17,18 +17,25 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = TextColor,
+    onPrimary = LightGrey,
+    secondary = BoxColor,
+    tertiary = LightGrey,
+    surface = Nblacklite,
+    surfaceContainer = NblackliteL,
+    error = Red,
+
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = TextColor,
+    onPrimary = LightGrey,
     secondary = BoxColor,
     tertiary = LightGrey,
-    surface = LightGreen,
+    surface = LightGrey,
+    surfaceContainer = lightGrn,
     error = Red,
-    onBackground = Background
+    background = Background,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -62,7 +69,7 @@ fun Kisaan10Theme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.onBackground.toArgb()
+            window.statusBarColor = colorScheme.background.toArgb()
             window.navigationBarColor = Color.White.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }

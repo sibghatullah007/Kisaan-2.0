@@ -120,7 +120,7 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
 //            .verticalScroll(rememberScrollState())
-            .background(color = MaterialTheme.colorScheme.onBackground)
+            .background(color = MaterialTheme.colorScheme.background)
             .padding(horizontal = 16.dp)
     ) {
         //        navTextHeading(text = "Diagnose")
@@ -303,14 +303,14 @@ fun DiagnoseButton(gradient: Brush,
                         text = "Start Diagnosis",
                         style = TextStyle(fontSize = 20.sp,
                             fontFamily = FontFamily(Font(R.font.montserrat_bold)),
-                            color = Color.Black)
+                            color = MaterialTheme.colorScheme.onBackground)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "Identify the crop diseases",
                         style = TextStyle(fontSize = 16.sp,
                             fontFamily = FontFamily(Font(R.font.montserrat)),
-                            color = Color.Black)
+                            color = MaterialTheme.colorScheme.onBackground)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(
@@ -426,7 +426,6 @@ fun saveBitmapToUri(context: Context, bitmap: Bitmap): Uri? {
 fun RecentDiseasesSection(recentDiseaseViewModel: RecentDiseaseViewModel,navController: NavHostController) {
     Row(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.onBackground)
             .fillMaxWidth()
             .fillMaxHeight(),
         horizontalArrangement = Arrangement.Center,
@@ -434,7 +433,7 @@ fun RecentDiseasesSection(recentDiseaseViewModel: RecentDiseaseViewModel,navCont
     ) {
         Column(
             modifier = Modifier
-                .background(Color.White, RoundedCornerShape(topStart = 18.dp, topEnd = 18.dp))
+                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(topStart = 18.dp, topEnd = 18.dp))
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
@@ -446,11 +445,11 @@ fun RecentDiseasesSection(recentDiseaseViewModel: RecentDiseaseViewModel,navCont
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.montserrat)),
                     fontSize = 18.sp,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             )
 
-            Divider(Modifier.padding(top = 20.dp, bottom = 20.dp), color = MaterialTheme.colorScheme.onBackground)
+            Divider(Modifier.padding(top = 20.dp, bottom = 20.dp), color = MaterialTheme.colorScheme.background)
             val listOfRecentDisease by recentDiseaseViewModel.allDiseases.observeAsState(initial = emptyList())
 
              DiseaseRow(diseases = listOfRecentDisease, navController)
@@ -496,7 +495,7 @@ fun recentDisease(id: Long, name: String, image: String?,navController: NavHostC
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.montserrat_medium)),
                     fontSize = 14.sp,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onSurface
                 ),
                 textAlign = TextAlign.Center
             )
@@ -551,7 +550,7 @@ fun RecentDiseaseResult(
                         Icon(Icons.Filled.Delete, contentDescription = "Delete")
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
             )
         }
     ) { innerPadding ->
@@ -823,8 +822,7 @@ fun BlogCard(blog: Blogs) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.onBackground),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
@@ -905,7 +903,7 @@ fun BlogSection(title: String, content: String) {
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                 fontSize = 15.sp,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 lineHeight = 25.sp,
                 textAlign = TextAlign.Justify
             ),
@@ -928,14 +926,15 @@ fun DiseaseCard(recentDisease: RecentDisease) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.onBackground),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
             .padding(16.dp)
-            .fillMaxWidth()) {
+            .fillMaxWidth()
+        ) {
             val image = recentDisease.pictureResId
             if (image != null) {
                 val uri = image.toUri()

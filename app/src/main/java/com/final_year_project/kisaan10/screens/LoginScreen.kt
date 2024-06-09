@@ -61,7 +61,7 @@ fun LoginScreen(
     Kisaan10Theme {
         Column(
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.onBackground)
+                .background(color = MaterialTheme.colorScheme.background)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -75,7 +75,7 @@ fun LoginScreen(
                         fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
                         fontSize = 30.sp,
                         letterSpacing = 1.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
                 Text(
@@ -85,7 +85,7 @@ fun LoginScreen(
                         fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                         fontSize = 18.sp,
                         letterSpacing = 1.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
                 Spacer(modifier = Modifier.height(25.dp))
@@ -141,7 +141,7 @@ fun LoginScreen(
                             style = androidx.compose.ui.text.TextStyle(
                                 fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
                                 fontSize = 18.sp,
-                                color = Color.White
+                                color = MaterialTheme.colorScheme.onPrimary
                             )
                         )
                     }
@@ -159,7 +159,7 @@ fun LoginScreen(
                         style = androidx.compose.ui.text.TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
                             fontSize = 18.sp,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     )
                 }
@@ -195,7 +195,7 @@ fun LoginScreen(
                 ) {
                     Text(
                         text = textBottom1,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontFamily = FontFamily(
                             Font(R.font.roboto_medium, weight = FontWeight.Medium)
                         ),

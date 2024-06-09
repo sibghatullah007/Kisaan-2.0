@@ -44,6 +44,7 @@ import com.final_year_project.kisaan10.screens.LoginScreen
 import com.final_year_project.kisaan10.screens.MainScreen
 import com.final_year_project.kisaan10.screens.SignUpScreen
 import com.final_year_project.kisaan10.screens.SplashScreen
+import com.final_year_project.kisaan10.screens.components.CustomAlertDialog
 import com.final_year_project.kisaan10.screens.components.ForgotPasswordScreen
 import com.final_year_project.kisaan10.screens.components.showToast
 import com.final_year_project.kisaan10.ui.theme.Kisaan10Theme
@@ -254,7 +255,6 @@ class MainActivity : ComponentActivity() {
             wheatViewModel,
             userData = userData,
             onSignOut = {
-//                val context = applicationContext
                 val activityContext = this // Assuming MainActivity is your activity
                 activityContext.let {
                     AlertDialog.Builder(it)

@@ -3,8 +3,9 @@ package com.final_year_project.kisaan10.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -58,7 +60,7 @@ fun HelpCenter(faqList: List<FAQ>,navController: NavController) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
             )
         }
     ) {paddingValue->
@@ -68,9 +70,10 @@ fun HelpCenter(faqList: List<FAQ>,navController: NavController) {
                 .fillMaxSize()
                 .padding(16.dp)
                 .padding(top = 50.dp)
-                .background(MaterialTheme.colorScheme.onBackground)
+                .background(MaterialTheme.colorScheme.background)
         ) {
             items(faqList) { faq ->
+                Spacer(modifier = Modifier.height(8.dp))
                 FAQItem(faq)
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -84,28 +87,39 @@ fun FAQItem(faq: FAQ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { expanded = !expanded }
-            .padding(8.dp),
+            .clickable { expanded = !expanded },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row {
+        Column(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(16.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min) // Adjust height based on content
+            ) {
                 Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .padding(end = 24.dp), // Ensure some padding to avoid overlap issues
                     text = faq.question,
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.primary
-                    ),
+                    )
                 )
-
+                Icon(
+                    imageVector = if (expanded) Icons.Outlined.ArrowDropUp else Icons.Outlined.ArrowDropDown,
+                    contentDescription = null,
+                    tint = Color.Black,
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(start = 8.dp) // Padding to adjust the overlap as needed
+                )
             }
-            Icon(
-                imageVector = if (expanded) Icons.Outlined.ArrowDropUp else Icons.Outlined.ArrowDropDown,
-                contentDescription = null,
-                tint = Color.Black,
-//                modifier = Modifier.clickable { expanded = !expanded }
-            )
 
             if (expanded) {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -114,7 +128,7 @@ fun FAQItem(faq: FAQ) {
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                         fontSize = 14.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     ),
                 )
             }

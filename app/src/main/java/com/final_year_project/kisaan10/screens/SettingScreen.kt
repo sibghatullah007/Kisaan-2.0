@@ -113,8 +113,8 @@ fun SettingScreen(
     if (listPrepared) {
         LazyColumn(
             modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.onBackground),
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -146,8 +146,9 @@ private fun UserDetails(context: Context, userData: UserData?,navController: Nav
             modifier = Modifier
                 .size(62.dp)
                 .clip(CircleShape)
-                .background(Color.Black),
+                .background(MaterialTheme.colorScheme.onBackground),
             imageVector = Icons.Filled.Person,
+            tint = MaterialTheme.colorScheme.background,
             contentDescription = "Your Image",
         )
 
@@ -179,7 +180,7 @@ private fun UserDetails(context: Context, userData: UserData?,navController: Nav
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontFamily = FontFamily(Font(R.font.montserrat_medium)),
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             letterSpacing = 0.8.sp
                         ),
                         maxLines = 1,
@@ -191,7 +192,7 @@ private fun UserDetails(context: Context, userData: UserData?,navController: Nav
             IconButton(
                 modifier = Modifier.weight(0.3f),
                 onClick = {
-                    Toast.makeText(context, "Edit Button", Toast.LENGTH_SHORT).show()
+                    navController.navigate("account_info")
                 }) {
                 Icon(
                     modifier = Modifier.size(24.dp),
@@ -263,7 +264,7 @@ private fun OptionsItemStyle(navController:NavController,item: OptionsData, cont
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
                 Spacer(modifier = Modifier.height(2.dp))
@@ -273,7 +274,7 @@ private fun OptionsItemStyle(navController:NavController,item: OptionsData, cont
                         fontSize = 14.sp,
                         letterSpacing = 0.8.sp,
                         fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
             }
@@ -296,10 +297,10 @@ private fun prepareOptionsData() {
     optionsList.clear()
     val options = listOf(
         OptionsData(Icons.Outlined.Person, "Account", "Manage your account"),
-        OptionsData(Icons.Outlined.Memory, "Clear Cache", "Clear your cache memory"),
         OptionsData(Icons.Outlined.SettingsSuggest, "Suggestion", "Suggest to improve"),
         OptionsData(Icons.Outlined.Policy, "Privacy Policy", "Terms and conditions"),
         OptionsData(Icons.AutoMirrored.Outlined.HelpOutline, "Help Center", "FAQs and customer support"),
+        OptionsData(Icons.Outlined.Memory, "Clear Cache", "Clear your cache memory"),
         OptionsData(Icons.Outlined.Share, "Tell Friends", "Share this application"),
         OptionsData(Icons.Outlined.Info, "App Info", "About the app"),
         OptionsData(Icons.AutoMirrored.Outlined.Logout, "Logout", "Logout your Account")
@@ -323,7 +324,7 @@ fun AppInfoScreen(navController:NavController) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back" )
                         }
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
                 )
             }
         ) { paddingValues ->
@@ -331,7 +332,7 @@ fun AppInfoScreen(navController:NavController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.onBackground)
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -368,7 +369,7 @@ fun AppInfoScreen(navController:NavController) {
                             style = TextStyle(
                                 fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
                                 fontSize = 20.sp,
-                                color = Color.White
+                                color = MaterialTheme.colorScheme.onBackground
                             ),
                         )
                         Text(
@@ -376,7 +377,7 @@ fun AppInfoScreen(navController:NavController) {
                             style = TextStyle(
                                 fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
                                 fontSize = 14.sp,
-                                color = Color.White
+                                color = MaterialTheme.colorScheme.onBackground
                             ),
                         )
                     }
@@ -393,7 +394,7 @@ fun AppInfoScreen(navController:NavController) {
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                             fontSize = 14.sp,
-                            color = Color.White,
+                            color =Color.White,
                             textAlign = TextAlign.Justify,
                             lineHeight = 20.sp,
                             letterSpacing = 2.sp
@@ -406,7 +407,10 @@ fun AppInfoScreen(navController:NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp)
-                        .background(Color.White, shape = RoundedCornerShape(20.dp))
+                        .background(
+                            MaterialTheme.colorScheme.surface,
+                            shape = RoundedCornerShape(20.dp)
+                        )
                         .padding(16.dp)
                 ) {
                     Image(
@@ -429,7 +433,7 @@ fun AppInfoScreen(navController:NavController) {
                             style = TextStyle(
                                 fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                                 fontSize = 15.sp,
-                                color = Color.Black
+                                color = MaterialTheme.colorScheme.onSurface
                             ),
                         )
                     }
@@ -505,7 +509,7 @@ fun SuggestionScreen(navController: NavController) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
                 )
             }
         ) { paddingValues ->
@@ -514,7 +518,7 @@ fun SuggestionScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = 20.dp)
-                    .background(MaterialTheme.colorScheme.onBackground),
+                    .background(MaterialTheme.colorScheme.background),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -534,7 +538,7 @@ fun SuggestionScreen(navController: NavController) {
                             style = TextStyle(
                                 fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                                 fontSize = 14.sp,
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.onBackground,
                                 textAlign = TextAlign.Justify,
                                 lineHeight = 20.sp,
                                 letterSpacing = 2.sp
@@ -592,7 +596,10 @@ fun SuggestionScreen(navController: NavController) {
                             end = 20.dp,
                             top = 20.dp,
                         )
-                        .background(Color.White, RoundedCornerShape(cornerRadius)),
+                        .background(
+                            MaterialTheme.colorScheme.surface,
+                            RoundedCornerShape(cornerRadius)
+                        ),
                     singleLine = true,
                     shape = RoundedCornerShape(cornerRadius),
                     textStyle = screenTextField(MaterialTheme.colorScheme.primary),
@@ -633,7 +640,10 @@ fun SuggestionScreen(navController: NavController) {
                             end = 20.dp,
                             top = 20.dp,
                         )
-                        .background(Color.White, RoundedCornerShape(cornerRadius)),
+                        .background(
+                            MaterialTheme.colorScheme.background,
+                            RoundedCornerShape(cornerRadius)
+                        ),
                     shape = RoundedCornerShape(cornerRadius),
                     textStyle = screenTextField(MaterialTheme.colorScheme.primary),
                     placeholder = {
@@ -700,7 +710,7 @@ fun SuggestionScreen(navController: NavController) {
                         }
                     },
                 ) {
-                    Text(text = "Send", color = Color.White)
+                    Text(text = "Send", color = MaterialTheme.colorScheme.onPrimary)
                 }
             }
         }
@@ -723,7 +733,7 @@ fun PrivacyPolicyScreen(navController: NavController) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
                 )
             }
         ) { inn ->
@@ -732,11 +742,10 @@ fun PrivacyPolicyScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(30.dp)
-                    .background(MaterialTheme.colorScheme.onBackground)
                     .verticalScroll(rememberScrollState())
+                    .padding(30.dp)
             ) {
-                Spacer(modifier = Modifier.height(35.dp))
+                Spacer(modifier = Modifier.height(55.dp))
                 Text(
                     text = "Introduction",
                     style = TextStyle(
@@ -750,7 +759,7 @@ fun PrivacyPolicyScreen(navController: NavController) {
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                         fontSize = 14.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     ),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -767,7 +776,7 @@ fun PrivacyPolicyScreen(navController: NavController) {
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                         fontSize = 14.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     ),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -784,7 +793,7 @@ fun PrivacyPolicyScreen(navController: NavController) {
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                         fontSize = 14.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     ),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -801,7 +810,7 @@ fun PrivacyPolicyScreen(navController: NavController) {
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                         fontSize = 14.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     ),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -818,7 +827,7 @@ fun PrivacyPolicyScreen(navController: NavController) {
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                         fontSize = 14.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     ),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -835,7 +844,7 @@ fun PrivacyPolicyScreen(navController: NavController) {
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                         fontSize = 14.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     ),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -845,7 +854,13 @@ fun PrivacyPolicyScreen(navController: NavController) {
                               },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
-                    Text("Back")
+                    Text(
+                        text = "Back",
+                        style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    ),)
                 }
             }
         }
@@ -869,7 +884,7 @@ fun AccountDetailsScreen(navController: NavController,userData: UserData?) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
                 )
             }
         ) { inn ->
@@ -878,7 +893,7 @@ fun AccountDetailsScreen(navController: NavController,userData: UserData?) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = 30.dp)
-                    .background(Color(0xFFEAE2E0)),
+                    .background(MaterialTheme.colorScheme.background),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -887,8 +902,7 @@ fun AccountDetailsScreen(navController: NavController,userData: UserData?) {
                 Icon(
                     modifier = Modifier
                         .size(100.dp)
-                        .clip(CircleShape)
-                        .background(Color.Black),
+                        .clip(CircleShape),
                     imageVector = Icons.Outlined.Person,
                     contentDescription = "Your Image",
                 )
@@ -930,7 +944,7 @@ fun AccountDetailsScreen(navController: NavController,userData: UserData?) {
                         text = label,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                     Text(
                         text = value,
@@ -966,7 +980,7 @@ fun EditAccountDetailScreen(navController: NavController, userData: UserData?) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
                 )
             }
         ) {it->
@@ -974,10 +988,12 @@ fun EditAccountDetailScreen(navController: NavController, userData: UserData?) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 80.dp)
-                    .background(MaterialTheme.colorScheme.onBackground)
+                    .background(MaterialTheme.colorScheme.background)
                     .verticalScroll(rememberScrollState())
+                    .padding(10.dp)
             ) {
+
+                Spacer(modifier = Modifier.height(50.dp))
 
                 OutlinedTextField(
                     value = name,
@@ -1042,7 +1058,12 @@ fun EditAccountDetailScreen(navController: NavController, userData: UserData?) {
                         .fillMaxWidth()
                         .padding(vertical = 16.dp)
                 ) {
-                    Text(text = "Save Changes")
+                    Text(text = "Save Changes",
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        ))
                 }
             }
         }

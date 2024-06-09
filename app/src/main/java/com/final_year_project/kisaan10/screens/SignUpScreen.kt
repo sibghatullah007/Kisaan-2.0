@@ -84,7 +84,7 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String, (Boolean) -> Unit
         }
         Column(
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.onBackground)
+                .background(color = MaterialTheme.colorScheme.background)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -98,7 +98,7 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String, (Boolean) -> Unit
                         fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
                         fontSize = 30.sp,
                         letterSpacing = 1.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
                 Text(modifier = Modifier
@@ -108,7 +108,7 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String, (Boolean) -> Unit
                         fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                         fontSize = 18.sp,
                         letterSpacing = 1.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
 
@@ -167,7 +167,7 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String, (Boolean) -> Unit
                                 style = androidx.compose.ui.text.TextStyle(
                                     fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
                                     fontSize = 18.sp,
-                                    color = Color.White
+                                    color = MaterialTheme.colorScheme.onPrimary
                                 )
                             )
                         }
@@ -188,7 +188,7 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String, (Boolean) -> Unit
                             fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                             fontSize = 16.sp,
                             letterSpacing = 1.sp,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     )
                     Devider()
@@ -224,7 +224,7 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String, (Boolean) -> Unit
                 ) {
                     Text(
                         text = textBottom1,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontFamily = FontFamily(
                             Font(
                                 R.font.roboto_medium,

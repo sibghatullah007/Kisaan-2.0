@@ -33,7 +33,7 @@ fun NotificationScreen(notifications: List<Notification>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.onBackground)
+            .background(color = MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
         item {
@@ -65,7 +65,7 @@ fun NotificationBox(
             .fillMaxWidth()
             .height(120.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 10.dp, vertical = 16.dp)
     ) {
         Column {
@@ -74,7 +74,7 @@ fun NotificationBox(
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
                     fontSize = 20.sp,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             )
             Spacer(modifier = Modifier.height(16.dp))

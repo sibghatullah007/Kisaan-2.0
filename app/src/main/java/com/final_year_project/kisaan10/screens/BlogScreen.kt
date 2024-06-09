@@ -55,7 +55,7 @@ fun BlogScreen(navController: NavHostController,viewModel: BlogsViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.onBackground)
+            .background(color = MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
         navTextHeading(text = "Blogs")
@@ -89,7 +89,7 @@ fun BlogsGrid(blogs: List<Blogs>, navController: NavHostController, modifier: Mo
                     .padding(10.dp)
                     .fillMaxWidth()
                     .height(180.dp)
-                    .background(color = Color.White, shape = RoundedCornerShape(10.dp))
+                    .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(10.dp))
                     .clickable { navController.navigate("blog_result_route/${blog.id}") },
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -110,7 +110,7 @@ fun BlogsGrid(blogs: List<Blogs>, navController: NavHostController, modifier: Mo
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.montserrat_medium)),
                         fontSize = 14.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onSurface
                     ),
                     textAlign = TextAlign.Center
                 )
@@ -138,7 +138,7 @@ fun BlogResult(
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back" )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
             )
         }
     ) { innerPadding ->
