@@ -254,10 +254,18 @@ fun DiagnoseButton(gradient: Brush,
         CustomAlertDialog(
             onDismissRequest = { showDialog = false },
             onGalleryClick = {
-                galleryLauncher.launch("image/*")
+                if (permissionState.allPermissionsGranted) {
+                    galleryLauncher.launch("image/*")
+                } else {
+                    permissionState.launchMultiplePermissionRequest()
+                }
                 showDialog = false },
             onCameraClick = {
-                cameraLauncher.launch()
+                if (permissionState.allPermissionsGranted) {
+                    cameraLauncher.launch()
+                } else {
+                    permissionState.launchMultiplePermissionRequest()
+                }
                 showDialog = false },
             onCloseClick = { showDialog = false }
         )
@@ -798,7 +806,7 @@ fun DiseasedResultScreen(
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
             )
         }
     ) { innerPadding ->
@@ -806,6 +814,7 @@ fun DiseasedResultScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
+                .background(MaterialTheme.colorScheme.background)
                 .padding(8.dp)
         ) {
             specificBlog?.let { blog ->
@@ -826,7 +835,11 @@ fun BlogCard(blog: Blogs) {
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(16.dp)
+        ) {
             val context = LocalContext.current
             val resourceName = blog.pictureResId.removePrefix("@drawable/")
             val resourceId = context.resources.getIdentifier(resourceName, "drawable", context.packageName)
