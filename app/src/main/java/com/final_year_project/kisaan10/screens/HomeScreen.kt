@@ -9,7 +9,6 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.launch
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,7 +26,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -41,8 +39,6 @@ import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -68,6 +64,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
@@ -140,9 +137,11 @@ fun HomeScreen(
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun DiagnoseButton(gradient: Brush,
-                   viewModel: ImageSelectionViewModel,
-                   onOkClick: () -> Unit) {
+fun DiagnoseButton(
+    gradient: Brush,
+    viewModel: ImageSelectionViewModel,
+    onOkClick: () -> Unit
+) {
     var showDialog by remember { mutableStateOf(false) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
@@ -150,7 +149,8 @@ fun DiagnoseButton(gradient: Brush,
     val permissionState = rememberMultiplePermissionsState(
         permissions = listOf(
             android.Manifest.permission.CAMERA,
-            android.Manifest.permission.READ_EXTERNAL_STORAGE
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
     )
 
@@ -161,139 +161,74 @@ fun DiagnoseButton(gradient: Brush,
         }
     )
 
+    val cameraUri = remember { mutableStateOf<Uri?>(null) }
+
     val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicturePreview(),
-        onResult = { bitmap: Bitmap? ->
-            if (bitmap != null) {
-                val uri = saveBitmapToUri(context, bitmap)
-                imageUri = uri
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { success: Boolean ->
+            if (success) {
+                imageUri = cameraUri.value
             }
         }
     )
 
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(230.dp),
-//        horizontalArrangement = Arrangement.Center,
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        OutlinedButton(
-//            onClick = { showDialog = true },
-//            modifier = Modifier
-//                .background(gradient, CircleShape)
-//                .size(200.dp),
-//            shape = CircleShape,
-//            contentPadding = PaddingValues(0.dp) // Remove content padding
-//        ) {
-//            if (imageUri != null) {
-//                Image(
-//                    painter = rememberImagePainter(data = imageUri),
-//                    contentDescription = "Selected Image",
-//                    modifier = Modifier
-//                        .size(200.dp)
-//                        .clip(CircleShape),
-//                    contentScale = ContentScale.Crop // Fill the button with the image
-//                )
-//            } else {
-//                Icon(
-//                    Icons.Filled.AddAPhoto,
-//                    contentDescription = "Camera Icon",
-//                    tint = Color.White,
-//                    modifier = Modifier.size(55.dp)
-//                )
-//            }
-//        }
-//
-//        if (showDialog) {
-//            AlertDialog(
-//                onDismissRequest = { showDialog = false },
-//                title = { Text(text = "Select Option") },
-//                text = {
-//                    Column {
-//                        TextButton(modifier = Modifier.fillMaxWidth(),
-//                            onClick = {
-//                            showDialog = false
-//                            galleryLauncher.launch("image/*")
-//                        }) {
-//                            Icon(
-//                                Icons.Filled.PhotoLibrary,
-//                                contentDescription = "Gallery Icon",
-//                                tint = Color.Black,
-//                                modifier = Modifier.size(24.dp)
-//                            )
-//                            Spacer(modifier = Modifier.width(8.dp))
-//                            Text("Gallery")
-//                        }
-//                        TextButton( modifier = Modifier.fillMaxWidth(),
-//                        onClick = {
-//                            showDialog = false
-//                            cameraLauncher.launch()
-//                        }) {
-//                            Icon(
-//                                Icons.Filled.PhotoCamera,
-//                                contentDescription = "Camera Icon",
-//                                tint = Color.Black,
-//                                modifier = Modifier.size(24.dp)
-//                            )
-//                            Spacer(modifier = Modifier.width(8.dp))
-//                            Text("Camera")
-//                        }
-//                    }
-//                },
-//                confirmButton = {
-//                    TextButton(onClick = { showDialog = false }) {
-//                        Text("Cancel")
-//                    }
-//                },
-//                containerColor = Color.White
-//            )
-//        }
-//    }
+    fun launchGallery() {
+        if (permissionState.allPermissionsGranted) {
+            galleryLauncher.launch("image/*")
+        } else {
+            permissionState.launchMultiplePermissionRequest()
+        }
+    }
+
+    fun launchCamera() {
+        if (permissionState.allPermissionsGranted) {
+            val uri = createImageUri(context)
+            cameraUri.value = uri
+            cameraLauncher.launch(uri)
+        } else {
+            permissionState.launchMultiplePermissionRequest()
+        }
+    }
+
     if (showDialog) {
         CustomAlertDialog(
             onDismissRequest = { showDialog = false },
             onGalleryClick = {
-                if (permissionState.allPermissionsGranted) {
-                    galleryLauncher.launch("image/*")
-                } else {
-                    permissionState.launchMultiplePermissionRequest()
-                }
-                showDialog = false },
+                launchGallery()
+                showDialog = false
+            },
             onCameraClick = {
-                if (permissionState.allPermissionsGranted) {
-                    cameraLauncher.launch()
-                } else {
-                    permissionState.launchMultiplePermissionRequest()
-                }
-                showDialog = false },
+                launchCamera()
+                showDialog = false
+            },
             onCloseClick = { showDialog = false }
         )
     }
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally){
-
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Box(
             modifier = Modifier
                 .sizeIn(minHeight = 200.dp, maxHeight = 500.dp)
-                .padding(top = 40.dp, end = 40.dp, start = 40.dp, bottom = 20.dp)
+                .padding(40.dp)
         ) {
-                Canvas(modifier = Modifier.matchParentSize()) {
-                    val dashWidth = 10.dp.toPx()
-                    val dashGap = 8.dp.toPx()
-                    val strokeWidth = 1.dp.toPx()
-                    val pathEffect = PathEffect.dashPathEffect(floatArrayOf(dashWidth, dashGap), 0f)
+            Canvas(modifier = Modifier.matchParentSize()) {
+                val dashWidth = 10.dp.toPx()
+                val dashGap = 8.dp.toPx()
+                val strokeWidth = 1.dp.toPx()
+                val pathEffect = PathEffect.dashPathEffect(floatArrayOf(dashWidth, dashGap), 0f)
 
-                    drawRoundRect(
-                        color =Color(0xFF4CAF50),
-                        size = size,
-                        cornerRadius = androidx.compose.ui.geometry.CornerRadius(8.dp.toPx(), 8.dp.toPx()),
-                        style = Stroke(width = strokeWidth, pathEffect = pathEffect)
-                    )
-                }
-            if(imageUri==null){
+                drawRoundRect(
+                    color = Color(0xFF4CAF50),
+                    size = size,
+                    cornerRadius = CornerRadius(8.dp.toPx(), 8.dp.toPx()),
+                    style = Stroke(width = strokeWidth, pathEffect = pathEffect)
+                )
+            }
+            if (imageUri == null) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -301,7 +236,7 @@ fun DiagnoseButton(gradient: Brush,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Icon(
-                        Icons.Filled.CameraAlt, // Replace with your camera icon resource
+                        Icons.Filled.CameraAlt,
                         contentDescription = "Camera Icon",
                         modifier = Modifier.size(40.dp),
                         tint = MaterialTheme.colorScheme.primary
@@ -309,31 +244,25 @@ fun DiagnoseButton(gradient: Brush,
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "Start Diagnosis",
-                        style = TextStyle(fontSize = 20.sp,
-                            fontFamily = FontFamily(Font(R.font.montserrat_bold)),
-                            color = MaterialTheme.colorScheme.onBackground)
+                        style = TextStyle(fontSize = 20.sp, fontFamily = FontFamily(Font(R.font.montserrat_bold)), color = MaterialTheme.colorScheme.onBackground)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "Identify the crop diseases",
-                        style = TextStyle(fontSize = 16.sp,
-                            fontFamily = FontFamily(Font(R.font.montserrat)),
-                            color = MaterialTheme.colorScheme.onBackground)
+                        style = TextStyle(fontSize = 16.sp, fontFamily = FontFamily(Font(R.font.montserrat)), color = MaterialTheme.colorScheme.onBackground)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(
                         onClick = { showDialog = true },
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                     ) {
-                        Text(text = "Take A Photo",
-                            style = TextStyle(fontSize = 16.sp,
-                                fontFamily = FontFamily(Font(R.font.montserrat_medium)),
-                                color = Color.White)
+                        Text(
+                            text = "Take A Photo",
+                            style = TextStyle(fontSize = 16.sp, fontFamily = FontFamily(Font(R.font.montserrat_medium)), color = Color.White)
                         )
                     }
                 }
-            }
-            else{
+            } else {
                 Image(
                     painter = rememberImagePainter(imageUri),
                     contentDescription = null,
@@ -355,19 +284,22 @@ fun DiagnoseButton(gradient: Brush,
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = {
-                onOkClick()
-                viewModel.setSelectedImageUri(uri = imageUri)
-            },modifier = Modifier
-                .border(
-                    width = 1.dp,
-                    brush = SolidColor(Color.White),
-                    shape = RoundedCornerShape(size = 20.dp)
-                )
-                .background(
-                    color = MaterialTheme.colorScheme.primary,
-                    shape = RoundedCornerShape(size = 20.dp)
-                )) {
+            IconButton(
+                onClick = {
+                    onOkClick()
+                    viewModel.setSelectedImageUri(uri = imageUri)
+                },
+                modifier = Modifier
+                    .border(
+                        width = 1.dp,
+                        brush = SolidColor(Color.White),
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                    .background(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(20.dp)
+                    )
+            ) {
                 Icon(
                     imageVector = Icons.Filled.Done,
                     contentDescription = "Done Icon",
@@ -375,16 +307,19 @@ fun DiagnoseButton(gradient: Brush,
                 )
             }
             Spacer(modifier = Modifier.size(10.dp))
-            IconButton(onClick = {imageUri = null}, Modifier
-                .border(
-                    width = 1.dp,
-                    brush = SolidColor(Color.White),
-                    shape = RoundedCornerShape(size = 20.dp)
-                )
-                .background(
-                    color = MaterialTheme.colorScheme.error,
-                    shape = RoundedCornerShape(size = 20.dp)
-                )) {
+            IconButton(
+                onClick = { imageUri = null },
+                modifier = Modifier
+                    .border(
+                        width = 1.dp,
+                        brush = SolidColor(Color.White),
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                    .background(
+                        color = MaterialTheme.colorScheme.error,
+                        shape = RoundedCornerShape(20.dp)
+                    )
+            ) {
                 Icon(
                     Icons.Filled.Cancel,
                     contentDescription = "Cancel Icon",
@@ -400,6 +335,13 @@ fun DiagnoseButton(gradient: Brush,
             permissionState.launchMultiplePermissionRequest()
         }
     }
+}
+
+private fun createImageUri(context: Context): Uri {
+    val contentValues = ContentValues().apply {
+        put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+    }
+    return context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)!!
 }
 
 fun saveBitmapToUri(context: Context, bitmap: Bitmap): Uri? {
@@ -584,10 +526,10 @@ fun RecentDiseaseResult(
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
                         fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.onSurface
                     ))
             },
-            containerColor = Color.White,
+            containerColor = MaterialTheme.colorScheme.surface,
             text = {
                 Text(text = "Do you want to delete this from history?",
                     style = TextStyle(
@@ -624,7 +566,7 @@ fun RecentDiseaseResult(
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_medium, FontWeight.Medium)),
                             fontSize = 14.sp,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.onSurface
                         ))
                 }
             }
