@@ -278,7 +278,7 @@ fun BlogItem(blog: Blogs) {
                 item {
                     SectionTitle(text = "Symptoms")
                     Text(
-                        text = blog.symptom,
+                        text = formatWithBullets(blog.symptom),
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                             fontSize = 15.sp,
@@ -298,7 +298,7 @@ fun BlogItem(blog: Blogs) {
                 item {
                     SectionTitle(text = if (blog.name == "Healthy Wheat") "Maintenance" else "Treatment")
                     Text(
-                        text = blog.treatment,
+                        text = formatWithBullets(blog.treatment),
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                             fontSize = 15.sp,
@@ -318,7 +318,7 @@ fun BlogItem(blog: Blogs) {
                 item {
                     SectionTitle(text = if (blog.name == "Healthy Wheat") "Some Tips for Your Crop" else "Preventions")
                     Text(
-                        text = blog.prevention,
+                        text = formatWithBullets(blog.prevention),
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                             fontSize = 15.sp,
@@ -333,6 +333,12 @@ fun BlogItem(blog: Blogs) {
                 }
             }
         }
+    }
+}
+// fun used to add bullet point at the starting of each sentence
+fun formatWithBullets(text: String): String {
+    return text.split('.').filter { it.isNotBlank() }.joinToString("\n• ") { it.trim() }.let {
+        if (it.startsWith("•")) it else "• $it"
     }
 }
         @Composable

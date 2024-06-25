@@ -94,6 +94,7 @@ import com.final_year_project.kisaan10.localDB.Blogs
 import com.final_year_project.kisaan10.localDB.RecentDisease
 import com.final_year_project.kisaan10.screens.components.CustomAlertDialog
 import com.final_year_project.kisaan10.screens.components.ShimmerEffect
+import com.final_year_project.kisaan10.screens.components.formatWithBullets
 import com.final_year_project.kisaan10.screens.components.navTextDescription
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -854,7 +855,7 @@ fun BlogSection(title: String, content: String) {
         Spacer(modifier = Modifier.height(15.dp))
 
         Text(
-            text = content,
+            text = formatWithBullets(content),
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                 fontSize = 15.sp,
@@ -936,7 +937,7 @@ fun DiseaseCard(recentDisease: RecentDisease) {
 fun DiseaseContent(recentDisease: RecentDisease, healthMessage: String, messageColor: Color) {
     Column {
         Text(
-            text = healthMessage,
+            text = formatWithBullets(healthMessage),
             style = TextStyle(
                 fontFamily = FontFamily(
                     Font(R.font.roboto_medium, FontWeight.Medium),
