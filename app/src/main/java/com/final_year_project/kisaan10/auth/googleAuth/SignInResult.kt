@@ -10,4 +10,5 @@ data class UserData(
     var userId:String,
     var username:String?,
     var userEmail:String?,
+    val authProvider: String?
 )

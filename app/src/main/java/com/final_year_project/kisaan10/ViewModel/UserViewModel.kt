@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.final_year_project.kisaan10.FirebaseManager
+import com.final_year_project.kisaan10.auth.googleAuth.UserData
 import com.final_year_project.kisaan10.screens.components.showToast
 import com.final_year_project.kisaan10.model.UserInfo
 import com.google.firebase.firestore.auth.User
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class UserViewModel : ViewModel() {
-    private val _user = MutableLiveData<UserInfo>()
+//    private val _user = MutableLiveData<UserInfo>()
 //    val user: LiveData<UserInfo> = _user
 
     private val firestoreDB = FirebaseManager.getFireStore()
@@ -25,8 +26,7 @@ class UserViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val userDoc = firestoreDB.collection("users").document(userId).get().await()
-                val userData = userDoc.toObject<UserInfo>()
-                _user.value = userData
+                val userData = userDoc.toObject<UserData>()
             } catch (e: Exception) {
                 // Handle error
             }

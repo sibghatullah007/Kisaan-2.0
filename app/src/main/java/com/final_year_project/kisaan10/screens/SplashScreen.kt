@@ -33,7 +33,7 @@ import com.final_year_project.kisaan10.R
 fun SplashScreen() {
     Box(modifier = Modifier
         .fillMaxSize()
-        .background(color = MaterialTheme.colorScheme.onBackground)) {
+        .background(color = MaterialTheme.colorScheme.background)) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -86,7 +86,7 @@ fun SplashScreen() {
                             fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.ExtraLight)),
                             fontSize = 16.sp,
                             letterSpacing = 1.sp,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     )
                 }
