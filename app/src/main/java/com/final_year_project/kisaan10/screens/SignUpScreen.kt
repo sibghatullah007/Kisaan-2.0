@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.final_year_project.kisaan10.R
 import com.final_year_project.kisaan10.auth.googleAuth.SignInState
+import com.final_year_project.kisaan10.auth.googleAuth.validateSignUp
 import com.final_year_project.kisaan10.screens.components.Devider
 import com.final_year_project.kisaan10.screens.components.ScreenTextFeild
 import com.final_year_project.kisaan10.screens.components.WithIcons
@@ -49,10 +52,12 @@ val textFieldPadding = 32.dp
 val cornerRadius = 25.dp
 
 @Composable
-fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
+fun SignUpScreen(onSignUpClicked:(String,String,String,String, (Boolean) -> Unit)->Unit,
                  signInNavigation:()->Unit,
                  signUpWithGoogle:()->Unit,
                  state: SignInState,
+                 loading: Boolean,
+                 setLoading: (Boolean) -> Unit,
                  context: Context = LocalContext.current) {
 
 
@@ -78,7 +83,7 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
         }
         Column(
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.onBackground)
+                .background(color = MaterialTheme.colorScheme.background)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -92,7 +97,7 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
                         fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Bold)),
                         fontSize = 30.sp,
                         letterSpacing = 1.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
                 Text(modifier = Modifier
@@ -102,7 +107,7 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
                         fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                         fontSize = 18.sp,
                         letterSpacing = 1.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
 
@@ -141,16 +146,30 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
                     shape = RoundedCornerShape(cornerRadius),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     onClick = {
-                        onSignUpClicked.invoke(userName,userEmail,userPassword,confirmUserPassword)
+//                    showToast(context = context, message = "Click: Button")
+                        val validateSignUp = validateSignUp(userName,userEmail,userPassword,confirmUserPassword)
+                        if (validateSignUp == null) {
+                            onSignUpClicked.invoke(userName,userEmail,userPassword,confirmUserPassword,setLoading)
+                        } else {
+                            com.final_year_project.kisaan10.screens.components.showToast(context, validateSignUp)
+                        }
                     }) {
-                    Text(
-                        text ="Sign Up",
-                        style = androidx.compose.ui.text.TextStyle(
-                            fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
-                            fontSize = 18.sp,
-                            color = Color.White
-                        )
-                    )
+                        if (loading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                color = MaterialTheme.colorScheme.primary,
+                                trackColor = Color.White
+                            )
+                        } else {
+                            Text(
+                                text ="Sign Up",
+                                style = androidx.compose.ui.text.TextStyle(
+                                    fontFamily = FontFamily(Font(R.font.roboto_bold, FontWeight.Medium)),
+                                    fontSize = 18.sp,
+                                    color = MaterialTheme.colorScheme.onPrimary
+                                )
+                            )
+                        }
                 }
 
                 Spacer(modifier = Modifier.height(48.dp))
@@ -158,6 +177,7 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
+//                modifier = Modifier.height(50.dp)
                 ) {
                     Devider()
                     Text(
@@ -167,7 +187,7 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
                             fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
                             fontSize = 16.sp,
                             letterSpacing = 1.sp,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     )
                     Devider()
@@ -185,6 +205,12 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
                         context = context,
                         onClick = signUpWithGoogle
                     )
+//                    WithIcons(
+//                        iconRes = R.drawable.fb,
+//                        contentDescription = "Sign up with Facebook",
+//                        context = context,
+//                        onClick = signUpWithGoogle,
+//                    )
                 }
                 val textBottom1 = "Already a member? "
                 val textBottom2 =  "Sign In"
@@ -197,7 +223,7 @@ fun SignUpScreen(onSignUpClicked:(String,String,String,String)->Unit,
                 ) {
                     Text(
                         text = textBottom1,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontFamily = FontFamily(
                             Font(
                                 R.font.roboto_medium,
